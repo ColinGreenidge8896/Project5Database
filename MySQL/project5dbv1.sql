@@ -46,7 +46,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 -- create roles table with each team role
 -- link roles to users? how are our users stored?
 
---or manage user roles in backend..
+-- or manage user roles in backend..
 -- ===========================================
 
 
