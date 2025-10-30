@@ -1,0 +1,26 @@
+{
+  "name": "project5database",
+  "version": "1.0.0",
+  "description": "Node.js + Express backend for project5dbv1",
+  "homepage": "https://github.com/ColinGreenidge8896/Project5Database#readme",
+  "bugs": {
+    "url": "https://github.com/ColinGreenidge8896/Project5Database/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ColinGreenidge8896/Project5Database.git"
+  },
+  "dependencies": {
+    "express": "^4.19.0",
+    "mysql2": "^3.9.0",
+    "dotenv": "^16.4.5",
+    "cors": "^2.8.5"
+  },
+  "license": "ISC",
+  "author": "Database Team",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "test"
+  }
+}

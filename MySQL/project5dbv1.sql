@@ -42,7 +42,14 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 -- TODO
 -- fix chosentrait (what does this do??)
+
+-- create roles table with each team role
+-- link roles to users? how are our users stored?
+
+--or manage user roles in backend..
 -- ===========================================
+
+
 
 CREATE TABLE CustomerAccount (
   AccountID INT AUTO_INCREMENT PRIMARY KEY,
