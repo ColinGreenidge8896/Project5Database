@@ -49,7 +49,20 @@ SET FOREIGN_KEY_CHECKS = 1;
 -- or manage user roles in backend..
 -- ===========================================
 
+CREATE TABLE Roles (
+  RoleID INT AUTO_INCREMENT PRIMARY KEY,
+  RoleName VARCHAR(50) NOT NULL
+);
 
+CREATE TABLE Users (
+  Username VARCHAR(50) NOT NULL,
+  RoleID INT,
+  FOREIGN KEY (RoleID) REFERENCES Roles(RoleID)
+);
+
+-- outline roles here
+INSERT INTO Roles (RoleName)
+VALUES ('admin'), ('inventory'), ('pos'), ('fleet'), ('ghost_diagnostics');
 
 CREATE TABLE CustomerAccount (
   AccountID INT AUTO_INCREMENT PRIMARY KEY,
