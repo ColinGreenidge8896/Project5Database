@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 /* ======================
-   🔒 LINUX AUTH HELPERS
+   LINUX AUTH HELPERS
 ====================== */
 
 // Returns true if the current Linux user is in the given group
@@ -38,7 +38,7 @@ function authorize(groups) {
 }
 
 /* ======================
-   🧱 HELPER FUNCTIONS
+   HELPER FUNCTIONS
 ====================== */
 
 function sendResponse(res, success, message, data = null) {
@@ -46,7 +46,7 @@ function sendResponse(res, success, message, data = null) {
 }
 
 /* ======================
-   👥 CUSTOMER ACCOUNT ROUTES
+   CUSTOMER ACCOUNT ROUTES
 ====================== */
 
 // Create a new customer account
@@ -115,7 +115,7 @@ app.delete("/api/customers/:id", authorize(["pos", "admin"]), async (req, res) =
 });
 
 /* ======================
-   📦 PRODUCT / INVENTORY ROUTES
+   PRODUCT / INVENTORY ROUTES
 ====================== */
 
 // Create new product
