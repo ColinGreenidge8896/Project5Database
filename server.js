@@ -147,6 +147,72 @@ app.get("/api/payments", authorize(["admin"]), async (req, res) => {
 });
 
 /* ======================
+   Item Transaction Route
+====================== */
+
+// Create an item transaction
+app.post("/api/item-transactions", authorize(["pos", "admin"]), async (req, res) => {
+  try {
+    const { paymentID, productID, quantity, subtotal } = req.body;
+    if (!paymentID || !productID || !subtotal)
+      return sendResponse(res, false, "Missing required fields.");
+
+    const [result] = await pool.query(
+      `INSERT INTO ItemTransaction (PaymentID, ProductID, Quantity, Subtotal)
+       VALUES (?, ?, ?, ?)`,
+      [paymentID, productID, quantity || 1, subtotal]
+    );
+
+    sendResponse(res, true, "Item transaction recorded.", { itemTransactionID: result.insertId });
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+// Get all item transactions
+app.get("/api/item-transactions", authorize(["admin"]), async (req, res) => {
+  try {
+    const [rows] = await pool.query("SELECT * FROM ItemTransaction;");
+    sendResponse(res, true, "Item transactions retrieved.", rows);
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+/* ======================
+   Service Transaction Route
+====================== */
+
+// Create a service transaction
+app.post("/api/service-transactions", authorize(["pos", "admin"]), async (req, res) => {
+  try {
+    const { paymentID, serviceID, hoursWorked, subtotal } = req.body;
+    if (!paymentID || !serviceID || !subtotal)
+      return sendResponse(res, false, "Missing required fields.");
+
+    const [result] = await pool.query(
+      `INSERT INTO ServiceTransaction (PaymentID, ServiceID, HoursWorked, Subtotal)
+       VALUES (?, ?, ?, ?)`,
+      [paymentID, serviceID, hoursWorked || 0, subtotal]
+    );
+
+    sendResponse(res, true, "Service transaction recorded.", { serviceTransactionID: result.insertId });
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+// Get all service transactions
+app.get("/api/service-transactions", authorize(["admin"]), async (req, res) => {
+  try {
+    const [rows] = await pool.query("SELECT * FROM ServiceTransaction;");
+    sendResponse(res, true, "Service transactions retrieved.", rows);
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+/* ======================
    PRODUCT / INVENTORY ROUTES
 ====================== */
 
