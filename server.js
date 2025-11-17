@@ -46,7 +46,7 @@ function sendResponse(res, success, message, data = null) {
 }
 
 /* ======================
-   CUSTOMER ACCOUNT ROUTES
+   CUSTOMER ACCOUNT ROUTES (POS Team)
 ====================== */
 
 // Create a new customer account
@@ -109,6 +109,38 @@ app.delete("/api/customers/:id", authorize(["pos", "admin"]), async (req, res) =
     if (result.affectedRows === 0)
       return sendResponse(res, false, "Customer not found.");
     sendResponse(res, true, "Customer deleted.");
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+/* ======================
+   Payment Route
+====================== */
+
+// Create a new payment
+app.post("/api/payments", authorize(["pos", "admin"]), async (req, res) => {
+  try {
+    const { accountID, cardNo, cvv, expiryDate, serviceAddress, deliveryAddress } = req.body;
+    if (!accountID || !cardNo || !cvv || !expiryDate)
+      return sendResponse(res, false, "Missing required fields.");
+
+    const [result] = await pool.query(
+      "INSERT INTO Payment (AccountID, CardNo, CVV, ExpiryDate, ServiceAddress, DeliveryAddress) VALUES (?, ?, ?, ?, ?, ?)",
+      [accountID, cardNo, cvv, expiryDate, serviceAddress || "", deliveryAddress || ""]
+    );
+
+    sendResponse(res, true, "Payment recorded.", { paymentID: result.insertId });
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+// Get all payments
+app.get("/api/payments", authorize(["admin"]), async (req, res) => {
+  try {
+    const [rows] = await pool.query("SELECT * FROM Payment;");
+    sendResponse(res, true, "Payments retrieved.", rows);
   } catch (err) {
     sendResponse(res, false, err.message);
   }
