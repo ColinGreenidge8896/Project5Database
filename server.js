@@ -12,38 +12,57 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 /* ======================
-   TODO
-
+TODO
 Role authorization currently checks everything as the server - not the people making requests
 Correct Authentication Flow
 1. Client logs in using school SSO
 2. Client sends their identity to backend
 3. Backend checks groups based on provided identity
 Not based on os.userInfo().
-
 URGENT: find solution
- 
+
 -use jsonwebtoken + jwks-rsa libraries to verify tokens of users?
 -configure .env
 -add new middleware
-
 OR
-
 -create secrets for each group
 -require secrets to be part of the json request?
-
 OR 
-
 -allow access based on filepath or module request location/source?
 
 MOVE ON WITHOUT AUTHENTICATION - PROBABLY DIFFICULT FOR FINAL PRODUCT
 
+REMOVE AUTH FROM ROUTES FOR NOW
+
+DONT FORGET DOCUMENTATION
+
 ====================== */
+
+
+/* ROUTES TO BE MADE ======
+- POS TEAM
+  -update account
+  -transaction routes
+
+- REVIEW TEAM
+  -product, rental and team reviews - create, read, update, delete
+
+- GHOST DIAGNOSTICS TEAM
+  -hardcoded values for ghost and trait tables
+  -InquiryForm and InquiryFormResponse CRUD routes
+  -ChosenTrait and IdentifyingTrait 
+
+- FLEET MANAGEMENT TEAM / INVENTORY TEAM
+  -vehicle, equipment, maintenanceEvent
+  -rentedEquipment, 
+
+ ========================= */
+
 
 /* ======================
    LINUX AUTH HELPERS
 ====================== */
-
+/*
 // Returns true if the current Linux user is in the given group
 function userInGroup(groupName) {
   try {
@@ -64,7 +83,7 @@ function authorize(groups) {
     if (allowed) next();
     else res.status(403).json({ success: false, message: "Access denied: insufficient permissions" });
   };
-}
+}*/
 
 /* ======================
    HELPER FUNCTIONS
@@ -127,6 +146,8 @@ app.get("/api/customers/:id", authorize(["pos", "admin"]), async (req, res) => {
     sendResponse(res, false, err.message);
   }
 });
+
+//update customer account
 
 // Delete customer
 app.delete("/api/customers/:id", authorize(["pos", "admin"]), async (req, res) => {
