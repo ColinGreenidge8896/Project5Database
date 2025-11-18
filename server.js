@@ -14,13 +14,6 @@ app.use(express.json());
 /* ======================
 TODO
 Role authorization currently checks everything as the server - not the people making requests
-Correct Authentication Flow
-1. Client logs in using school SSO
-2. Client sends their identity to backend
-3. Backend checks groups based on provided identity
-Not based on os.userInfo().
-URGENT: find solution
-
 -use jsonwebtoken + jwks-rsa libraries to verify tokens of users?
 -configure .env
 -add new middleware
@@ -32,10 +25,7 @@ OR
 
 MOVE ON WITHOUT AUTHENTICATION - PROBABLY DIFFICULT FOR FINAL PRODUCT
 
-REMOVE AUTH FROM ROUTES FOR NOW
-
 DONT FORGET DOCUMENTATION
-
 ====================== */
 
 
@@ -48,7 +38,7 @@ DONT FORGET DOCUMENTATION
   -product, rental and team reviews - create, read, update, delete
 
 - GHOST DIAGNOSTICS TEAM
-  -hardcoded values for ghost and trait tables
+  -hardcoded values for ghost and trait tables - waiting on GD team
   -InquiryForm and InquiryFormResponse CRUD routes
   -ChosenTrait and IdentifyingTrait 
 
@@ -57,33 +47,6 @@ DONT FORGET DOCUMENTATION
   -rentedEquipment, 
 
  ========================= */
-
-
-/* ======================
-   LINUX AUTH HELPERS
-====================== */
-/*
-// Returns true if the current Linux user is in the given group
-function userInGroup(groupName) {
-  try {
-    const user = os.userInfo().username;
-    const groups = execSync(`groups ${user}`).toString();
-    return groups.split(/\s+/).includes(groupName);
-  } catch (err) {
-    console.error("Error checking Linux group:", err);
-    return false;
-  }
-}
-
-// Middleware: only allow users in the required group(s)
-function authorize(groups) {
-  return (req, res, next) => {
-    const requiredGroups = Array.isArray(groups) ? groups : [groups];
-    const allowed = requiredGroups.some(g => userInGroup(g));
-    if (allowed) next();
-    else res.status(403).json({ success: false, message: "Access denied: insufficient permissions" });
-  };
-}*/
 
 /* ======================
    HELPER FUNCTIONS
@@ -98,12 +61,13 @@ function sendResponse(res, success, message, data = null) {
 ====================== */
 
 // Create a new customer account
-app.post("/api/customers", authorize(["pos", "admin"]), async (req, res) => {
+app.post("/api/customers", async (req, res) => {
   try {
     const { email, username, password, status } = req.body;
     if (!email || !username || !password)
       return sendResponse(res, false, "Missing required fields.");
 
+    //are we receiving password already hashed or hasing it ourselves?
     const hashed = await bcrypt.hash(password, 10);
 
     const [result] = await pool.query(
@@ -121,7 +85,7 @@ app.post("/api/customers", authorize(["pos", "admin"]), async (req, res) => {
 });
 
 // Read all customer accounts
-app.get("/api/customers", authorize(["pos", "admin"]), async (req, res) => {
+app.get("/api/customers", async (req, res) => {
   try {
     const [rows] = await pool.query(
       "SELECT AccountID, Email, Username, Status FROM CustomerAccount;"
@@ -133,7 +97,7 @@ app.get("/api/customers", authorize(["pos", "admin"]), async (req, res) => {
 });
 
 // Read single customer by ID
-app.get("/api/customers/:id", authorize(["pos", "admin"]), async (req, res) => {
+app.get("/api/customers/:id", async (req, res) => {
   try {
     const [rows] = await pool.query(
       "SELECT AccountID, Email, Username, Status FROM CustomerAccount WHERE AccountID = ?;",
@@ -150,7 +114,7 @@ app.get("/api/customers/:id", authorize(["pos", "admin"]), async (req, res) => {
 //update customer account
 
 // Delete customer
-app.delete("/api/customers/:id", authorize(["pos", "admin"]), async (req, res) => {
+app.delete("/api/customers/:id", async (req, res) => {
   try {
     const [result] = await pool.query(
       "DELETE FROM CustomerAccount WHERE AccountID = ?;",
@@ -169,7 +133,7 @@ app.delete("/api/customers/:id", authorize(["pos", "admin"]), async (req, res) =
 ====================== */
 
 // Create a new payment  -- dont store CVV!
-app.post("/api/payments", authorize(["pos", "admin"]), async (req, res) => {
+app.post("/api/payments", async (req, res) => {
   try {
     const { accountID, cardNo, cvv, expiryDate, serviceAddress, deliveryAddress } = req.body;
     if (!accountID || !cardNo || !cvv || !expiryDate)
@@ -187,7 +151,7 @@ app.post("/api/payments", authorize(["pos", "admin"]), async (req, res) => {
 });
 
 // Get all payments
-app.get("/api/payments", authorize(["admin"]), async (req, res) => {
+app.get("/api/payments", async (req, res) => {
   try {
     const [rows] = await pool.query("SELECT * FROM Payment;");
     sendResponse(res, true, "Payments retrieved.", rows);
@@ -201,7 +165,7 @@ app.get("/api/payments", authorize(["admin"]), async (req, res) => {
 ====================== */
 
 // Create an item transaction
-app.post("/api/item-transactions", authorize(["pos", "admin"]), async (req, res) => {
+app.post("/api/item-transactions", async (req, res) => {
   try {
     const { paymentID, productID, quantity, subtotal } = req.body;
     if (!paymentID || !productID || !subtotal)
@@ -220,7 +184,7 @@ app.post("/api/item-transactions", authorize(["pos", "admin"]), async (req, res)
 });
 
 // Get all item transactions
-app.get("/api/item-transactions", authorize(["admin"]), async (req, res) => {
+app.get("/api/item-transactions", async (req, res) => {
   try {
     const [rows] = await pool.query("SELECT * FROM ItemTransaction;");
     sendResponse(res, true, "Item transactions retrieved.", rows);
@@ -234,7 +198,7 @@ app.get("/api/item-transactions", authorize(["admin"]), async (req, res) => {
 ====================== */
 
 // Create a service transaction
-app.post("/api/service-transactions", authorize(["pos", "admin"]), async (req, res) => {
+app.post("/api/service-transactions", async (req, res) => {
   try {
     const { paymentID, serviceID, hoursWorked, subtotal } = req.body;
     if (!paymentID || !serviceID || !subtotal)
@@ -253,7 +217,7 @@ app.post("/api/service-transactions", authorize(["pos", "admin"]), async (req, r
 });
 
 // Get all service transactions
-app.get("/api/service-transactions", authorize(["admin"]), async (req, res) => {
+app.get("/api/service-transactions", async (req, res) => {
   try {
     const [rows] = await pool.query("SELECT * FROM ServiceTransaction;");
     sendResponse(res, true, "Service transactions retrieved.", rows);
@@ -267,7 +231,7 @@ app.get("/api/service-transactions", authorize(["admin"]), async (req, res) => {
 ====================== */
 
 // Create new product
-app.post("/api/products", authorize(["inventory", "admin"]), async (req, res) => {
+app.post("/api/products", async (req, res) => {
   try {
     const { name, description, price, stock, status } = req.body;
     if (!name || !price)
@@ -285,7 +249,7 @@ app.post("/api/products", authorize(["inventory", "admin"]), async (req, res) =>
 });
 
 // Get all products
-app.get("/api/products", authorize(["inventory", "admin", "pos"]), async (req, res) => {
+app.get("/api/products", async (req, res) => {
   try {
     const [rows] = await pool.query(
       "SELECT ProductID, Name, Description, Price, Stock, Status FROM Product;"
@@ -297,7 +261,7 @@ app.get("/api/products", authorize(["inventory", "admin", "pos"]), async (req, r
 });
 
 // Update product stock or details
-app.patch("/api/products/:id", authorize(["inventory", "admin"]), async (req, res) => {
+app.patch("/api/products/:id", async (req, res) => {
   try {
     const { name, description, price, stock, status } = req.body;
     const [result] = await pool.query(
@@ -313,7 +277,7 @@ app.patch("/api/products/:id", authorize(["inventory", "admin"]), async (req, re
 });
 
 // Delete product
-app.delete("/api/products/:id", authorize(["admin"]), async (req, res) => {
+app.delete("/api/products/:id", async (req, res) => {
   try {
     const [result] = await pool.query("DELETE FROM Product WHERE ProductID = ?", [
       req.params.id,
@@ -321,6 +285,301 @@ app.delete("/api/products/:id", authorize(["admin"]), async (req, res) => {
     if (result.affectedRows === 0)
       return sendResponse(res, false, "Product not found.");
     sendResponse(res, true, "Product deleted.");
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+/* ======================
+   DIAGNOSTICS FORMS ROUTES
+====================== */
+
+//create inquiryform
+app.post("/api/inquiry-forms", async (req, res) => {
+  try {
+    const { accountID, description } = req.body;
+
+    if (!accountID)
+      return sendResponse(res, false, "Missing accountID.");
+
+    const [result] = await pool.query(
+      `INSERT INTO InquiryForm (AccountID, Description)
+       VALUES (?, ?)`,
+      [accountID, description || null]
+    );
+
+    sendResponse(res, true, "Inquiry form created.", { inquiryFormID: result.insertId });
+  } catch (err) {
+    console.error(err);
+    sendResponse(res, false, "Internal server error.");
+  }
+});
+
+//get all inquiryforms
+app.get("/api/inquiry-forms", async (req, res) => {
+  try {
+    const [rows] = await pool.query("SELECT * FROM InquiryForm;");
+    sendResponse(res, true, "Inquiry forms retrieved.", rows);
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+//get inquiryform by ID
+app.get("/api/inquiry-forms/:id", async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      "SELECT * FROM InquiryForm WHERE InquiryFormID = ?",
+      [req.params.id]
+    );
+
+    if (rows.length === 0)
+      return sendResponse(res, false, "Inquiry form not found.");
+
+    sendResponse(res, true, "Inquiry form retrieved.", rows[0]);
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+//update inquiryform
+app.patch("/api/inquiry-forms/:id", async (req, res) => {
+  try {
+    const { description } = req.body;
+
+    const [result] = await pool.query(
+      `UPDATE InquiryForm
+       SET Description = COALESCE(?, Description)
+       WHERE InquiryFormID = ?`,
+      [description, req.params.id]
+    );
+
+    if (result.affectedRows === 0)
+      return sendResponse(res, false, "Inquiry form not found.");
+
+    sendResponse(res, true, "Inquiry form updated.");
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+//delete inquiryform 
+app.delete("/api/inquiry-forms/:id", async (req, res) => {
+  try {
+    const [result] = await pool.query(
+      "DELETE FROM InquiryForm WHERE InquiryFormID = ?",
+      [req.params.id]
+    );
+
+    if (result.affectedRows === 0)
+      return sendResponse(res, false, "Inquiry form not found.");
+
+    sendResponse(res, true, "Inquiry form deleted.");
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+//create inquiryformresponse
+app.post("/api/inquiry-form-responses", async (req, res) => {
+  try {
+    const { inquiryFormID, ghostID, description } = req.body;
+
+    if (!inquiryFormID || !ghostID)
+      return sendResponse(res, false, "Missing required fields.");
+
+    const [result] = await pool.query(
+      `INSERT INTO InquiryFormResponse (InquiryFormID, GhostID, Description)
+       VALUES (?, ?, ?)`,
+      [inquiryFormID, ghostID, description || null]
+    );
+
+    sendResponse(res, true, "Response created.", { inquiryFormResponseID: result.insertId });
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+//get all inquiryformresponse
+app.get("/api/inquiry-form-responses", async (req, res) => {
+  try {
+    const [rows] = await pool.query("SELECT * FROM InquiryFormResponse;");
+    sendResponse(res, true, "Responses retrieved.", rows);
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+//get resposneform by id
+app.get("/api/inquiry-form-responses/:id", async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      "SELECT * FROM InquiryFormResponse WHERE InquiryFormResponseID = ?",
+      [req.params.id]
+    );
+
+    if (rows.length === 0)
+      return sendResponse(res, false, "Response not found.");
+
+    sendResponse(res, true, "Response retrieved.", rows[0]);
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+//update response form
+app.patch("/api/inquiry-form-responses/:id", async (req, res) => {
+  try {
+    const { description, ghostID } = req.body;
+
+    const [result] = await pool.query(
+      `UPDATE InquiryFormResponse
+       SET Description = COALESCE(?, Description),
+           GhostID = COALESCE(?, GhostID)
+       WHERE InquiryFormResponseID = ?`,
+      [description, ghostID, req.params.id]
+    );
+
+    if (result.affectedRows === 0)
+      return sendResponse(res, false, "Response not found.");
+
+    sendResponse(res, true, "Response updated.");
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+//delete responseform
+app.delete("/api/inquiry-form-responses/:id", async (req, res) => {
+  try {
+    const [result] = await pool.query(
+      "DELETE FROM InquiryFormResponse WHERE InquiryFormResponseID = ?",
+      [req.params.id]
+    );
+
+    if (result.affectedRows === 0)
+      return sendResponse(res, false, "Response not found.");
+
+    sendResponse(res, true, "Response deleted.");
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+//create chosentrait
+app.post("/api/chosen-traits", async (req, res) => {
+  try {
+    const { inquiryFormID, traitID } = req.body;
+
+    if (!inquiryFormID || !traitID)
+      return sendResponse(res, false, "Missing required fields.");
+
+    const [result] = await pool.query(
+      `INSERT INTO ChosenTrait (InquiryFormID, TraitID)
+       VALUES (?, ?)`,
+      [inquiryFormID, traitID]
+    );
+
+    sendResponse(res, true, "Chosen trait added.", { chosenTraitID: result.insertId });
+  } catch (err) {
+    if (err.code === "ER_DUP_ENTRY")
+      return sendResponse(res, false, "Trait already chosen for this form.");
+    sendResponse(res, false, err.message);
+  }
+});
+
+//get all chosentraits from a form
+app.get("/api/chosen-traits/form/:id", async (req, res) => {
+  try {
+    //get all chosentrait data from a chosen inquiryform
+    const [rows] = await pool.query(
+      `SELECT ct.*, t.TraitName, t.TraitType
+       FROM ChosenTrait ct
+       JOIN Trait t ON ct.TraitID = t.TraitID
+       WHERE ct.InquiryFormID = ?`,
+      [req.params.id]
+    );
+
+    sendResponse(res, true, "Chosen traits retrieved.", rows);
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+//delete chosentrait
+app.delete("/api/chosen-traits", async (req, res) => {
+  try {
+    const { inquiryFormID, traitID } = req.body;
+
+    const [result] = await pool.query(
+      "DELETE FROM ChosenTrait WHERE InquiryFormID = ? AND TraitID = ?",
+      [inquiryFormID, traitID]
+    );
+
+    if (result.affectedRows === 0)
+      return sendResponse(res, false, "Chosen trait not found.");
+
+    sendResponse(res, true, "Chosen trait removed.");
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+//add identifyingtrait to ghost
+app.post("/api/identifying-traits", async (req, res) => {
+  try {
+    const { ghostID, traitID } = req.body;
+
+    if (!ghostID || !traitID)
+      return sendResponse(res, false, "Missing fields.");
+
+    await pool.query(
+      `INSERT INTO IdentifyingTrait (GhostID, TraitID)
+       VALUES (?, ?)`,
+      [ghostID, traitID]
+    );
+
+    sendResponse(res, true, "Identifying trait added.");
+  } catch (err) {
+    if (err.code === "ER_DUP_ENTRY")
+      return sendResponse(res, false, "Trait already exists for ghost.");
+    sendResponse(res, false, err.message);
+  }
+});
+
+//get all traits for a ghost
+app.get("/api/identifying-traits/ghost/:id", async (req, res) => {
+  try {
+    //for every identifyingtrait row for a ghost, join to trait table 
+    // and get the full trait details from trait
+    //returns all traits linked to a ghost ID
+    const [rows] = await pool.query( 
+      `SELECT it.*, t.TraitName, t.TraitType
+       FROM IdentifyingTrait it
+       JOIN Trait t ON it.TraitID = t.TraitID
+       WHERE it.GhostID = ?`,
+      [req.params.id]
+    );
+
+    sendResponse(res, true, "Identifying traits retrieved.", rows);
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+//delete identifyingtrait
+app.delete("/api/identifying-traits", async (req, res) => {
+  try {
+    const { ghostID, traitID } = req.body;
+
+    const [result] = await pool.query(
+      "DELETE FROM IdentifyingTrait WHERE GhostID = ? AND TraitID = ?",
+      [ghostID, traitID]
+    );
+
+    if (result.affectedRows === 0)
+      return sendResponse(res, false, "Trait not found for ghost.");
+
+    sendResponse(res, true, "Identifying trait removed.");
   } catch (err) {
     sendResponse(res, false, err.message);
   }
@@ -351,94 +610,6 @@ app.post("/api/reviews/products", async(req, res) => {
     );
 
     sendResponse(res, true, "Product Review created.", {ReviewID: result.insertId});
-  }
-  catch (err) {
-    sendResponse(res, false, err.message);
-  }
-});
-
-// Get all product reviews
-app.get("/api/reviews/products", async(req, res) => {
-  try {
-    const [rows] = await pool.query(
-      "SELECT ProductID, AccountID, Rating, Comment FROM ProductReview;"
-    );
-    sendResponse(res, true, "Product Reviews retrieved.", rows);
-  } 
-  catch (err) {
-    sendResponse(res, false, err.message);
-  }
-});
-
-// Get product review by ID
-app.get("/api/reviews/products/:id", async(req, res) =>{
-  try {
-    const [rows] = await pool.query(
-      "SELECT ProductID, AccountID, Rating, Comment FROM ProductReview WHERE ReviewID = ?;",
-      [req.params.id]
-    );
-    if (rows.length === 0)
-      return sendResponse(res, false, "Product Review not found.");
-    sendResponse(res, true, "Product Review retrieved.", rows[0]);
-  } 
-  catch (err) {
-    sendResponse(res, false, err.message);
-  }
-});
-
-// Update product review rating and/or comment by id
-app.patch("/api/reviews/products/:id", async(req, res) => {
-  try {
-    const { rating, comment } = req.body;
-    const [result] = await pool.query(
-      "UPDATE ProductReview SET Rating = COALESCE(?, Rating), Comment = COALESCE(?, Comment) WHERE ReviewID = ?",
-      [rating, comment, req.params.id]
-    );
-    if (result.affectedRows === 0)
-      return sendResponse(res, false, "Product Review not found.");
-    sendResponse(res, true, "Product Review updated.");
-  } 
-  catch (err) {
-    sendResponse(res, false, err.message);
-  }
-});
-
-// Delete product review by id
-app.delete("/api/reviews/products/:id", async(req, res) => {
-  try {
-    const [result] = await pool.query("DELETE FROM ProductReview WHERE ReviewID = ?", [
-      req.params.id,
-    ]);
-    if (result.affectedRows === 0)
-      return sendResponse(res, false, "Product Review not found.");
-    sendResponse(res, true, "Product Review deleted.");
-  } 
-  catch (err) {
-    sendResponse(res, false, err.message);
-  }
-});
-
-/* ======================
-      RENTAL REVIEWS
-====================== */
-
-// Create a rental review
-app.post("/api/reviews/rentals", async(req, res) => {
-  try {
-    const { rentalID, accountID, rating, comment } = req.body;
-    if (!rentalID || !accountID) {
-      return sendResponse(res, false, "Missing required fields");
-    }
-    if (rating < 1 || rating > 5) {
-      return sendResponse(res, false, "Invalid rating value, must be 1-5");
-    }
-
-    const [result] = await pool.query(
-      "INSERT INTO RentalReview (RentalID, AccountID, Rating, Comment) VALUES (?, ?, ?, ?)",
-      [rentalID, accountID, rating, comment || ""]
-    );
-
-    sendResponse(res, true, "Rental Review created.", {ReviewID: result.insertId});
   }
   catch (err) {
     sendResponse(res, false, err.message);
