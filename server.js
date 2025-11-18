@@ -14,13 +14,6 @@ app.use(express.json());
 /* ======================
 TODO
 Role authorization currently checks everything as the server - not the people making requests
-Correct Authentication Flow
-1. Client logs in using school SSO
-2. Client sends their identity to backend
-3. Backend checks groups based on provided identity
-Not based on os.userInfo().
-URGENT: find solution
-
 -use jsonwebtoken + jwks-rsa libraries to verify tokens of users?
 -configure .env
 -add new middleware
@@ -32,10 +25,7 @@ OR
 
 MOVE ON WITHOUT AUTHENTICATION - PROBABLY DIFFICULT FOR FINAL PRODUCT
 
-REMOVE AUTH FROM ROUTES FOR NOW
-
 DONT FORGET DOCUMENTATION
-
 ====================== */
 
 
@@ -57,33 +47,6 @@ DONT FORGET DOCUMENTATION
   -rentedEquipment, 
 
  ========================= */
-
-
-/* ======================
-   LINUX AUTH HELPERS
-====================== */
-/*
-// Returns true if the current Linux user is in the given group
-function userInGroup(groupName) {
-  try {
-    const user = os.userInfo().username;
-    const groups = execSync(`groups ${user}`).toString();
-    return groups.split(/\s+/).includes(groupName);
-  } catch (err) {
-    console.error("Error checking Linux group:", err);
-    return false;
-  }
-}
-
-// Middleware: only allow users in the required group(s)
-function authorize(groups) {
-  return (req, res, next) => {
-    const requiredGroups = Array.isArray(groups) ? groups : [groups];
-    const allowed = requiredGroups.some(g => userInGroup(g));
-    if (allowed) next();
-    else res.status(403).json({ success: false, message: "Access denied: insufficient permissions" });
-  };
-}*/
 
 /* ======================
    HELPER FUNCTIONS
