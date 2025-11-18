@@ -96,6 +96,7 @@ CREATE TABLE Product (
   CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+-- is this a type of equipment or individual units? 
 CREATE TABLE Equipment (
   EquipmentID INT AUTO_INCREMENT PRIMARY KEY,
   ProductID INT,
@@ -108,6 +109,7 @@ CREATE TABLE Equipment (
 );
 
 -- Equipment can be linked to vehicle by entire category, not individual equipment items
+-- also does a vehicle need equipment tied to it?? just tie everything together in a Service table entry
 CREATE TABLE Vehicle (
   VehicleID INT AUTO_INCREMENT PRIMARY KEY,
   EquipmentID INT NOT NULL,
@@ -222,7 +224,7 @@ CREATE TABLE ServiceTransaction (
   FOREIGN KEY (PaymentID) REFERENCES Payment(PaymentID),
   FOREIGN KEY (ServiceID) REFERENCES Service(ServiceID)
 );
-
+-- also make equipmentstock table? 
 CREATE TABLE ProductStock (
   StockID INT AUTO_INCREMENT PRIMARY KEY,
   ProductID INT NOT NULL,
