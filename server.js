@@ -67,6 +67,7 @@ app.post("/api/customers", async (req, res) => {
     if (!email || !username || !password)
       return sendResponse(res, false, "Missing required fields.");
 
+    //are we receiving password already hashed or hasing it ourselves?
     const hashed = await bcrypt.hash(password, 10);
 
     const [result] = await pool.query(
@@ -288,6 +289,304 @@ app.delete("/api/products/:id", async (req, res) => {
     sendResponse(res, false, err.message);
   }
 });
+
+/* ======================
+   DIAGNOSTICS FORMS ROUTES
+====================== */
+
+//create inquiryform
+app.post("/api/inquiry-forms", async (req, res) => {
+  try {
+    const { accountID, description } = req.body;
+
+    if (!accountID)
+      return sendResponse(res, false, "Missing accountID.");
+
+    const [result] = await pool.query(
+      `INSERT INTO InquiryForm (AccountID, Description)
+       VALUES (?, ?)`,
+      [accountID, description || null]
+    );
+
+    sendResponse(res, true, "Inquiry form created.", { inquiryFormID: result.insertId });
+  } catch (err) {
+    console.error(err);
+    sendResponse(res, false, "Internal server error.");
+  }
+});
+
+//get all inquiryforms
+app.get("/api/inquiry-forms", async (req, res) => {
+  try {
+    const [rows] = await pool.query("SELECT * FROM InquiryForm;");
+    sendResponse(res, true, "Inquiry forms retrieved.", rows);
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+//get inquiryform by ID
+app.get("/api/inquiry-forms/:id", async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      "SELECT * FROM InquiryForm WHERE InquiryFormID = ?",
+      [req.params.id]
+    );
+
+    if (rows.length === 0)
+      return sendResponse(res, false, "Inquiry form not found.");
+
+    sendResponse(res, true, "Inquiry form retrieved.", rows[0]);
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+//update inquiryform
+app.patch("/api/inquiry-forms/:id", async (req, res) => {
+  try {
+    const { description } = req.body;
+
+    const [result] = await pool.query(
+      `UPDATE InquiryForm
+       SET Description = COALESCE(?, Description)
+       WHERE InquiryFormID = ?`,
+      [description, req.params.id]
+    );
+
+    if (result.affectedRows === 0)
+      return sendResponse(res, false, "Inquiry form not found.");
+
+    sendResponse(res, true, "Inquiry form updated.");
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+//delete inquiryform 
+app.delete("/api/inquiry-forms/:id", async (req, res) => {
+  try {
+    const [result] = await pool.query(
+      "DELETE FROM InquiryForm WHERE InquiryFormID = ?",
+      [req.params.id]
+    );
+
+    if (result.affectedRows === 0)
+      return sendResponse(res, false, "Inquiry form not found.");
+
+    sendResponse(res, true, "Inquiry form deleted.");
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+//create inquiryformresponse
+app.post("/api/inquiry-form-responses", async (req, res) => {
+  try {
+    const { inquiryFormID, ghostID, description } = req.body;
+
+    if (!inquiryFormID || !ghostID)
+      return sendResponse(res, false, "Missing required fields.");
+
+    const [result] = await pool.query(
+      `INSERT INTO InquiryFormResponse (InquiryFormID, GhostID, Description)
+       VALUES (?, ?, ?)`,
+      [inquiryFormID, ghostID, description || null]
+    );
+
+    sendResponse(res, true, "Response created.", { inquiryFormResponseID: result.insertId });
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+//get all inquiryformresponse
+app.get("/api/inquiry-form-responses", async (req, res) => {
+  try {
+    const [rows] = await pool.query("SELECT * FROM InquiryFormResponse;");
+    sendResponse(res, true, "Responses retrieved.", rows);
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+//get resposneform by id
+app.get("/api/inquiry-form-responses/:id", async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      "SELECT * FROM InquiryFormResponse WHERE InquiryFormResponseID = ?",
+      [req.params.id]
+    );
+
+    if (rows.length === 0)
+      return sendResponse(res, false, "Response not found.");
+
+    sendResponse(res, true, "Response retrieved.", rows[0]);
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+//update response form
+app.patch("/api/inquiry-form-responses/:id", async (req, res) => {
+  try {
+    const { description, ghostID } = req.body;
+
+    const [result] = await pool.query(
+      `UPDATE InquiryFormResponse
+       SET Description = COALESCE(?, Description),
+           GhostID = COALESCE(?, GhostID)
+       WHERE InquiryFormResponseID = ?`,
+      [description, ghostID, req.params.id]
+    );
+
+    if (result.affectedRows === 0)
+      return sendResponse(res, false, "Response not found.");
+
+    sendResponse(res, true, "Response updated.");
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+//delete responseform
+app.delete("/api/inquiry-form-responses/:id", async (req, res) => {
+  try {
+    const [result] = await pool.query(
+      "DELETE FROM InquiryFormResponse WHERE InquiryFormResponseID = ?",
+      [req.params.id]
+    );
+
+    if (result.affectedRows === 0)
+      return sendResponse(res, false, "Response not found.");
+
+    sendResponse(res, true, "Response deleted.");
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+//create chosentrait
+app.post("/api/chosen-traits", async (req, res) => {
+  try {
+    const { inquiryFormID, traitID } = req.body;
+
+    if (!inquiryFormID || !traitID)
+      return sendResponse(res, false, "Missing required fields.");
+
+    const [result] = await pool.query(
+      `INSERT INTO ChosenTrait (InquiryFormID, TraitID)
+       VALUES (?, ?)`,
+      [inquiryFormID, traitID]
+    );
+
+    sendResponse(res, true, "Chosen trait added.", { chosenTraitID: result.insertId });
+  } catch (err) {
+    if (err.code === "ER_DUP_ENTRY")
+      return sendResponse(res, false, "Trait already chosen for this form.");
+    sendResponse(res, false, err.message);
+  }
+});
+
+//get all chosentraits from a form
+app.get("/api/chosen-traits/form/:id", async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      `SELECT ct.*, t.TraitName, t.TraitType
+       FROM ChosenTrait ct
+       JOIN Trait t ON ct.TraitID = t.TraitID
+       WHERE ct.InquiryFormID = ?`,
+      [req.params.id]
+    );
+
+    sendResponse(res, true, "Chosen traits retrieved.", rows);
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+//delete chosentrait
+app.delete("/api/chosen-traits", async (req, res) => {
+  try {
+    const { inquiryFormID, traitID } = req.body;
+
+    const [result] = await pool.query(
+      "DELETE FROM ChosenTrait WHERE InquiryFormID = ? AND TraitID = ?",
+      [inquiryFormID, traitID]
+    );
+
+    if (result.affectedRows === 0)
+      return sendResponse(res, false, "Chosen trait not found.");
+
+    sendResponse(res, true, "Chosen trait removed.");
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+//add identifyingtrait to ghost
+app.post("/api/identifying-traits", async (req, res) => {
+  try {
+    const { ghostID, traitID } = req.body;
+
+    if (!ghostID || !traitID)
+      return sendResponse(res, false, "Missing fields.");
+
+    await pool.query(
+      `INSERT INTO IdentifyingTrait (GhostID, TraitID)
+       VALUES (?, ?)`,
+      [ghostID, traitID]
+    );
+
+    sendResponse(res, true, "Identifying trait added.");
+  } catch (err) {
+    if (err.code === "ER_DUP_ENTRY")
+      return sendResponse(res, false, "Trait already exists for ghost.");
+    sendResponse(res, false, err.message);
+  }
+});
+
+//get all traits for a ghost
+app.get("/api/identifying-traits/ghost/:id", async (req, res) => {
+  try {
+    //for every identifyingtrait row for a ghost, join to trait table 
+    // and get the full trait details from trait
+    //returns all traits linked to a ghost ID
+    const [rows] = await pool.query( 
+      `SELECT it.*, t.TraitName, t.TraitType
+       FROM IdentifyingTrait it
+       JOIN Trait t ON it.TraitID = t.TraitID
+       WHERE it.GhostID = ?`,
+      [req.params.id]
+    );
+
+    sendResponse(res, true, "Identifying traits retrieved.", rows);
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+//delete identifyingtrait
+app.delete("/api/identifying-traits", async (req, res) => {
+  try {
+    const { ghostID, traitID } = req.body;
+
+    const [result] = await pool.query(
+      "DELETE FROM IdentifyingTrait WHERE GhostID = ? AND TraitID = ?",
+      [ghostID, traitID]
+    );
+
+    if (result.affectedRows === 0)
+      return sendResponse(res, false, "Trait not found for ghost.");
+
+    sendResponse(res, true, "Identifying trait removed.");
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+
+
 
 /* ======================
    🧪 TEST & SERVER START
