@@ -289,6 +289,7 @@ app.delete("/api/products/:id", async (req, res) => {
     sendResponse(res, false, err.message);
   }
 });
+
 /* ======================
    DIAGNOSTICS FORMS ROUTES
 ====================== */
@@ -590,7 +591,7 @@ app.delete("/api/identifying-traits", async (req, res) => {
 ====================== */
 
 /* ======================
-      PRODUCT REVIEWS
+      Product Reviews
 ====================== */
 
 // Create product review
@@ -610,6 +611,94 @@ app.post("/api/reviews/products", async(req, res) => {
     );
 
     sendResponse(res, true, "Product Review created.", {ReviewID: result.insertId});
+  }
+  catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+// Get all product reviews
+app.get("/api/reviews/products", async(req, res) => {
+  try {
+    const [rows] = await pool.query(
+      "SELECT ProductID, AccountID, Rating, Comment FROM ProductReview;"
+    );
+    sendResponse(res, true, "Product Reviews retrieved.", rows);
+  } 
+  catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+// Get product review by ID
+app.get("/api/reviews/products/:id", async(req, res) =>{
+  try {
+    const [rows] = await pool.query(
+      "SELECT ProductID, AccountID, Rating, Comment FROM ProductReview WHERE ReviewID = ?;",
+      [req.params.id]
+    );
+    if (rows.length === 0)
+      return sendResponse(res, false, "Product Review not found.");
+    sendResponse(res, true, "Product Review retrieved.", rows[0]);
+  } 
+  catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+// Update product review rating and/or comment by id
+app.patch("/api/reviews/products/:id", async(req, res) => {
+  try {
+    const { rating, comment } = req.body;
+    const [result] = await pool.query(
+      "UPDATE ProductReview SET Rating = COALESCE(?, Rating), Comment = COALESCE(?, Comment) WHERE ReviewID = ?",
+      [rating, comment, req.params.id]
+    );
+    if (result.affectedRows === 0)
+      return sendResponse(res, false, "Product Review not found.");
+    sendResponse(res, true, "Product Review updated.");
+  } 
+  catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+// Delete product review by id
+app.delete("/api/reviews/products/:id", async(req, res) => {
+  try {
+    const [result] = await pool.query("DELETE FROM ProductReview WHERE ReviewID = ?", [
+      req.params.id,
+    ]);
+    if (result.affectedRows === 0)
+      return sendResponse(res, false, "Product Review not found.");
+    sendResponse(res, true, "Product Review deleted.");
+  } 
+  catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+/* ======================
+      Rental Reviews
+====================== */
+
+// Create a rental review
+app.post("/api/reviews/rentals", async(req, res) => {
+  try {
+    const { rentalID, accountID, rating, comment } = req.body;
+    if (!rentalID || !accountID) {
+      return sendResponse(res, false, "Missing required fields");
+    }
+    if (rating < 1 || rating > 5) {
+      return sendResponse(res, false, "Invalid rating value, must be 1-5");
+    }
+
+    const [result] = await pool.query(
+      "INSERT INTO RentalReview (RentalID, AccountID, Rating, Comment) VALUES (?, ?, ?, ?)",
+      [rentalID, accountID, rating, comment || ""]
+    );
+
+    sendResponse(res, true, "Rental Review created.", {ReviewID: result.insertId});
   }
   catch (err) {
     sendResponse(res, false, err.message);
@@ -678,7 +767,7 @@ app.delete("/api/reviews/rentals/:id", async(req, res) => {
 });
 
 /* ======================
-      TEAM REVIEWS
+      Team Reviews
 ====================== */
 
 // Create team review
