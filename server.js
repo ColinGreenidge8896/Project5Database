@@ -98,7 +98,7 @@ function sendResponse(res, success, message, data = null) {
 ====================== */
 
 // Create a new customer account
-app.post("/api/customers", authorize(["pos", "admin"]), async (req, res) => {
+app.post("/api/customers", async (req, res) => {
   try {
     const { email, username, password, status } = req.body;
     if (!email || !username || !password)
@@ -121,7 +121,7 @@ app.post("/api/customers", authorize(["pos", "admin"]), async (req, res) => {
 });
 
 // Read all customer accounts
-app.get("/api/customers", authorize(["pos", "admin"]), async (req, res) => {
+app.get("/api/customers", async (req, res) => {
   try {
     const [rows] = await pool.query(
       "SELECT AccountID, Email, Username, Status FROM CustomerAccount;"
@@ -133,7 +133,7 @@ app.get("/api/customers", authorize(["pos", "admin"]), async (req, res) => {
 });
 
 // Read single customer by ID
-app.get("/api/customers/:id", authorize(["pos", "admin"]), async (req, res) => {
+app.get("/api/customers/:id", async (req, res) => {
   try {
     const [rows] = await pool.query(
       "SELECT AccountID, Email, Username, Status FROM CustomerAccount WHERE AccountID = ?;",
@@ -150,7 +150,7 @@ app.get("/api/customers/:id", authorize(["pos", "admin"]), async (req, res) => {
 //update customer account
 
 // Delete customer
-app.delete("/api/customers/:id", authorize(["pos", "admin"]), async (req, res) => {
+app.delete("/api/customers/:id", async (req, res) => {
   try {
     const [result] = await pool.query(
       "DELETE FROM CustomerAccount WHERE AccountID = ?;",
@@ -169,7 +169,7 @@ app.delete("/api/customers/:id", authorize(["pos", "admin"]), async (req, res) =
 ====================== */
 
 // Create a new payment  -- dont store CVV!
-app.post("/api/payments", authorize(["pos", "admin"]), async (req, res) => {
+app.post("/api/payments", async (req, res) => {
   try {
     const { accountID, cardNo, cvv, expiryDate, serviceAddress, deliveryAddress } = req.body;
     if (!accountID || !cardNo || !cvv || !expiryDate)
@@ -187,7 +187,7 @@ app.post("/api/payments", authorize(["pos", "admin"]), async (req, res) => {
 });
 
 // Get all payments
-app.get("/api/payments", authorize(["admin"]), async (req, res) => {
+app.get("/api/payments", async (req, res) => {
   try {
     const [rows] = await pool.query("SELECT * FROM Payment;");
     sendResponse(res, true, "Payments retrieved.", rows);
@@ -201,7 +201,7 @@ app.get("/api/payments", authorize(["admin"]), async (req, res) => {
 ====================== */
 
 // Create an item transaction
-app.post("/api/item-transactions", authorize(["pos", "admin"]), async (req, res) => {
+app.post("/api/item-transactions", async (req, res) => {
   try {
     const { paymentID, productID, quantity, subtotal } = req.body;
     if (!paymentID || !productID || !subtotal)
@@ -220,7 +220,7 @@ app.post("/api/item-transactions", authorize(["pos", "admin"]), async (req, res)
 });
 
 // Get all item transactions
-app.get("/api/item-transactions", authorize(["admin"]), async (req, res) => {
+app.get("/api/item-transactions", async (req, res) => {
   try {
     const [rows] = await pool.query("SELECT * FROM ItemTransaction;");
     sendResponse(res, true, "Item transactions retrieved.", rows);
@@ -234,7 +234,7 @@ app.get("/api/item-transactions", authorize(["admin"]), async (req, res) => {
 ====================== */
 
 // Create a service transaction
-app.post("/api/service-transactions", authorize(["pos", "admin"]), async (req, res) => {
+app.post("/api/service-transactions", async (req, res) => {
   try {
     const { paymentID, serviceID, hoursWorked, subtotal } = req.body;
     if (!paymentID || !serviceID || !subtotal)
@@ -253,7 +253,7 @@ app.post("/api/service-transactions", authorize(["pos", "admin"]), async (req, r
 });
 
 // Get all service transactions
-app.get("/api/service-transactions", authorize(["admin"]), async (req, res) => {
+app.get("/api/service-transactions", async (req, res) => {
   try {
     const [rows] = await pool.query("SELECT * FROM ServiceTransaction;");
     sendResponse(res, true, "Service transactions retrieved.", rows);
@@ -267,7 +267,7 @@ app.get("/api/service-transactions", authorize(["admin"]), async (req, res) => {
 ====================== */
 
 // Create new product
-app.post("/api/products", authorize(["inventory", "admin"]), async (req, res) => {
+app.post("/api/products", async (req, res) => {
   try {
     const { name, description, price, stock, status } = req.body;
     if (!name || !price)
@@ -285,7 +285,7 @@ app.post("/api/products", authorize(["inventory", "admin"]), async (req, res) =>
 });
 
 // Get all products
-app.get("/api/products", authorize(["inventory", "admin", "pos"]), async (req, res) => {
+app.get("/api/products", async (req, res) => {
   try {
     const [rows] = await pool.query(
       "SELECT ProductID, Name, Description, Price, Stock, Status FROM Product;"
@@ -297,7 +297,7 @@ app.get("/api/products", authorize(["inventory", "admin", "pos"]), async (req, r
 });
 
 // Update product stock or details
-app.patch("/api/products/:id", authorize(["inventory", "admin"]), async (req, res) => {
+app.patch("/api/products/:id", async (req, res) => {
   try {
     const { name, description, price, stock, status } = req.body;
     const [result] = await pool.query(
@@ -313,7 +313,7 @@ app.patch("/api/products/:id", authorize(["inventory", "admin"]), async (req, re
 });
 
 // Delete product
-app.delete("/api/products/:id", authorize(["admin"]), async (req, res) => {
+app.delete("/api/products/:id", async (req, res) => {
   try {
     const [result] = await pool.query("DELETE FROM Product WHERE ProductID = ?", [
       req.params.id,
