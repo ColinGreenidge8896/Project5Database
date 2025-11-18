@@ -12,6 +12,35 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 /* ======================
+   TODO
+
+Role authorization currently checks everything as the server - not the people making requests
+Correct Authentication Flow
+1. Client logs in using school SSO
+2. Client sends their identity to backend
+3. Backend checks groups based on provided identity
+Not based on os.userInfo().
+
+URGENT: find solution
+ 
+-use jsonwebtoken + jwks-rsa libraries to verify tokens of users?
+-configure .env
+-add new middleware
+
+OR
+
+-create secrets for each group
+-require secrets to be part of the json request?
+
+OR 
+
+-allow access based on filepath or module request location/source?
+
+MOVE ON WITHOUT AUTHENTICATION - PROBABLY DIFFICULT FOR FINAL PRODUCT
+
+====================== */
+
+/* ======================
    LINUX AUTH HELPERS
 ====================== */
 
@@ -118,7 +147,7 @@ app.delete("/api/customers/:id", authorize(["pos", "admin"]), async (req, res) =
    Payment Route
 ====================== */
 
-// Create a new payment
+// Create a new payment  -- dont store CVV!
 app.post("/api/payments", authorize(["pos", "admin"]), async (req, res) => {
   try {
     const { accountID, cardNo, cvv, expiryDate, serviceAddress, deliveryAddress } = req.body;
