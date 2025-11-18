@@ -586,9 +586,6 @@ app.delete("/api/identifying-traits", async (req, res) => {
   }
 });
 
-
-
-
 /* ======================
    🧪 TEST & SERVER START
 ====================== */

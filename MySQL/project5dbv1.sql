@@ -381,3 +381,43 @@ INSERT INTO Equipment (EquipmentID, EquipmentName) VALUES
 ('Holy Text'),
 ('Flashlight'),
 ('Radios');
+
+-- Traits for None (ghost_ID 0)
+INSERT INTO IdentifyingTrait (GhostID, TraitID) VALUES
+(0, 0), -- Strange Cold Spots
+(0, 1); -- Flickering Lights
+
+-- Traits for Phantom (ghost_ID 1)
+INSERT INTO IdentifyingTrait (GhostID, TraitID) VALUES
+(1, 0), -- Strange Cold Spots
+(1, 1), -- Flickering Lights
+(1, 2), -- Seeing Disappearing Figures
+(1, 8); -- Sense of Being Watched
+
+-- Traits for Wraith (ghost_ID 2)
+INSERT INTO IdentifyingTrait (GhostID, TraitID) VALUES
+(2, 0), -- Strange Cold Spots
+(2, 1), -- Flickering Lights
+(2, 6); -- Feeling of Intense Dread/Impending Doom
+
+-- Traits for Poltergeist (ghost_ID 3)
+INSERT INTO IdentifyingTrait (GhostID, TraitID) VALUES
+(3, 0), -- Strange Cold Spots
+(3, 1), -- Flickering Lights
+(3, 5), -- Floating Objects
+(3, 3); -- Doors Slamming On Their Own
+
+-- Traits for Banshee (ghost_ID 4)
+INSERT INTO IdentifyingTrait (GhostID, TraitID) VALUES
+(4, 0), -- Strange Cold Spots
+(4, 1), -- Flickering Lights
+(4, 4), -- Disembodied Screaming
+(4, 8); -- Sense of Being Watched
+
+-- Traits for Revenant (ghost_ID 5)
+INSERT INTO IdentifyingTrait (GhostID, TraitID) VALUES
+(5, 0), -- Strange Cold Spots
+(5, 1), -- Flickering Lights
+(5, 7), -- Physical Attack
+(5, 2), -- Seeing Disappearing Figures
+(5, 8); -- Sense of Being Watched
