@@ -9,6 +9,7 @@ USE project5dbv1;
 -- ===========================================
 SET FOREIGN_KEY_CHECKS = 0;
 
+DROP TABLE IF EXISTS Roles;
 DROP TABLE IF EXISTS ItemReq;
 DROP TABLE IF EXISTS ChosenTrait;
 DROP TABLE IF EXISTS InquiryFormResponse;
@@ -38,18 +39,20 @@ DROP TABLE IF EXISTS CustomerAccount;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- ===========================================
--- Base tables
-
 -- TODO
--- fix chosentrait (what does this do??)
 
--- create roles table with each team role
--- link roles to users? how are our users stored?
-
--- or manage user roles in backend..
+-- fix logic in vehicle, equipment
+-- add foreign key restrictions NOT NULL? why vs why not?
+-- cascade on delete for certain tables? customerAccount deletes forms etc.?
+-- create review table, then make each review type use the review table? move out repeated code (AccountID + rating)
+-- validation for entries (product price not negative, rental start date > end date)
 -- ===========================================
+CREATE TABLE Roles (
+  RoleID INT AUTO_INCREMENT PRIMARY KEY,
+  RoleName VARCHAR(100) UNIQUE NOT NULL
+);
 
--- linux roles here
+-- linux roles here - adjust to server implementation
 INSERT INTO Roles (RoleName)
 VALUES ('admin'), ('inventory'), ('pos'), ('fleet'), ('ghost_diagnostics');
 
@@ -60,6 +63,22 @@ CREATE TABLE CustomerAccount (
   PasswordHash VARCHAR(255) NOT NULL,
   Status ENUM('active','inactive','banned') DEFAULT 'active',
   CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE CustomerAddress (
+  AddressID INT AUTO_INCREMENT PRIMARY KEY,
+  AccountID INT NOT NULL,
+  Line1 VARCHAR(255),
+  Line2 VARCHAR(255),
+  City VARCHAR(100),
+  ProvinceState VARCHAR(100),
+  PostalCode VARCHAR(20),
+  Country VARCHAR(100),
+  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (AccountID) REFERENCES CustomerAccount(AccountID),
+  
+  -- REQUIRED to allow composite FK from Rental
+  UNIQUE (AddressID, AccountID)
 );
 
 CREATE TABLE Team (
@@ -88,9 +107,10 @@ CREATE TABLE Equipment (
   FOREIGN KEY (ProductID) REFERENCES Product(ProductID)
 );
 
+-- Equipment can be linked to vehicle by entire category, not individual equipment items
 CREATE TABLE Vehicle (
   VehicleID INT AUTO_INCREMENT PRIMARY KEY,
-  EquipmentID INT NOT NULL UNIQUE,
+  EquipmentID INT NOT NULL,
   Year SMALLINT,
   Make VARCHAR(100),
   Model VARCHAR(100),
@@ -110,13 +130,19 @@ CREATE TABLE Rental (
   Status VARCHAR(50),
   Note TEXT,
   CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (CustomerID) REFERENCES CustomerAccount(AccountID)
+  
+  FOREIGN KEY (CustomerID) REFERENCES CustomerAccount(AccountID),
+  -- combined foreign key to make sure that referenced rentals are to correct customer and address
+  FOREIGN KEY (BillingAddressID, CustomerID)
+      REFERENCES CustomerAddress(AddressID, AccountID)
 );
 
+-- remove ability to rent same equipment over and over - use UNIQUE
 CREATE TABLE RentedEquipment (
   RentedEquipmentID INT AUTO_INCREMENT PRIMARY KEY,
   RentalID INT NOT NULL,
   EquipmentID INT NOT NULL,
+  UNIQUE (RentalID, EquipmentID),
   RentalRate DECIMAL(10,2) DEFAULT 0.00,
   EquipmentDamageFee DECIMAL(10,2) DEFAULT 0.00,
   EquipmentSecurityFee DECIMAL(10,2) DEFAULT 0.00,
@@ -124,6 +150,7 @@ CREATE TABLE RentedEquipment (
   FOREIGN KEY (EquipmentID) REFERENCES Equipment(EquipmentID)
 );
 
+-- tie entries to either requipment or rental, otherwise "floating" events possible
 CREATE TABLE MaintenanceEvent (
   MaintenanceEventID INT AUTO_INCREMENT PRIMARY KEY,
   EquipmentID INT NOT NULL,
@@ -140,18 +167,6 @@ CREATE TABLE MaintenanceEvent (
   FOREIGN KEY (RentalID) REFERENCES Rental(RentalID)
 );
 
-CREATE TABLE CustomerAddress (
-  AddressID INT AUTO_INCREMENT PRIMARY KEY,
-  AccountID INT NOT NULL,
-  Line1 VARCHAR(255),
-  Line2 VARCHAR(255),
-  City VARCHAR(100),
-  ProvinceState VARCHAR(100),
-  PostalCode VARCHAR(20),
-  Country VARCHAR(100),
-  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (AccountID) REFERENCES CustomerAccount(AccountID)
-);
 
 CREATE TABLE Payment (
   PaymentID INT AUTO_INCREMENT PRIMARY KEY,
@@ -163,9 +178,11 @@ CREATE TABLE Payment (
   Amount DECIMAL(10,2),
   PaidAt DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (AccountID) REFERENCES CustomerAccount(AccountID),
-  FOREIGN KEY (BillingAddressID) REFERENCES CustomerAddress(AddressID)
+  FOREIGN KEY (BillingAddressID, AccountID)
+    REFERENCES CustomerAddress(AddressID, AccountID)
 );
 
+-- service table for services performed - ghost diagnostics table
 CREATE TABLE Service (
   ServiceID INT AUTO_INCREMENT PRIMARY KEY,
   ServiceName VARCHAR(150) NOT NULL,
@@ -173,6 +190,15 @@ CREATE TABLE Service (
   BaseRate DECIMAL(10,2),
   TeamID INT,
   FOREIGN KEY (TeamID) REFERENCES Team(TeamID)
+);
+
+-- CustomerService - Ghost Diagnostics table for customer and service mix 
+CREATE TABLE CustomerService (
+  CustomerServiceID int AUTO_INCREMENT PRIMARY KEY,
+  ServiceID int NOT NULL,
+  AccountID int NOT NULL,
+  FOREIGN KEY (ServiceID) REFERENCES Service(ServiceID),
+  FOREIGN key (AccountID) REFERENCES CustomerAccount(AccountID)
 );
 
 CREATE TABLE ItemTransaction (
@@ -271,39 +297,43 @@ CREATE TABLE IdentifyingTrait (
   FOREIGN KEY (TraitID) REFERENCES Trait(TraitID)
 );
 
-CREATE TABLE ChosenTrait (
-  TraitID INT NOT NULL,
-  InquiryFormResponseID INT NOT NULL,
-  PRIMARY KEY (TraitID, InquiryFormResponseID),
-  FOREIGN KEY (TraitID) REFERENCES Trait(TraitID)
-  -- FK to InquiryFormResponse added below once table exists
-);
-
 CREATE TABLE InquiryForm (
   InquiryFormID INT AUTO_INCREMENT PRIMARY KEY,
-  CustomerID INT NOT NULL,
+  AccountID INT,
   Description TEXT,
   SubmittedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (CustomerID) REFERENCES CustomerAccount(AccountID)
+  FOREIGN KEY (AccountID) REFERENCES CustomerAccount(AccountID)
 );
 
 CREATE TABLE InquiryFormResponse (
   InquiryFormResponseID INT AUTO_INCREMENT PRIMARY KEY,
   InquiryFormID INT, 
-  CustomerID INT NOT NULL,
   GhostID INT,
   Description TEXT,
   SubmittedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (InquiryFormID) REFERENCES InquiryForm(InquiryFormID),
-  FOREIGN KEY (CustomerID) REFERENCES CustomerAccount(AccountID),
   FOREIGN KEY (GhostID) REFERENCES Ghost(GhostID)
 );
 
--- need to fix these
-ALTER TABLE ChosenTrait
-  ADD CONSTRAINT fk_chosentrait_inquiry FOREIGN KEY (InquiryFormResponseID)
-  REFERENCES InquiryFormResponse(InquiryFormResponseID);
+-- requested implementation from ghost diag team - can change to combined primary key if needed
+CREATE TABLE ChosenTrait (
+  ChosenTraitID INT AUTO_INCREMENT PRIMARY KEY,
+  InquiryFormID INT,
+  TraitID INT,
+  UNIQUE (InquiryFormID, TraitID),
+  FOREIGN KEY (InquiryFormID) REFERENCES InquiryForm(InquiryFormID),
+  FOREIGN KEY (TraitID) REFERENCES Trait(TraitID)
+);
 
+CREATE TABLE RemovalMethod (
+  RemovalMethodID INT AUTO_INCREMENT PRIMARY KEY,
+  GhostID int,
+  ServiceID int,
+  FOREIGN KEY (GhostID) REFERENCES Ghost(GhostID),
+  FOREIGN KEY (ServiceID) REFERENCES Service(ServiceID)
+);
+
+-- who accesses this table?
 CREATE TABLE ItemReq (
   ItemReqID INT AUTO_INCREMENT PRIMARY KEY,
   EquipmentID INT,
