@@ -38,7 +38,7 @@ DONT FORGET DOCUMENTATION
   -product, rental and team reviews - create, read, update, delete
 
 - GHOST DIAGNOSTICS TEAM
-  -hardcoded values for ghost and trait tables
+  -hardcoded values for ghost and trait tables - waiting on GD team
   -InquiryForm and InquiryFormResponse CRUD routes
   -ChosenTrait and IdentifyingTrait 
 
@@ -491,6 +491,7 @@ app.post("/api/chosen-traits", async (req, res) => {
 //get all chosentraits from a form
 app.get("/api/chosen-traits/form/:id", async (req, res) => {
   try {
+    //get all chosentrait data from a chosen inquiryform
     const [rows] = await pool.query(
       `SELECT ct.*, t.TraitName, t.TraitType
        FROM ChosenTrait ct

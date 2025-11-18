@@ -224,6 +224,7 @@ CREATE TABLE ServiceTransaction (
   FOREIGN KEY (PaymentID) REFERENCES Payment(PaymentID),
   FOREIGN KEY (ServiceID) REFERENCES Service(ServiceID)
 );
+
 -- also make equipmentstock table? 
 CREATE TABLE ProductStock (
   StockID INT AUTO_INCREMENT PRIMARY KEY,
@@ -345,3 +346,38 @@ CREATE TABLE ItemReq (
   FOREIGN KEY (EquipmentID) REFERENCES Equipment(EquipmentID),
   FOREIGN KEY (ServiceID) REFERENCES Service(ServiceID)
 );
+
+-- inserting ghost and trait data
+INSERT INTO Ghost (GhostID, GhostName, Description) VALUES
+('None', 'This is NOT a supernatural entity'),
+('Phantom', 'A ghost known for its frightening appearance and habit of watching the living, but otherwise harmless demeanor.'),
+('Wraith', 'A ghost known for its strong aura of dread and doom, with the feeling often persisting until you leave the wraith’s haunting grounds.'),
+('Poltergeist', 'A ghost known for its ability to manipulate objects, often throwing items, slamming doors, or turning lights on and off.'),
+('Banshee', 'A ghost with a frightening, potentially dangerous wail, known for driving people off cliffs as they run in fear.'),
+('Revenant', 'A ghost with a physical presence, aggressive and capable of harming people directly. Highly dangerous.');
+
+INSERT INTO Trait (TraitID, TraitName) VALUES
+('Strange Cold Spots'),
+('Flickering Lights'),
+('Seeing Disappearing Figures'),
+('Doors Slamming On Their Own'),
+('Disembodied Screaming'),
+('Floating Objects'),
+('Feeling of Intense Dread/Impending Doom'),
+('Physical Attack'),
+('Sense of Being Watched');
+
+INSERT INTO Equipment (EquipmentID, EquipmentName) VALUES
+('Salt'),
+('Candy'),
+('Doorstops / Wedges'),
+('Helmet'),
+('Religious Symbol'),
+('Earplugs'),
+('Body Armour'),
+('Video Camera'),
+('EVP Recorder'),
+('EMF Reader'),
+('Holy Text'),
+('Flashlight'),
+('Radios');
