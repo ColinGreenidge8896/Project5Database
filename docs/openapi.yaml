@@ -1,0 +1,417 @@
+openapi: 3.0.3
+
+info:
+  title: Ghostbusters Database API
+  version: 1.0.0
+  description: API documentation for the database.
+
+tags:
+  - name: Reviews
+    description: Parent category for all review endpoints.
+  - name: Reviews.Product
+    description: Endpoints related to product reviews.
+  - name: Reviews.Rental
+    description: Endpoints related to rental reviews.
+  - name: Reviews.Team
+    description: Endpoints related to team reviews.
+
+paths:
+  # ======================
+  # Product Reviews
+  # ======================
+  /api/reviews/products:
+    post:
+      summary: Create a product review
+      tags:
+        - Reviews.Product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - productID
+                - accountID
+              properties:
+                productID:
+                  type: integer
+                  example: 101
+                accountID:
+                  type: integer
+                  example: 5
+                rating:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+                  example: 4
+                comment:
+                  type: string
+                  example: "Great product!"
+      responses:
+        "200":
+          description: Product review created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      ReviewID:
+                        type: integer
+                        example: 42
+        "400":
+          description: Missing required fields or invalid rating
+        "500":
+          description: Server error
+    
+    get:
+      summary: Get all product reviews
+      tags:
+        - Reviews.Product
+      responses:
+        "200":
+          description: List of all product reviews
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        ProductID:
+                          type: integer
+                        AccountID:
+                          type: integer
+                        Rating:
+                          type: integer
+                        Comment:
+                          type: string
+        "500":
+          description: Server error
+  
+  /api/reviews/products/{id}:
+    get:
+      summary: Get a product review by ID
+      tags:
+        - Reviews.Product
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Review ID
+      responses:
+        "200":
+          description: Product review retrieved
+        "404":
+          description: Product review not found
+        "500":
+          description: Server error
+    
+    patch:
+      summary: Update a product review
+      tags:
+        - Reviews.Product
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Review ID
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rating:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+                comment:
+                  type: string
+      responses:
+        "200":
+          description: Product review updated
+        "404":
+          description: Product review not found
+        "500":
+          description: Server error
+
+    delete:
+      summary: Delete a product review 
+      tags:
+        - Reviews.Product
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Review ID
+      responses:
+        "200":
+          description: Product review deleted
+        "404":
+          description: Product review not found
+        "500":
+          description: Server error
+  
+  # ======================
+  # Rental Reviews
+  # ======================
+  /api/reviews/rentals:
+    post:
+      summary: Create a rental review
+      tags:
+        - Reviews.Rental
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - rentalID
+                - accountID
+              properties:
+                rentalID:
+                  type: integer
+                  example: 201
+                accountID:
+                  type: integer
+                  example: 5
+                rating:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+                  example: 5
+                comment:
+                  type: string
+                  example: "Smooth rental experience."
+      responses:
+        "200":
+          description: Rental review created successfully
+        "400":
+          description: Missing required fields or invalid rating
+        "500":
+          description: Server error
+    
+    get:
+      summary: Get all rental reviews
+      tags:
+        - Reviews.Rental
+      responses:
+        "200":
+          description: List of all rental reviews
+        "500":
+          description: Server error
+  
+  /api/reviews/rentals/{id}:
+    get:
+      summary: Get a rental review by ID
+      tags:
+        - Reviews.Rental
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Review ID
+      responses:
+        "200":
+          description: Rental review retrieved
+        "404":
+          description: Rental review not found
+        "500":
+          description: Server error
+    
+    patch:
+      summary: Update a rental review
+      tags:
+        - Reviews.Rental
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Review ID
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rating:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+                comment:
+                  type: string
+      responses:
+        "200":
+          description: Rental review updated
+        "404":
+          description: Rental review not found
+        "500":
+          description: Server error
+
+    delete:
+      summary: Delete a rental review 
+      tags:
+        - Reviews.Rental
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Review ID
+      responses:
+        "200":
+          description: Rental review deleted
+        "404":
+          description: Rental review not found
+        "500":
+          description: Server error
+  
+  # ======================
+  # Team Reviews
+  # ======================
+  /api/reviews/teams:
+    post:
+      summary: Create a team review
+      tags:
+        - Reviews.Team
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - teamID
+                - accountID
+              properties:
+                rentalID:
+                  type: integer
+                  example: 301
+                accountID:
+                  type: integer
+                  example: 5
+                rating:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+                  example: 4
+                comment:
+                  type: string
+                  example: "Efficient work."
+      responses:
+        "200":
+          description: Team review created successfully
+        "400":
+          description: Missing required fields or invalid rating
+        "500":
+          description: Server error
+    
+    get:
+      summary: Get all team reviews
+      tags:
+        - Reviews.Team
+      responses:
+        "200":
+          description: List of all team reviews
+        "500":
+          description: Server error
+  
+  /api/reviews/teams/{id}:
+    get:
+      summary: Get a team review by ID
+      tags:
+        - Reviews.Team
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Review ID
+      responses:
+        "200":
+          description: Team review retrieved
+        "404":
+          description: Team review not found
+        "500":
+          description: Server error
+    
+    patch:
+      summary: Update a team review
+      tags:
+        - Reviews.Team
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Review ID
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rating:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+                comment:
+                  type: string
+      responses:
+        "200":
+          description: Team review updated
+        "404":
+          description: Team review not found
+        "500":
+          description: Server error
+
+    delete:
+      summary: Delete a team review 
+      tags:
+        - Reviews.Team
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Review ID
+      responses:
+        "200":
+          description: Team review deleted
+        "404":
+          description: Team review not found
+        "500":
+          description: Server error
