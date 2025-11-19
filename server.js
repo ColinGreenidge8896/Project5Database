@@ -1,6 +1,8 @@
 import express from "express";
+import reviewsRoute from "./routes/reviews.js";
 import dotenv from "dotenv";
 import { pool } from "./config/db.js";
+import { sendResponse } from "./utils/sendResponse.js";
 import { execSync } from "child_process";
 import os from "os";
 import bcrypt from "bcrypt";
@@ -10,6 +12,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+
+app.use("/api/reviews", reviewsRoute(pool, sendResponse));
 
 /* ======================
 TODO
@@ -47,14 +51,6 @@ DONT FORGET DOCUMENTATION
   -rentedEquipment, 
 
  ========================= */
-
-/* ======================
-   HELPER FUNCTIONS
-====================== */
-
-function sendResponse(res, success, message, data = null) {
-  res.json({ success, message, data });
-}
 
 /* ======================
    CUSTOMER ACCOUNT ROUTES (POS Team)
