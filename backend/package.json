@@ -14,13 +14,15 @@
     "express": "^4.19.0",
     "mysql2": "^3.9.0",
     "dotenv": "^16.4.5",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "bcrypt": "^5.1.0"
   },
   "license": "ISC",
   "author": "Database Team",
-  "type": "commonjs",
+  "type": "module",
   "main": "server.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "dev": "nodemon src/server.js"
   }
 }

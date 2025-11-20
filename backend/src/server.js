@@ -3,8 +3,6 @@ import reviewsRoute from "./routes/reviews.js";
 import dotenv from "dotenv";
 import { pool } from "./config/db.js";
 import { sendResponse } from "./utils/sendResponse.js";
-import { execSync } from "child_process";
-import os from "os";
 import bcrypt from "bcrypt";
 
 dotenv.config();
@@ -285,6 +283,95 @@ app.delete("/api/products/:id", async (req, res) => {
     sendResponse(res, false, err.message);
   }
 });
+
+
+/* ======================
+   CATEGORY / INVENTORY ROUTES
+====================== */
+
+app.post("/api/categories", async (req, res) => {
+  try {
+    const { name, description } = req.body;
+
+    if (!name)
+      return sendResponse(res, false, "Missing required field: name.");
+
+    const [result] = await pool.query(
+      `INSERT INTO Category (Name, Description)
+       VALUES (?, ?)`,
+      [name, description || ""]
+    );
+
+    sendResponse(res, true, "Category created.", { categoryID: result.insertId });
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+app.get("/api/categories", async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      "SELECT CategoryID, Name, Description FROM Category;"
+    );
+    sendResponse(res, true, "Categories retrieved.", rows);
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+app.get("/api/categories/:id", async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      "SELECT CategoryID, Name, Description FROM Category WHERE CategoryID = ?;",
+      [req.params.id]
+    );
+
+    if (rows.length === 0)
+      return sendResponse(res, false, "Category not found.");
+
+    sendResponse(res, true, "Category retrieved.", rows[0]);
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+app.patch("/api/categories/:id", async (req, res) => {
+  try {
+    const { name, description } = req.body;
+
+    const [result] = await pool.query(
+      `UPDATE Category
+       SET Name = COALESCE(?, Name),
+           Description = COALESCE(?, Description)
+       WHERE CategoryID = ?`,
+      [name, description, req.params.id]
+    );
+
+    if (result.affectedRows === 0)
+      return sendResponse(res, false, "Category not found.");
+
+    sendResponse(res, true, "Category updated.");
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
+app.delete("/api/categories/:id", async (req, res) => {
+  try {
+    const [result] = await pool.query(
+      "DELETE FROM Category WHERE CategoryID = ?",
+      [req.params.id]
+    );
+
+    if (result.affectedRows === 0)
+      return sendResponse(res, false, "Category not found.");
+
+    sendResponse(res, true, "Category deleted.");
+  } catch (err) {
+    sendResponse(res, false, err.message);
+  }
+});
+
 
 /* ======================
    DIAGNOSTICS FORMS ROUTES
@@ -851,7 +938,7 @@ app.delete("/api/reviews/teams/:id", async(req, res) => {
 });
 
 /* ======================
-   🧪 TEST & SERVER START
+   TEST & SERVER START
 ====================== */
 
 app.get("/api/test", async (req, res) => {
@@ -864,5 +951,5 @@ app.get("/api/test", async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
+  console.log(`Server running at http://localhost:${PORT}`);
 });
