@@ -21,6 +21,7 @@
   "type": "commonjs",
   "main": "server.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "dev": "nodemon src/server.js"
   }
 }

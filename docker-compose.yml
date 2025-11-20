@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    #configure env variables?
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  backend:
+    build: ./backend
+    container_name: backend_api
+    restart: always
+    ports:
+      - "3000:3000"
+    #configure env variables?
+    environment:
+      DB_HOST: mysql
+      DB_USER: appuser
+      DB_PASSWORD: apppass
+      DB_NAME: mydb
+    depends_on:
+      - mysql
+    
+    # Optional: if you want autoreload during development
+    # volumes:
+    #   - ./backend:/app
+
+    # TO START DOCKER
+    #docker compose up --build
+
+    #todo
+    #use nodemon to hot reload changes during dev
+    #
+
+volumes:
+  mysql_data:
