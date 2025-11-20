@@ -41,7 +41,7 @@ services:
 
     #todo
     #use nodemon to hot reload changes during dev
-    #
+    #compose override for dev vs prod?
 
 volumes:
   mysql_data:
