@@ -1,8 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
 import { pool } from "./config/db.js";
-import { execSync } from "child_process";
-import os from "os";
 import bcrypt from "bcrypt";
 
 dotenv.config();
