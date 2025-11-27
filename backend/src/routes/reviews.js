@@ -182,14 +182,14 @@ export default (pool, sendResponse) => {
     });
 
     /* ======================
-        Team Reviews
+        Service Reviews
     ====================== */
 
-    // Create team review
-    router.post("/teams", async(req, res) => {
+    // Create service review
+    router.post("/services", async(req, res) => {
     try {
-        const { teamID, accountID, rating, comment } = req.body;
-        if (!teamID || !accountID) {
+        const { serviceID, accountID, rating, comment } = req.body;
+        if (!serviceID || !accountID) {
         return sendResponse(res, false, "Missing required fields");
         }
         if (rating < 1 || rating > 5) {
@@ -197,72 +197,72 @@ export default (pool, sendResponse) => {
         }
 
         const [result] = await pool.query(
-        "INSERT INTO TeamReview (RentalID, AccountID, Rating, Comment) VALUES (?, ?, ?, ?)",
-        [teamID, accountID, rating, comment || ""]
+        "INSERT INTO ServiceReview (RentalID, AccountID, Rating, Comment) VALUES (?, ?, ?, ?)",
+        [serviceID, accountID, rating, comment || ""]
         );
 
-        sendResponse(res, true, "Team Review created.", {ReviewID: result.insertId});
+        sendResponse(res, true, "Service Review created.", {ReviewID: result.insertId});
     }
     catch (err) {
         sendResponse(res, false, err.message);
     }
     });
 
-    // Get all team reviews
-    router.get("/teams", async(req, res) => {
+    // Get all service reviews
+    router.get("/services", async(req, res) => {
     try {
         const [rows] = await pool.query(
-        "SELECT TeamID, AccountID, Rating, Comment FROM TeamReview;"
+        "SELECT ServiceID, AccountID, Rating, Comment FROM ServiceReview;"
         );
-        sendResponse(res, true, "Team Reviews retrieved.", rows);
+        sendResponse(res, true, "Service Reviews retrieved.", rows);
     } 
     catch (err) {
         sendResponse(res, false, err.message);
     }
     });
 
-    // Get team review by ID
-    router.get("/teams/:id", async(req, res) =>{
+    // Get service review by ID
+    router.get("/services/:id", async(req, res) =>{
     try {
         const [rows] = await pool.query(
-        "SELECT TeamID, AccountID, Rating, Comment FROM TeamReview WHERE ReviewID = ?;",
+        "SELECT ServiceID, AccountID, Rating, Comment FROM ServiceReview WHERE ReviewID = ?;",
         [req.params.id]
         );
         if (rows.length === 0)
-        return sendResponse(res, false, "Team Review not found.");
-        sendResponse(res, true, "Team Review retrieved.", rows[0]);
+        return sendResponse(res, false, "Service Review not found.");
+        sendResponse(res, true, "Service Review retrieved.", rows[0]);
     } 
     catch (err) {
         sendResponse(res, false, err.message);
     }
     });
 
-    // Update team review rating and/or comment by id
-    router.patch("/teams/:id", async(req, res) => {
+    // Update service review rating and/or comment by id
+    router.patch("/services/:id", async(req, res) => {
     try {
         const { rating, comment } = req.body;
         const [result] = await pool.query(
-        "UPDATE TeamReview SET Rating = COALESCE(?, Rating), Comment = COALESCE(?, Comment) WHERE ReviewID = ?",
+        "UPDATE ServiceReview SET Rating = COALESCE(?, Rating), Comment = COALESCE(?, Comment) WHERE ReviewID = ?",
         [rating, comment, req.params.id]
         );
         if (result.affectedRows === 0)
-        return sendResponse(res, false, "Team Review not found.");
-        sendResponse(res, true, "Team Review updated.");
+        return sendResponse(res, false, "Service Review not found.");
+        sendResponse(res, true, "Service Review updated.");
     } 
     catch (err) {
         sendResponse(res, false, err.message);
     }
     });
 
-    // Delete team review by id
-    router.delete("/teams/:id", async(req, res) => {
+    // Delete service review by id
+    router.delete("/services/:id", async(req, res) => {
     try {
-        const [result] = await pool.query("DELETE FROM TeamReview WHERE ReviewID = ?", [
+        const [result] = await pool.query("DELETE FROM ServiceReview WHERE ReviewID = ?", [
         req.params.id,
         ]);
         if (result.affectedRows === 0)
-        return sendResponse(res, false, "Team Review not found.");
-        sendResponse(res, true, "Team Review deleted.");
+        return sendResponse(res, false, "Service Review not found.");
+        sendResponse(res, true, "Service Review deleted.");
     } 
     catch (err) {
         sendResponse(res, false, err.message);
