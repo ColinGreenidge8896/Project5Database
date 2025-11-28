@@ -1,7 +1,6 @@
-# Use local Node.js image from Debian (no Docker Hub pull)
+# Use Debian base and install Node
 FROM debian:bookworm-slim
 
-# Install Node.js manually
 RUN apt-get update && \
     apt-get install -y curl python3 make g++ && \
     curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
@@ -11,15 +10,16 @@ RUN apt-get update && \
 # Set working directory
 WORKDIR /app
 
-# Copy package.json and install dependencies
+# Copy package.json first (better caching)
 COPY package*.json ./
+
 RUN npm install
 
-# Copy backend code
+# Copy backend source code
 COPY . .
 
-# Expose backend port
+# Expose API port
 EXPOSE 3000
 
-# Start server
-CMD ["node", "server.js"]
+# Run backend
+CMD ["node", "src/server.js"]
