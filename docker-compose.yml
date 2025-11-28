@@ -1,6 +1,6 @@
 services:
   db:
-    image: my_local_mysql   # use your custom image
+    image: my_local_mysql
     container_name: project_db
     restart: unless-stopped
     environment:
@@ -19,26 +19,14 @@ services:
     restart: always
     ports:
       - "3000:3000"
-    #configure env variables?
     environment:
-      DB_HOST: mysql
-      DB_USER: appuser
-      DB_PASSWORD: password
-      DB_NAME: mydb
+      DB_HOST: db
+      DB_USER: myuser
+      DB_PASSWORD: mypassword
+      DB_NAME: mydatabase
     depends_on:
-      - mysql
+      - db
     command: ["node", "server.js"]
-    
-    # Optional: if you want autoreload during development
-    # volumes:
-    #   - ./backend:/app
-
-    # TO START DOCKER
-    #docker compose up --build
-
-    #todo
-    #use nodemon to hot reload changes during dev
-    #compose override for dev vs prod?
 
 volumes:
-  mysql_data:
+  db_data:
