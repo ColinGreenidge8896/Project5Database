@@ -10,31 +10,33 @@ USE project5dbv1;
 SET FOREIGN_KEY_CHECKS = 0;
 
 DROP TABLE IF EXISTS Roles;
-DROP TABLE IF EXISTS ItemReq;
-DROP TABLE IF EXISTS ChosenTrait;
-DROP TABLE IF EXISTS InquiryFormResponse;
-DROP TABLE IF EXISTS InquiryForm;
-DROP TABLE IF EXISTS IdentifyingTrait;
-DROP TABLE IF EXISTS Trait;
-DROP TABLE IF EXISTS Ghost;
-DROP TABLE IF EXISTS ServiceReview;
-DROP TABLE IF EXISTS RentalReview;
-DROP TABLE IF EXISTS ProductReview;
-DROP TABLE IF EXISTS StockOrder;
-DROP TABLE IF EXISTS ProductStock;
-DROP TABLE IF EXISTS ServiceTransaction;
-DROP TABLE IF EXISTS ItemTransaction;
-DROP TABLE IF EXISTS Service;
-DROP TABLE IF EXISTS Payment;
-DROP TABLE IF EXISTS CustomerAddress;
-DROP TABLE IF EXISTS MaintenanceEvent;
-DROP TABLE IF EXISTS RentedEquipment;
-DROP TABLE IF EXISTS Rental;
-DROP TABLE IF EXISTS Vehicle;
-DROP TABLE IF EXISTS Equipment;
-DROP TABLE IF EXISTS Product;
-DROP TABLE IF EXISTS Team;
 DROP TABLE IF EXISTS CustomerAccount;
+DROP TABLE IF EXISTS CustomerAddress;
+DROP TABLE IF EXISTS Team;
+DROP TABLE IF EXISTS Product;
+DROP TABLE IF EXISTS Equipment;
+DROP TABLE IF EXISTS Vehicle;
+DROP TABLE IF EXISTS Rental;
+DROP TABLE IF EXISTS RentedEquipment;
+DROP TABLE IF EXISTS MaintenanceEvent;
+DROP TABLE IF EXISTS Payment;
+DROP TABLE IF EXISTS Service;
+DROP TABLE IF EXISTS CustomerService;
+DROP TABLE IF EXISTS ItemTransaction;
+DROP TABLE IF EXISTS ServiceTransaction;
+DROP TABLE IF EXISTS ProductStock;
+DROP TABLE IF EXISTS StockOrder;
+DROP TABLE IF EXISTS ProductReview;
+DROP TABLE IF EXISTS RentalReview;
+DROP TABLE IF EXISTS ServiceReview;
+DROP TABLE IF EXISTS Ghost;
+DROP TABLE IF EXISTS Trait;
+DROP TABLE IF EXISTS IdentifyingTrait;
+DROP TABLE IF EXISTS InquiryForm;
+DROP TABLE IF EXISTS InquiryFormResponse;
+DROP TABLE IF EXISTS ChosenTrait;
+DROP TABLE IF EXISTS RemovalMethod;
+DROP TABLE IF EXISTS ItemReq;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -84,7 +86,7 @@ CREATE TABLE CustomerAddress (
 CREATE TABLE Team (
   TeamID INT AUTO_INCREMENT PRIMARY KEY,
   TeamName VARCHAR(150) NOT NULL,
-  Description TEXT,
+  TeamDescription TEXT,
   CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -100,8 +102,8 @@ CREATE TABLE Product (
 CREATE TABLE Equipment (
   EquipmentID INT AUTO_INCREMENT PRIMARY KEY,
   ProductID INT,
-  Name VARCHAR(150) NOT NULL,
-  Description TEXT,
+  EquipmentName VARCHAR(150) NOT NULL,
+  EquipmentDescription TEXT,
   Qty INT NOT NULL DEFAULT 1,
   RentalStatus ENUM('available','rented','maintenance','retired') DEFAULT 'available',
   CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -188,7 +190,7 @@ CREATE TABLE Payment (
 CREATE TABLE Service (
   ServiceID INT AUTO_INCREMENT PRIMARY KEY,
   ServiceName VARCHAR(150) NOT NULL,
-  Description TEXT,
+  ServiceDescription TEXT,
   BaseRate DECIMAL(10,2),
   TeamID INT,
   FOREIGN KEY (TeamID) REFERENCES Team(TeamID)
@@ -280,8 +282,8 @@ CREATE TABLE ServiceReview (
 
 CREATE TABLE Ghost (
   GhostID INT AUTO_INCREMENT PRIMARY KEY,
-  Name VARCHAR(150) NOT NULL,
-  Description TEXT,
+  GhostName VARCHAR(150) NOT NULL,
+  GhostDescription TEXT,
   ThreatLevel ENUM('low','medium','high') DEFAULT 'medium',
   CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
 );
@@ -303,7 +305,7 @@ CREATE TABLE IdentifyingTrait (
 CREATE TABLE InquiryForm (
   InquiryFormID INT AUTO_INCREMENT PRIMARY KEY,
   AccountID INT,
-  Description TEXT,
+  InquiryFormDescription TEXT,
   SubmittedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (AccountID) REFERENCES CustomerAccount(AccountID)
 );
@@ -312,7 +314,7 @@ CREATE TABLE InquiryFormResponse (
   InquiryFormResponseID INT AUTO_INCREMENT PRIMARY KEY,
   InquiryFormID INT, 
   GhostID INT,
-  Description TEXT,
+  InquiryFormResponseDescription TEXT,
   SubmittedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (InquiryFormID) REFERENCES InquiryForm(InquiryFormID),
   FOREIGN KEY (GhostID) REFERENCES Ghost(GhostID)
@@ -348,7 +350,7 @@ CREATE TABLE ItemReq (
 );
 
 -- inserting ghost and trait data
-INSERT INTO Ghost (GhostID, GhostName, Description) VALUES
+INSERT INTO Ghost (GhostName, GhostDescription) VALUES
 ('None', 'This is NOT a supernatural entity'),
 ('Phantom', 'A ghost known for its frightening appearance and habit of watching the living, but otherwise harmless demeanor.'),
 ('Wraith', 'A ghost known for its strong aura of dread and doom, with the feeling often persisting until you leave the wraith’s haunting grounds.'),
@@ -356,7 +358,9 @@ INSERT INTO Ghost (GhostID, GhostName, Description) VALUES
 ('Banshee', 'A ghost with a frightening, potentially dangerous wail, known for driving people off cliffs as they run in fear.'),
 ('Revenant', 'A ghost with a physical presence, aggressive and capable of harming people directly. Highly dangerous.');
 
-INSERT INTO Trait (TraitID, TraitName) VALUES
+SELECT * FROM GHOST;
+
+INSERT INTO Trait (TraitName) VALUES
 ('Strange Cold Spots'),
 ('Flickering Lights'),
 ('Seeing Disappearing Figures'),
@@ -367,7 +371,9 @@ INSERT INTO Trait (TraitID, TraitName) VALUES
 ('Physical Attack'),
 ('Sense of Being Watched');
 
-INSERT INTO Equipment (EquipmentID, EquipmentName) VALUES
+SELECT * FROM Trait;
+
+INSERT INTO Equipment (EquipmentName) VALUES
 ('Salt'),
 ('Candy'),
 ('Doorstops / Wedges'),
@@ -382,42 +388,44 @@ INSERT INTO Equipment (EquipmentID, EquipmentName) VALUES
 ('Flashlight'),
 ('Radios');
 
+SELECT * FROM Equipment;
+
 -- Traits for None (ghost_ID 0)
 INSERT INTO IdentifyingTrait (GhostID, TraitID) VALUES
-(0, 0), -- Strange Cold Spots
-(0, 1); -- Flickering Lights
+(1, 1), -- Strange Cold Spots
+(1, 2); -- Flickering Lights
 
 -- Traits for Phantom (ghost_ID 1)
 INSERT INTO IdentifyingTrait (GhostID, TraitID) VALUES
-(1, 0), -- Strange Cold Spots
-(1, 1), -- Flickering Lights
-(1, 2), -- Seeing Disappearing Figures
-(1, 8); -- Sense of Being Watched
+(2, 1), -- Strange Cold Spots
+(2, 2), -- Flickering Lights
+(2, 3), -- Seeing Disappearing Figures
+(2, 9); -- Sense of Being Watched
 
 -- Traits for Wraith (ghost_ID 2)
 INSERT INTO IdentifyingTrait (GhostID, TraitID) VALUES
-(2, 0), -- Strange Cold Spots
-(2, 1), -- Flickering Lights
-(2, 6); -- Feeling of Intense Dread/Impending Doom
+(3, 1), -- Strange Cold Spots
+(3, 2), -- Flickering Lights
+(3, 7); -- Feeling of Intense Dread/Impending Doom
 
 -- Traits for Poltergeist (ghost_ID 3)
 INSERT INTO IdentifyingTrait (GhostID, TraitID) VALUES
-(3, 0), -- Strange Cold Spots
-(3, 1), -- Flickering Lights
-(3, 5), -- Floating Objects
-(3, 3); -- Doors Slamming On Their Own
+(4, 1), -- Strange Cold Spots
+(4, 2), -- Flickering Lights
+(4, 6), -- Floating Objects
+(4, 4); -- Doors Slamming On Their Own
 
 -- Traits for Banshee (ghost_ID 4)
 INSERT INTO IdentifyingTrait (GhostID, TraitID) VALUES
-(4, 0), -- Strange Cold Spots
-(4, 1), -- Flickering Lights
-(4, 4), -- Disembodied Screaming
-(4, 8); -- Sense of Being Watched
+(5, 1), -- Strange Cold Spots
+(5, 2), -- Flickering Lights
+(5, 5), -- Disembodied Screaming
+(5, 9); -- Sense of Being Watched
 
 -- Traits for Revenant (ghost_ID 5)
 INSERT INTO IdentifyingTrait (GhostID, TraitID) VALUES
-(5, 0), -- Strange Cold Spots
-(5, 1), -- Flickering Lights
-(5, 7), -- Physical Attack
-(5, 2), -- Seeing Disappearing Figures
-(5, 8); -- Sense of Being Watched
+(6, 1), -- Strange Cold Spots
+(6, 2), -- Flickering Lights
+(6, 8), -- Physical Attack
+(6, 3), -- Seeing Disappearing Figures
+(6, 9); -- Sense of Being Watched
