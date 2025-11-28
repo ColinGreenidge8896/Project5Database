@@ -1,19 +1,17 @@
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: mysql_db
-    restart: always
-    #configure env variables?
+  db:
+    image: my_local_mysql   # use your custom image
+    container_name: project_db
+    restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: mydb
-      MYSQL_USER: appuser
-      MYSQL_PASSWORD: apppass
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mydatabase
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: mypassword
     ports:
-      - "3307:3306"
+      - "3306:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db_data:/var/lib/mysql
 
   backend:
     build: ./backend
