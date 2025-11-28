@@ -5,7 +5,7 @@ services:
     restart: always
     #configure env variables?
     environment:
-      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: mydb
       MYSQL_USER: appuser
       MYSQL_PASSWORD: apppass
@@ -25,10 +25,11 @@ services:
     environment:
       DB_HOST: mysql
       DB_USER: appuser
-      DB_PASSWORD: apppass
+      DB_PASSWORD: password
       DB_NAME: mydb
     depends_on:
       - mysql
+    command: ["node", "server.js"]
     
     # Optional: if you want autoreload during development
     # volumes:
