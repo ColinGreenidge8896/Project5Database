@@ -1,16 +1,16 @@
-# Use a minimal Linux image as base
+# Use minimal Debian image
 FROM debian:bookworm-slim
 
-# Install MySQL server
+# Install MariaDB (MySQL replacement)
 RUN apt-get update && \
-    apt-get install -y mysql-server && \
+    apt-get install -y mariadb-server && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy init.sql into Docker’s MySQL init directory
+# Copy initialization SQL
 COPY init.sql /docker-entrypoint-initdb.d/init.sql
 
 # Expose MySQL port
 EXPOSE 3306
 
-# Run MySQL server in the foreground
+# Start MariaDB in foreground
 CMD ["mysqld"]
