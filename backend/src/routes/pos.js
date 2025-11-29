@@ -8,6 +8,12 @@ const router = express.Router();
 
 export default (pool, sendResponse) => {
 
+    /*
+    POS Team requests all routes be created using POST
+    and route names are designed as: api/customers/login, api/customers/register, etc
+    CREATE login, register (register is first /customers route, but can be renamed if they want)
+    */
+
     // Create a new customer account
     router.post("/customers", async (req, res) => {
     try {
@@ -75,6 +81,49 @@ export default (pool, sendResponse) => {
         sendResponse(res, false, err.message);
     }
     });
+
+    // Login route -/customers/login or just /login
+    router.post("/login", async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return sendResponse(res, false, "Missing email or password.");
+        }
+
+        // Find the user by email
+        const [rows] = await pool.query(
+            "SELECT AccountID, Email, Username, Password, Status FROM CustomerAccount WHERE Email = ?;",
+            [email]
+        );
+
+        if (rows.length === 0) {
+            return sendResponse(res, false, "Invalid email or password.");
+        }
+
+        const user = rows[0];
+
+        // Compare the provided password with the hashed password
+        const passwordMatch = await bcrypt.compare(password, user.Password);
+
+        if (!passwordMatch) {
+            return sendResponse(res, false, "Invalid email or password.");
+        }
+
+        // Optionally, check if the account is active
+        if (user.Status !== "active") {
+            return sendResponse(res, false, "Account is not active.");
+        }
+
+        // Remove password before sending user data
+        delete user.Password;
+
+        sendResponse(res, true, "Login successful.", { user });
+    } catch (err) {
+        console.error("Error during login:", err);
+        sendResponse(res, false, "Internal server error.");
+    }
+});
 
     /* ======================
     Payment Route
