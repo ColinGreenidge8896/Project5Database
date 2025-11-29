@@ -40,6 +40,13 @@ DROP TABLE IF EXISTS ItemReq;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
+-- needed to allow backend to connect
+DROP USER IF EXISTS 'myuser'@'%';
+CREATE USER 'myuser'@'%' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON mydatabase.* TO 'myuser'@'%';
+FLUSH PRIVILEGES;
+
+
 -- ===========================================
 -- TODO
 

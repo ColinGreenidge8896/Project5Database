@@ -10,20 +10,13 @@ RUN mkdir -p /var/lib/mysql /var/run/mysqld && \
     chown -R mysql:mysql /var/lib/mysql /var/run/mysqld && \
     chmod 777 /var/run/mysqld
 
-# Force MariaDB to run as mysql (should already be default, but we enforce it)
-RUN sed -i 's/\[mysqld\]/[mysqld]\nuser=mysql/' /etc/mysql/mariadb.conf.d/50-server.cnf
+# Allow external connections
+RUN sed -i "s/^bind-address.*/bind-address = 0.0.0.0/" /etc/mysql/mariadb.conf.d/50-server.cnf
 
-# Copy initialization SQL
+# Init script
 COPY init.sql /docker-entrypoint-initdb.d/init.sql
 
-# Data volume
-VOLUME /var/lib/mysql
-
-# Expose SQL port
 EXPOSE 3306
 
-# Switch to the mysql user that already exists
-USER mysql
-
-# Start MariaDB
+# Must run mysqld as mysql explicitly
 CMD ["mysqld"]
