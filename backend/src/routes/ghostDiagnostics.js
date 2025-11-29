@@ -8,7 +8,7 @@ const router = express.Router();
 export default (pool, sendResponse) => {
 
     //create inquiryform
-    router.post("/api/inquiry-forms", async (req, res) => {
+    router.post("/inquiry-forms", async (req, res) => {
     try {
         const { accountID, description } = req.body;
 
@@ -29,7 +29,7 @@ export default (pool, sendResponse) => {
     });
 
     //get all inquiryforms
-    router.get("/api/inquiry-forms", async (req, res) => {
+    router.get("/inquiry-forms", async (req, res) => {
     try {
         const [rows] = await pool.query("SELECT * FROM InquiryForm;");
         sendResponse(res, true, "Inquiry forms retrieved.", rows);
@@ -39,7 +39,7 @@ export default (pool, sendResponse) => {
     });
 
     //get inquiryform by ID
-    router.get("/api/inquiry-forms/:id", async (req, res) => {
+    router.get("/inquiry-forms/:id", async (req, res) => {
     try {
         const [rows] = await pool.query(
         "SELECT * FROM InquiryForm WHERE InquiryFormID = ?",
@@ -56,7 +56,7 @@ export default (pool, sendResponse) => {
     });
 
     //update inquiryform
-    router.patch("/api/inquiry-forms/:id", async (req, res) => {
+    router.patch("/inquiry-forms/:id", async (req, res) => {
     try {
         const { description } = req.body;
 
@@ -77,7 +77,7 @@ export default (pool, sendResponse) => {
     });
 
     //delete inquiryform 
-    router.delete("/api/inquiry-forms/:id", async (req, res) => {
+    router.delete("/inquiry-forms/:id", async (req, res) => {
     try {
         const [result] = await pool.query(
         "DELETE FROM InquiryForm WHERE InquiryFormID = ?",
@@ -94,7 +94,7 @@ export default (pool, sendResponse) => {
     });
 
     //create inquiryformresponse
-    router.post("/api/inquiry-form-responses", async (req, res) => {
+    router.post("/inquiry-form-responses", async (req, res) => {
     try {
         const { inquiryFormID, ghostID, description } = req.body;
 
@@ -114,7 +114,7 @@ export default (pool, sendResponse) => {
     });
 
     //get all inquiryformresponse
-    router.get("/api/inquiry-form-responses", async (req, res) => {
+    router.get("/inquiry-form-responses", async (req, res) => {
     try {
         const [rows] = await pool.query("SELECT * FROM InquiryFormResponse;");
         sendResponse(res, true, "Responses retrieved.", rows);
@@ -124,7 +124,7 @@ export default (pool, sendResponse) => {
     });
 
     //get resposneform by id
-    router.get("/api/inquiry-form-responses/:id", async (req, res) => {
+    router.get("/inquiry-form-responses/:id", async (req, res) => {
     try {
         const [rows] = await pool.query(
         "SELECT * FROM InquiryFormResponse WHERE InquiryFormResponseID = ?",
@@ -141,7 +141,7 @@ export default (pool, sendResponse) => {
     });
 
     //update response form
-    router.patch("/api/inquiry-form-responses/:id", async (req, res) => {
+    router.patch("/inquiry-form-responses/:id", async (req, res) => {
     try {
         const { description, ghostID } = req.body;
 
@@ -163,7 +163,7 @@ export default (pool, sendResponse) => {
     });
 
     //delete responseform
-    router.delete("/api/inquiry-form-responses/:id", async (req, res) => {
+    router.delete("/inquiry-form-responses/:id", async (req, res) => {
     try {
         const [result] = await pool.query(
         "DELETE FROM InquiryFormResponse WHERE InquiryFormResponseID = ?",
@@ -180,7 +180,7 @@ export default (pool, sendResponse) => {
     });
 
     //create chosentrait
-    router.post("/api/chosen-traits", async (req, res) => {
+    router.post("/chosen-traits", async (req, res) => {
     try {
         const { inquiryFormID, traitID } = req.body;
 
@@ -202,7 +202,7 @@ export default (pool, sendResponse) => {
     });
 
     //get all chosentraits from a form
-    router.get("/api/chosen-traits/form/:id", async (req, res) => {
+    router.get("/chosen-traits/form/:id", async (req, res) => {
     try {
         //get all chosentrait data from a chosen inquiryform
         const [rows] = await pool.query(
@@ -220,7 +220,7 @@ export default (pool, sendResponse) => {
     });
 
     //delete chosentrait
-    router.delete("/api/chosen-traits", async (req, res) => {
+    router.delete("/chosen-traits", async (req, res) => {
     try {
         const { inquiryFormID, traitID } = req.body;
 
@@ -239,7 +239,7 @@ export default (pool, sendResponse) => {
     });
 
     //add identifyingtrait to ghost
-    router.post("/api/identifying-traits", async (req, res) => {
+    router.post("/identifying-traits", async (req, res) => {
     try {
         const { ghostID, traitID } = req.body;
 
@@ -261,7 +261,7 @@ export default (pool, sendResponse) => {
     });
 
     //get all traits for a ghost
-    router.get("/api/identifying-traits/ghost/:id", async (req, res) => {
+    router.get("/identifying-traits/ghost/:id", async (req, res) => {
     try {
         //for every identifyingtrait row for a ghost, join to trait table 
         // and get the full trait details from trait
@@ -281,7 +281,7 @@ export default (pool, sendResponse) => {
     });
 
     //delete identifyingtrait
-    router.delete("/api/identifying-traits", async (req, res) => {
+    router.delete("/identifying-traits", async (req, res) => {
     try {
         const { ghostID, traitID } = req.body;
 

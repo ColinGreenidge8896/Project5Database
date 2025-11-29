@@ -9,7 +9,7 @@ const router = express.Router();
 export default (pool, sendResponse) => {
 
     // Create a new customer account
-    router.post("/api/customers", async (req, res) => {
+    router.post("/customers", async (req, res) => {
     try {
         const { email, username, password, status } = req.body;
         if (!email || !username || !password)
@@ -33,7 +33,7 @@ export default (pool, sendResponse) => {
     });
 
     // Read all customer accounts
-    router.get("/api/customers", async (req, res) => {
+    router.get("/customers", async (req, res) => {
     try {
         const [rows] = await pool.query(
         "SELECT AccountID, Email, Username, Status FROM CustomerAccount;"
@@ -45,7 +45,7 @@ export default (pool, sendResponse) => {
     });
 
     // Read single customer by ID
-    router.get("/api/customers/:id", async (req, res) => {
+    router.get("/customers/:id", async (req, res) => {
     try {
         const [rows] = await pool.query(
         "SELECT AccountID, Email, Username, Status FROM CustomerAccount WHERE AccountID = ?;",
@@ -62,7 +62,7 @@ export default (pool, sendResponse) => {
     //update customer account
 
     // Delete customer
-    router.delete("/api/customers/:id", async (req, res) => {
+    router.delete("/customers/:id", async (req, res) => {
     try {
         const [result] = await pool.query(
         "DELETE FROM CustomerAccount WHERE AccountID = ?;",
@@ -81,7 +81,7 @@ export default (pool, sendResponse) => {
     ====================== */
 
     // Create a new payment  -- dont store CVV!
-    router.post("/api/payments", async (req, res) => {
+    router.post("/payments", async (req, res) => {
     try {
         const { accountID, cardNo, cvv, expiryDate, serviceAddress, deliveryAddress } = req.body;
         if (!accountID || !cardNo || !cvv || !expiryDate)
@@ -99,7 +99,7 @@ export default (pool, sendResponse) => {
     });
 
     // Get all payments
-    router.get("/api/payments", async (req, res) => {
+    router.get("/payments", async (req, res) => {
     try {
         const [rows] = await pool.query("SELECT * FROM Payment;");
         sendResponse(res, true, "Payments retrieved.", rows);
@@ -113,7 +113,7 @@ export default (pool, sendResponse) => {
     ====================== */
 
     // Create an item transaction
-    router.post("/api/item-transactions", async (req, res) => {
+    router.post("/item-transactions", async (req, res) => {
     try {
         const { paymentID, productID, quantity, subtotal } = req.body;
         if (!paymentID || !productID || !subtotal)
@@ -132,7 +132,7 @@ export default (pool, sendResponse) => {
     });
 
     // Get all item transactions
-    router.get("/api/item-transactions", async (req, res) => {
+    router.get("/item-transactions", async (req, res) => {
     try {
         const [rows] = await pool.query("SELECT * FROM ItemTransaction;");
         sendResponse(res, true, "Item transactions retrieved.", rows);
@@ -146,7 +146,7 @@ export default (pool, sendResponse) => {
     ====================== */
 
     // Create a service transaction
-    router.post("/api/service-transactions", async (req, res) => {
+    router.post("/service-transactions", async (req, res) => {
     try {
         const { paymentID, serviceID, hoursWorked, subtotal } = req.body;
         if (!paymentID || !serviceID || !subtotal)
@@ -165,7 +165,7 @@ export default (pool, sendResponse) => {
     });
 
     // Get all service transactions
-    router.get("/api/service-transactions", async (req, res) => {
+    router.get("/service-transactions", async (req, res) => {
     try {
         const [rows] = await pool.query("SELECT * FROM ServiceTransaction;");
         sendResponse(res, true, "Service transactions retrieved.", rows);

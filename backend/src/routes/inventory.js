@@ -8,7 +8,7 @@ const router = express.Router();
 export default (pool, sendResponse) => {
 
     // Create new product
-    router.post("/api/products", async (req, res) => {
+    router.post("/products", async (req, res) => {
     try {
         const { name, description, price, stock, status } = req.body;
         if (!name || !price)
@@ -26,7 +26,7 @@ export default (pool, sendResponse) => {
     });
 
     // Get all products
-    router.get("/api/products", async (req, res) => {
+    router.get("/products", async (req, res) => {
     try {
         const [rows] = await pool.query(
         "SELECT ProductID, Name, Description, Price, Stock, Status FROM Product;"
@@ -38,7 +38,7 @@ export default (pool, sendResponse) => {
     });
 
     // Update product stock or details
-    router.patch("/api/products/:id", async (req, res) => {
+    router.patch("/products/:id", async (req, res) => {
     try {
         const { name, description, price, stock, status } = req.body;
         const [result] = await pool.query(
@@ -54,7 +54,7 @@ export default (pool, sendResponse) => {
     });
 
     // Delete product
-    router.delete("/api/products/:id", async (req, res) => {
+    router.delete("/products/:id", async (req, res) => {
     try {
         const [result] = await pool.query("DELETE FROM Product WHERE ProductID = ?", [
         req.params.id,
@@ -72,7 +72,7 @@ export default (pool, sendResponse) => {
     CATEGORY / INVENTORY ROUTES
     ====================== */
 
-    router.post("/api/categories", async (req, res) => {
+    router.post("/categories", async (req, res) => {
     try {
         const { name, description } = req.body;
 
@@ -91,7 +91,7 @@ export default (pool, sendResponse) => {
     }
     });
 
-    router.get("/api/categories", async (req, res) => {
+    router.get("/categories", async (req, res) => {
     try {
         const [rows] = await pool.query(
         "SELECT CategoryID, Name, Description FROM Category;"
@@ -102,7 +102,7 @@ export default (pool, sendResponse) => {
     }
     });
 
-    router.get("/api/categories/:id", async (req, res) => {
+    router.get("/categories/:id", async (req, res) => {
     try {
         const [rows] = await pool.query(
         "SELECT CategoryID, Name, Description FROM Category WHERE CategoryID = ?;",
@@ -118,7 +118,7 @@ export default (pool, sendResponse) => {
     }
     });
 
-    router.patch("/api/categories/:id", async (req, res) => {
+    router.patch("/categories/:id", async (req, res) => {
     try {
         const { name, description } = req.body;
 
@@ -139,7 +139,7 @@ export default (pool, sendResponse) => {
     }
     });
 
-    router.delete("/api/categories/:id", async (req, res) => {
+    router.delete("/categories/:id", async (req, res) => {
     try {
         const [result] = await pool.query(
         "DELETE FROM Category WHERE CategoryID = ?",
