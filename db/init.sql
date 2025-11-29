@@ -1,8 +1,8 @@
 -- ===========================================
 -- Create and use schema
 -- ===========================================
-CREATE DATABASE IF NOT EXISTS project5dbv1;
-USE project5dbv1;
+CREATE DATABASE IF NOT EXISTS mydatabase;
+USE mydatabase;
 
 -- ===========================================
 -- Drop tables if they exist (in safe order)
@@ -365,7 +365,7 @@ INSERT INTO Ghost (GhostName, GhostDescription) VALUES
 ('Banshee', 'A ghost with a frightening, potentially dangerous wail, known for driving people off cliffs as they run in fear.'),
 ('Revenant', 'A ghost with a physical presence, aggressive and capable of harming people directly. Highly dangerous.');
 
-SELECT * FROM GHOST;
+-- SELECT * FROM GHOST;
 
 INSERT INTO Trait (TraitName) VALUES
 ('Strange Cold Spots'),
