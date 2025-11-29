@@ -1,5 +1,6 @@
 //Author:   Nonso
-//Review:   Max, Lexie
+//Review:   Max, Lexie      November 17 2025
+//Review:   Lexie           November 29 2025
 
 import express from "express";
 
@@ -7,16 +8,20 @@ const router = express.Router();
 
 export default (pool, sendResponse) => {
 
+    /* ======================
+    PRODUCT / INVENTORY ROUTES
+    ====================== */
+
     // Create new product
-    router.post("/products", async (req, res) => {
+    router.post("/product", async (req, res) => {
     try {
-        const { name, description, price, stock, status } = req.body;
+        const { name, description, price } = req.body;
         if (!name || !price)
         return sendResponse(res, false, "Missing required fields.");
 
         const [result] = await pool.query(
-        "INSERT INTO Product (Name, Description, Price, Stock, Status) VALUES (?, ?, ?, ?, ?)",
-        [name, description || "", price, stock || 0, status || "active"]
+        "INSERT INTO Product (ProductName, ProductDescription, Price) VALUES (?, ?, ?)",
+        [name, description || "", price]
         );
 
         sendResponse(res, true, "Product created.", { productID: result.insertId });
@@ -26,10 +31,10 @@ export default (pool, sendResponse) => {
     });
 
     // Get all products
-    router.get("/products", async (req, res) => {
+    router.get("/product", async (req, res) => {
     try {
         const [rows] = await pool.query(
-        "SELECT ProductID, Name, Description, Price, Stock, Status FROM Product;"
+        "SELECT * FROM Product;"
         );
         sendResponse(res, true, "Products retrieved.", rows);
     } catch (err) {
@@ -38,12 +43,12 @@ export default (pool, sendResponse) => {
     });
 
     // Update product stock or details
-    router.patch("/products/:id", async (req, res) => {
+    router.patch("/product/:id", async (req, res) => {
     try {
-        const { name, description, price, stock, status } = req.body;
+        const { name, description, price } = req.body;
         const [result] = await pool.query(
-        "UPDATE Product SET Name = COALESCE(?, Name), Description = COALESCE(?, Description), Price = COALESCE(?, Price), Stock = COALESCE(?, Stock), Status = COALESCE(?, Status) WHERE ProductID = ?",
-        [name, description, price, stock, status, req.params.id]
+        "UPDATE Product SET ProductName = COALESCE(?, ProductName), ProductDescription = COALESCE(?, ProductDescription), Price = COALESCE(?, Price) WHERE ProductID = ?",
+        [name, description, price, req.params.id]
         );
         if (result.affectedRows === 0)
         return sendResponse(res, false, "Product not found.");
@@ -54,7 +59,7 @@ export default (pool, sendResponse) => {
     });
 
     // Delete product
-    router.delete("/products/:id", async (req, res) => {
+    router.delete("/product/:id", async (req, res) => {
     try {
         const [result] = await pool.query("DELETE FROM Product WHERE ProductID = ?", [
         req.params.id,
@@ -67,89 +72,151 @@ export default (pool, sendResponse) => {
     }
     });
 
+    //Author:     Lexie Haveman
+    //Date:       November 29 2025
 
     /* ======================
-    CATEGORY / INVENTORY ROUTES
+    PRODUCTSTOCK / INVENTORY ROUTES
     ====================== */
 
-    router.post("/categories", async (req, res) => {
+    //create new product stock
+    router.post("/productstock", async (req, res) => {
     try {
-        const { name, description } = req.body;
-
-        if (!name)
-        return sendResponse(res, false, "Missing required field: name.");
+        const { productid, qty, restock, lastrestock } = req.body;
+        if (!productid || !qty || !restock)
+        return sendResponse(res, false, "Missing required fields.");
 
         const [result] = await pool.query(
-        `INSERT INTO Category (Name, Description)
-        VALUES (?, ?)`,
-        [name, description || ""]
+        "INSERT INTO ProductStock (ProductID, QuantityAvailable, RestockThreshold, LastRestockDate) VALUES (?, ?, ?, ?)",
+        [productid, qty || 0, restock || 0, lastrestock || "CURDATE()"]
         );
 
-        sendResponse(res, true, "Category created.", { categoryID: result.insertId });
+        sendResponse(res, true, "Product Stock created.", { productID: result.insertId });
     } catch (err) {
         sendResponse(res, false, err.message);
     }
     });
 
-    router.get("/categories", async (req, res) => {
+    // Get all product stock
+    router.get("/productstock", async (req, res) => {
     try {
         const [rows] = await pool.query(
-        "SELECT CategoryID, Name, Description FROM Category;"
+        "SELECT ProductStock.StockID, ProductStock.ProductID, Product.ProductName, ProductStock.QuantityAvailable, ProductStock.RestockThreshold, ProductStock.LastRestockDate FROM ProductStock INNER JOIN Product ON ProductStock.ProductID = Product.ProductID;"
         );
-        sendResponse(res, true, "Categories retrieved.", rows);
+        sendResponse(res, true, "Product stock retrieved.", rows);
     } catch (err) {
         sendResponse(res, false, err.message);
     }
     });
 
-    router.get("/categories/:id", async (req, res) => {
+    // Update product stock or details
+    router.patch("/productstock/:id", async (req, res) => {
+    try {
+        const { productid, qty, restock, lastrestock } = req.body;
+        const [result] = await pool.query(
+        "UPDATE ProductStock SET ProductID = COALESCE(?, ProductID), QuantityAvailable = COALESCE(?, QuantityAvailable), RestockThreshold = COALESCE(?, RestockThreshold), LastRestockDate = COALESCE(?, LastRestockDate) WHERE ProductID = ?",
+        [productid, qty, restock, lastrestock, req.params.id]
+        );
+        if (result.affectedRows === 0)
+        return sendResponse(res, false, "Product not found.");
+        sendResponse(res, true, "Product stock updated.");
+    } catch (err) {
+        sendResponse(res, false, err.message);
+    }
+    });
+
+    // Delete product
+    router.delete("/productstock/:id", async (req, res) => {
+    try {
+        const [result] = await pool.query("DELETE FROM ProductStock WHERE ProductID = ?", [
+        req.params.id,
+        ]);
+        if (result.affectedRows === 0)
+        return sendResponse(res, false, "Product not found.");
+        sendResponse(res, true, "Product deleted.");
+    } catch (err) {
+        sendResponse(res, false, err.message);
+    }
+    });
+
+    //Author:     Lexie Haveman
+    //Date:       November 29 2025
+
+    /* ======================
+    STOCKORDER / INVENTORY ROUTES
+    ====================== */
+
+    // Create new order
+    router.post("/stockorder", async (req, res) => {
+    try {
+        const { productid, qty, suppliername, ordered, received } = req.body;
+        if (!productid || !qty || !suppliername)
+        return sendResponse(res, false, "Missing required fields.");
+
+        const [result] = await pool.query(
+        "INSERT INTO StockOrder (ProductID, QuantityOrdered, SupplierName, OrderedAt, ReceivedAt) VALUES (?, ?, ?, ?, ?)",
+        [productid, qty, suppliername, ordered || "CURDATE()", received || ""]
+        );
+
+        sendResponse(res, true, "Order created.", { productID: result.insertId });
+    } catch (err) {
+        sendResponse(res, false, err.message);
+    }
+    });
+
+    // Get all orders
+    router.get("/stockorder", async (req, res) => {
     try {
         const [rows] = await pool.query(
-        "SELECT CategoryID, Name, Description FROM Category WHERE CategoryID = ?;",
-        [req.params.id]
+        "SELECT * FROM StockOrder;"
         );
-
-        if (rows.length === 0)
-        return sendResponse(res, false, "Category not found.");
-
-        sendResponse(res, true, "Category retrieved.", rows[0]);
+        sendResponse(res, true, "Orders retrieved.", rows);
     } catch (err) {
         sendResponse(res, false, err.message);
     }
     });
 
-    router.patch("/categories/:id", async (req, res) => {
+    // Update order complete
+    router.patch("/stockorder/:id", async (req, res) => {
     try {
-        const { name, description } = req.body;
-
+        const { productid, qty, suppliername, ordered, received } = req.body;
         const [result] = await pool.query(
-        `UPDATE Category
-        SET Name = COALESCE(?, Name),
-            Description = COALESCE(?, Description)
-        WHERE CategoryID = ?`,
-        [name, description, req.params.id]
+        "UPDATE StockOrder SET ProductID = COALESCE(?, ProductID), QuantityOrdered = COALESCE(?, QuantityOrdered), SupplierName = COALESCE(?, SupplierName), OrderedAt = COALESCE(?, OrderedAt), ReceivedAt = COALESCE(?, ReceivedAt) WHERE StockOrderID = ?",
+        [productid, qty, suppliername, ordered, received, req.params.id]
         );
-
         if (result.affectedRows === 0)
-        return sendResponse(res, false, "Category not found.");
-
-        sendResponse(res, true, "Category updated.");
+        return sendResponse(res, false, "Order not found.");
+        sendResponse(res, true, "Stock order updated.");
     } catch (err) {
         sendResponse(res, false, err.message);
     }
     });
 
-    router.delete("/categories/:id", async (req, res) => {
+    // Update stock order only received
+    router.patch("/stockorder/received/:id", async (req, res) => {
     try {
+        const { received } = req.body;
         const [result] = await pool.query(
-        "DELETE FROM Category WHERE CategoryID = ?",
-        [req.params.id]
+        "UPDATE StockOrder SET ReceivedAt = COALESCE(?, ReceivedAt) WHERE StockOrderID = ?",
+        [received || "CURDATE()", req.params.id]
         );
-
         if (result.affectedRows === 0)
-        return sendResponse(res, false, "Category not found.");
+        return sendResponse(res, false, "Order not found.");
+        sendResponse(res, true, "Order updated.");
+    } catch (err) {
+        sendResponse(res, false, err.message);
+    }
+    });
 
-        sendResponse(res, true, "Category deleted.");
+    // Delete order
+    router.delete("/stockorder/:id", async (req, res) => {
+    try {
+        const [result] = await pool.query("DELETE FROM StockOrder WHERE StockOrderID = ?", [
+        req.params.id,
+        ]);
+        if (result.affectedRows === 0)
+        return sendResponse(res, false, "Order not found.");
+        sendResponse(res, true, "Order deleted.");
     } catch (err) {
         sendResponse(res, false, err.message);
     }
