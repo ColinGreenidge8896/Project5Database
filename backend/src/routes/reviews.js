@@ -10,7 +10,7 @@ export default (pool, sendResponse) => {
     ====================== */
 
     // Create product review
-    router.post("/products", async(req, res) => {
+    router.post("/product-reviews", async(req, res) => {
     try {
         const { productID, accountID, rating, comment } = req.body;
         if (!productID || !accountID) {
@@ -33,7 +33,7 @@ export default (pool, sendResponse) => {
     });
 
     // Get all product reviews
-    router.get("/products", async(req, res) => {
+    router.get("/product-reviews", async(req, res) => {
     try {
         const [rows] = await pool.query(
         "SELECT ProductID, AccountID, Rating, Comment FROM ProductReview;"
@@ -46,7 +46,7 @@ export default (pool, sendResponse) => {
     });
 
     // Get product review by ID
-    router.get("/products/:id", async(req, res) =>{
+    router.get("/product-reviews/:id", async(req, res) =>{
     try {
         const [rows] = await pool.query(
         "SELECT ProductID, AccountID, Rating, Comment FROM ProductReview WHERE ReviewID = ?;",
@@ -62,7 +62,7 @@ export default (pool, sendResponse) => {
     });
 
     // Update product review rating and/or comment by id
-    router.patch("/products/:id", async(req, res) => {
+    router.patch("/product-reviews/:id", async(req, res) => {
     try {
         const { rating, comment } = req.body;
         const [result] = await pool.query(
@@ -79,7 +79,7 @@ export default (pool, sendResponse) => {
     });
 
     // Delete product review by id
-    router.delete("/products/:id", async(req, res) => {
+    router.delete("/product-reviews/:id", async(req, res) => {
     try {
         const [result] = await pool.query("DELETE FROM ProductReview WHERE ReviewID = ?", [
         req.params.id,
@@ -98,7 +98,7 @@ export default (pool, sendResponse) => {
     ====================== */
 
     // Create a rental review
-    router.post("/rentals", async(req, res) => {
+    router.post("/rental-reviews", async(req, res) => {
     try {
         const { rentalID, accountID, rating, comment } = req.body;
         if (!rentalID || !accountID) {
@@ -121,7 +121,7 @@ export default (pool, sendResponse) => {
     });
 
     // Get all rental reviews
-    router.get("/rentals", async(req, res) => {
+    router.get("/rental-reviews", async(req, res) => {
     try {
         const [rows] = await pool.query(
         "SELECT RentalID, AccountID, Rating, Comment FROM RentalReview;"
@@ -134,7 +134,7 @@ export default (pool, sendResponse) => {
     });
 
     // Get rental review by ID
-    router.get("/rentals/:id", async(req, res) =>{
+    router.get("/rental-reviews/:id", async(req, res) =>{
     try {
         const [rows] = await pool.query(
         "SELECT RentalID, AccountID, Rating, Comment FROM RentalReview WHERE ReviewID = ?;",
@@ -150,7 +150,7 @@ export default (pool, sendResponse) => {
     });
 
     // Update rental review rating and/or comment by id
-    router.patch("/rentals/:id", async(req, res) => {
+    router.patch("/rental-reviews/:id", async(req, res) => {
     try {
         const { rating, comment } = req.body;
         const [result] = await pool.query(
@@ -167,7 +167,7 @@ export default (pool, sendResponse) => {
     });
 
     // Delete rental review by id
-    router.delete("/rentals/:id", async(req, res) => {
+    router.delete("/rental-reviews/:id", async(req, res) => {
     try {
         const [result] = await pool.query("DELETE FROM RentalReview WHERE ReviewID = ?", [
         req.params.id,
@@ -186,7 +186,7 @@ export default (pool, sendResponse) => {
     ====================== */
 
     // Create service review
-    router.post("/services", async(req, res) => {
+    router.post("/service-reviews", async(req, res) => {
     try {
         const { serviceID, accountID, rating, comment } = req.body;
         if (!serviceID || !accountID) {
@@ -209,7 +209,7 @@ export default (pool, sendResponse) => {
     });
 
     // Get all service reviews
-    router.get("/services", async(req, res) => {
+    router.get("/service-reviews", async(req, res) => {
     try {
         const [rows] = await pool.query(
         "SELECT ServiceID, AccountID, Rating, Comment FROM ServiceReview;"
@@ -222,7 +222,7 @@ export default (pool, sendResponse) => {
     });
 
     // Get service review by ID
-    router.get("/services/:id", async(req, res) =>{
+    router.get("/service-reviews/:id", async(req, res) =>{
     try {
         const [rows] = await pool.query(
         "SELECT ServiceID, AccountID, Rating, Comment FROM ServiceReview WHERE ReviewID = ?;",
@@ -238,7 +238,7 @@ export default (pool, sendResponse) => {
     });
 
     // Update service review rating and/or comment by id
-    router.patch("/services/:id", async(req, res) => {
+    router.patch("/service-reviews/:id", async(req, res) => {
     try {
         const { rating, comment } = req.body;
         const [result] = await pool.query(
@@ -255,7 +255,7 @@ export default (pool, sendResponse) => {
     });
 
     // Delete service review by id
-    router.delete("/services/:id", async(req, res) => {
+    router.delete("/service-reviews/:id", async(req, res) => {
     try {
         const [result] = await pool.query("DELETE FROM ServiceReview WHERE ReviewID = ?", [
         req.params.id,
