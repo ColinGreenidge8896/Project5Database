@@ -407,7 +407,7 @@ INSERT INTO Trait (TraitName) VALUES
 ('Physical Attack'),
 ('Sense of Being Watched');
 
-SELECT * FROM Trait;
+-- SELECT * FROM Trait;
 
 INSERT INTO Product (ProductName) VALUES
 ('Salt'),
