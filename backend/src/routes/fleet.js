@@ -189,7 +189,7 @@ export default (pool, sendResponse) => {
     });
 
     // Get all from rental
-    router.get("/rented-equipment", async (req, res) => {
+    router.get("/rental", async (req, res) => {
     try {
         const [rows] = await pool.query(
         "SELECT * FROM Rental;"

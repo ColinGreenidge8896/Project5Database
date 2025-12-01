@@ -80,7 +80,7 @@ export default (pool, sendResponse) => {
     ====================== */
 
     //create new product stock
-    router.post("/productstock", async (req, res) => {
+    router.post("/product-stock", async (req, res) => {
     try {
         const { productid, qty, restock, lastrestock } = req.body;
         if (!productid || !qty || !restock)
@@ -98,7 +98,7 @@ export default (pool, sendResponse) => {
     });
 
     // Get all product stock
-    router.get("/productstock", async (req, res) => {
+    router.get("/product-stock", async (req, res) => {
     try {
         const [rows] = await pool.query(
         "SELECT ProductStock.StockID, ProductStock.ProductID, Product.ProductName, ProductStock.QuantityAvailable, ProductStock.RestockThreshold, ProductStock.LastRestockDate FROM ProductStock INNER JOIN Product ON ProductStock.ProductID = Product.ProductID;"
@@ -110,7 +110,7 @@ export default (pool, sendResponse) => {
     });
 
     // Update product stock or details
-    router.patch("/productstock/:id", async (req, res) => {
+    router.patch("/product-stock/:id", async (req, res) => {
     try {
         const { productid, qty, restock, lastrestock } = req.body;
         const [result] = await pool.query(
@@ -126,7 +126,7 @@ export default (pool, sendResponse) => {
     });
 
     // Delete product
-    router.delete("/productstock/:id", async (req, res) => {
+    router.delete("/product-stock/:id", async (req, res) => {
     try {
         const [result] = await pool.query("DELETE FROM ProductStock WHERE ProductID = ?", [
         req.params.id,
@@ -147,7 +147,7 @@ export default (pool, sendResponse) => {
     ====================== */
 
     // Create new order
-    router.post("/stockorder", async (req, res) => {
+    router.post("/stock-order", async (req, res) => {
     try {
         const { productid, qty, suppliername, ordered, received } = req.body;
         if (!productid || !qty || !suppliername)
@@ -165,7 +165,7 @@ export default (pool, sendResponse) => {
     });
 
     // Get all orders
-    router.get("/stockorder", async (req, res) => {
+    router.get("/stock-order", async (req, res) => {
     try {
         const [rows] = await pool.query(
         "SELECT * FROM StockOrder;"
@@ -177,7 +177,7 @@ export default (pool, sendResponse) => {
     });
 
     // Update order complete
-    router.patch("/stockorder/:id", async (req, res) => {
+    router.patch("/stock-order/:id", async (req, res) => {
     try {
         const { productid, qty, suppliername, ordered, received } = req.body;
         const [result] = await pool.query(
@@ -193,7 +193,7 @@ export default (pool, sendResponse) => {
     });
 
     // Update stock order only received
-    router.patch("/stockorder/received/:id", async (req, res) => {
+    router.patch("/stock-order/received/:id", async (req, res) => {
     try {
         const { received } = req.body;
         const [result] = await pool.query(
@@ -209,7 +209,7 @@ export default (pool, sendResponse) => {
     });
 
     // Delete order
-    router.delete("/stockorder/:id", async (req, res) => {
+    router.delete("/stock-order/:id", async (req, res) => {
     try {
         const [result] = await pool.query("DELETE FROM StockOrder WHERE StockOrderID = ?", [
         req.params.id,
