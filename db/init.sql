@@ -122,12 +122,13 @@ CREATE TABLE Product (
 );
 
 CREATE TABLE ProductStock (
-  StockID INT AUTO_INCREMENT PRIMARY KEY,
-  ProductID INT NOT NULL,
+  ProductID INT PRIMARY KEY,
   QuantityAvailable INT DEFAULT 0,
   RestockThreshold INT DEFAULT 10,
   LastRestockDate DATE,
-  FOREIGN KEY (ProductID) REFERENCES Product(ProductID)
+  CONSTRAINT FK_ProductStock_Product
+	FOREIGN KEY (ProductID) REFERENCES Product(ProductID)
+	ON DELETE CASCADE
 );
 
 CREATE TABLE StockOrder (
@@ -409,20 +410,35 @@ INSERT INTO Trait (TraitName) VALUES
 
 -- SELECT * FROM Trait;
 
-INSERT INTO Product (ProductName) VALUES
-('Salt'),
-('Candy'),
-('Doorstops / Wedges'),
-('Helmet'),
-('Religious Symbol'),
-('Earplugs'),
-('Body Armour'),
-('Video Camera'),
-('EVP Recorder'),
-('EMF Reader'),
-('Holy Text'),
-('Flashlight'),
-('Radios');
+INSERT INTO Product (ProductName, Price, ProductDescription) VALUES
+('Salt', 15.00, 'Purified rock salt used to repel entities and mark safe zones.'),
+('Candy', 5.00, 'High-sugar sanity restoration sweets for prolonged investigations.'),
+('Doorstops / Wedges', 8.50, 'Heavy-duty rubber wedges to ensure exit routes remain accessible.'),
+('Helmet', 45.00, 'Safety headgear equipped with a mounting point for cameras or lights.'),
+('Religious Symbol', 25.00, 'A sacred icon used to ward off malevolent spirits during hunts.'),
+('Earplugs', 3.00, 'Industrial grade noise reduction to protect against sonic paranormal events.'),
+('Body Armour', 120.00, 'Lightweight kevlar vest providing protection against physical manifestations.'),
+('Video Camera', 250.00, '1080p Camcorder with Night Vision capability for evidence collection.'),
+('EVP Recorder', 85.00, 'High-sensitivity audio recorder designed to capture Electronic Voice Phenomena.'),
+('EMF Reader', 45.00, 'Handheld device for detecting electromagnetic field fluctuations.'),
+('Holy Text', 20.00, 'Standard issue religious scripture used for cleansing rituals.'),
+('Flashlight', 35.00, 'Waterproof, high-lumen tactical flashlight.'),
+('Radios', 60.00, 'Long-range two-way radios for team communication in large locations.');
+
+INSERT INTO ProductStock (ProductID, QuantityAvailable, RestockThreshold, LastRestockDate) VALUES
+(1, 100, 20, NOW()),  -- Salt
+(2, 200, 50, NOW()),  -- Candy
+(3, 50, 10, NOW()),   -- Doorstops / Wedges
+(4, 15, 5, NOW()),    -- Helmet
+(5, 30, 5, NOW()),    -- Religious Symbol
+(6, 100, 20, NOW()),  -- Earplugs
+(7, 10, 2, NOW()),    -- Body Armour
+(8, 8, 2, NOW()),     -- Video Camera
+(9, 12, 3, NOW()),    -- EVP Recorder
+(10, 15, 5, NOW()),   -- EMF Reader
+(11, 25, 5, NOW()),   -- Holy Text
+(12, 40, 10, NOW()),  -- Flashlight
+(13, 20, 5, NOW());   -- Radios
 
 INSERT INTO Equipment (EquipmentCode, EquipmentName, EquipmentDescription, EquipmentValue, EquipmentCategory, EquipmentType, EquipmentTrackingId, EquipmentAvailability)
 VALUES

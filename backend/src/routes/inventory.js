@@ -101,7 +101,7 @@ export default (pool, sendResponse) => {
     router.get("/product-stock", async (req, res) => {
     try {
         const [rows] = await pool.query(
-        "SELECT ProductStock.StockID, ProductStock.ProductID, Product.ProductName, ProductStock.QuantityAvailable, ProductStock.RestockThreshold, ProductStock.LastRestockDate FROM ProductStock INNER JOIN Product ON ProductStock.ProductID = Product.ProductID;"
+        "SELECT ProductStock.ProductID, Product.ProductName, ProductStock.QuantityAvailable, ProductStock.RestockThreshold, ProductStock.LastRestockDate FROM ProductStock INNER JOIN Product ON ProductStock.ProductID = Product.ProductID;"
         );
         sendResponse(res, true, "Product stock retrieved.", rows);
     } catch (err) {
