@@ -45,7 +45,7 @@ export default (pool, sendResponse) => {
     // Update equipment records complete
     router.patch("/equipment/:id", async (req, res) => {
     try {
-        const { equipmentcode, productid, description, category, type, trackingid, availability } = req.body;
+        const { equipmentcode, name, description, value, category, type, trackingid, availability } = req.body;
         const [result] = await pool.query(
         `UPDATE Equipment SET EquipmentCode = COALESCE(?, EquipmentCode), EquipmentName = COALESCE(?, EquipmentName), 
                             EquipmentDescription = COALESCE(?, EquipmentDescription), EquipmentValue = COALESCE(?, EquipmentValue),
@@ -53,7 +53,7 @@ export default (pool, sendResponse) => {
                             EquipmentTrackingId = COALESCE(?, EquipmentTrackingId), 
                             EquipmentAvailability = COALESCE(?, EquipmentAvailability)
         WHERE EquipmentID = ?`,
-        [equipmentcode, productid, description || "", category, type, trackingid, availability || "Available", req.params.id]
+        [equipmentcode, name, description || "", value, category, type, trackingid, availability || "Available", req.params.id]
         );
         if (result.affectedRows === 0)
         return sendResponse(res, false, "Equipment not found.");
