@@ -88,7 +88,7 @@ export default (pool, sendResponse) => {
 
         const [result] = await pool.query(
         "INSERT INTO ProductStock (ProductID, QuantityAvailable, RestockThreshold, LastRestockDate) VALUES (?, ?, ?, ?)",
-        [productid, qty || 0, restock || 0, lastrestock || "CURDATE()"]
+        [productid, qty || 0, restock || 0, lastrestock]
         );
 
         sendResponse(res, true, "Product Stock created.", { productID: result.insertId });
@@ -155,7 +155,7 @@ export default (pool, sendResponse) => {
 
         const [result] = await pool.query(
         "INSERT INTO StockOrder (ProductID, QuantityOrdered, SupplierName, OrderedAt, ReceivedAt) VALUES (?, ?, ?, ?, ?)",
-        [productid, qty, suppliername, ordered || "CURDATE()", received || ""]
+        [productid, qty, suppliername, ordered, received || ""]
         );
 
         sendResponse(res, true, "Order created.", { productID: result.insertId });
@@ -198,7 +198,7 @@ export default (pool, sendResponse) => {
         const { received } = req.body;
         const [result] = await pool.query(
         "UPDATE StockOrder SET ReceivedAt = COALESCE(?, ReceivedAt) WHERE StockOrderID = ?",
-        [received || "CURDATE()", req.params.id]
+        [received, req.params.id]
         );
         if (result.affectedRows === 0)
         return sendResponse(res, false, "Order not found.");

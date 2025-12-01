@@ -8,7 +8,7 @@ const router = express.Router();
 export default (pool, sendResponse) => {
 
     //create inquiryform
-    router.post("/inquiry-forms", async (req, res) => {
+    router.post("/inquiry-form", async (req, res) => {
     try {
         const { accountID, description } = req.body;
 
@@ -16,7 +16,7 @@ export default (pool, sendResponse) => {
         return sendResponse(res, false, "Missing accountID.");
 
         const [result] = await pool.query(
-        `INSERT INTO InquiryForm (AccountID, Description)
+        `INSERT INTO InquiryForm (AccountID, InquiryFormDescription)
         VALUES (?, ?)`,
         [accountID, description || null]
         );
@@ -29,7 +29,7 @@ export default (pool, sendResponse) => {
     });
 
     //get all inquiryforms
-    router.get("/inquiry-forms", async (req, res) => {
+    router.get("/inquiry-form", async (req, res) => {
     try {
         const [rows] = await pool.query("SELECT * FROM InquiryForm;");
         sendResponse(res, true, "Inquiry forms retrieved.", rows);
@@ -39,7 +39,7 @@ export default (pool, sendResponse) => {
     });
 
     //get inquiryform by ID
-    router.get("/inquiry-forms/:id", async (req, res) => {
+    router.get("/inquiry-form/:id", async (req, res) => {
     try {
         const [rows] = await pool.query(
         "SELECT * FROM InquiryForm WHERE InquiryFormID = ?",
@@ -56,13 +56,13 @@ export default (pool, sendResponse) => {
     });
 
     //update inquiryform
-    router.patch("/inquiry-forms/:id", async (req, res) => {
+    router.patch("/inquiry-form/:id", async (req, res) => {
     try {
         const { description } = req.body;
 
         const [result] = await pool.query(
         `UPDATE InquiryForm
-        SET Description = COALESCE(?, Description)
+        SET InquiryFormDescription = COALESCE(?, InquiryFormDescription)
         WHERE InquiryFormID = ?`,
         [description, req.params.id]
         );
@@ -77,7 +77,7 @@ export default (pool, sendResponse) => {
     });
 
     //delete inquiryform 
-    router.delete("/inquiry-forms/:id", async (req, res) => {
+    router.delete("/inquiry-form/:id", async (req, res) => {
     try {
         const [result] = await pool.query(
         "DELETE FROM InquiryForm WHERE InquiryFormID = ?",
@@ -94,7 +94,7 @@ export default (pool, sendResponse) => {
     });
 
     //create inquiryformresponse
-    router.post("/inquiry-form-responses", async (req, res) => {
+    router.post("/inquiry-form-response", async (req, res) => {
     try {
         const { inquiryFormID, ghostID, description } = req.body;
 
@@ -102,7 +102,7 @@ export default (pool, sendResponse) => {
         return sendResponse(res, false, "Missing required fields.");
 
         const [result] = await pool.query(
-        `INSERT INTO InquiryFormResponse (InquiryFormID, GhostID, Description)
+        `INSERT INTO InquiryFormResponse (InquiryFormID, GhostID, InquiryFormResponseDescription)
         VALUES (?, ?, ?)`,
         [inquiryFormID, ghostID, description || null]
         );
@@ -114,7 +114,7 @@ export default (pool, sendResponse) => {
     });
 
     //get all inquiryformresponse
-    router.get("/inquiry-form-responses", async (req, res) => {
+    router.get("/inquiry-form-response", async (req, res) => {
     try {
         const [rows] = await pool.query("SELECT * FROM InquiryFormResponse;");
         sendResponse(res, true, "Responses retrieved.", rows);
@@ -124,7 +124,7 @@ export default (pool, sendResponse) => {
     });
 
     //get resposneform by id
-    router.get("/inquiry-form-responses/:id", async (req, res) => {
+    router.get("/inquiry-form-response/:id", async (req, res) => {
     try {
         const [rows] = await pool.query(
         "SELECT * FROM InquiryFormResponse WHERE InquiryFormResponseID = ?",
@@ -141,13 +141,13 @@ export default (pool, sendResponse) => {
     });
 
     //update response form
-    router.patch("/inquiry-form-responses/:id", async (req, res) => {
+    router.patch("/inquiry-form-response/:id", async (req, res) => {
     try {
         const { description, ghostID } = req.body;
 
         const [result] = await pool.query(
         `UPDATE InquiryFormResponse
-        SET Description = COALESCE(?, Description),
+        SET InquiryFormResponseDescription = COALESCE(?, InquiryFormResponseDescription),
             GhostID = COALESCE(?, GhostID)
         WHERE InquiryFormResponseID = ?`,
         [description, ghostID, req.params.id]
@@ -163,7 +163,7 @@ export default (pool, sendResponse) => {
     });
 
     //delete responseform
-    router.delete("/inquiry-form-responses/:id", async (req, res) => {
+    router.delete("/inquiry-form-response/:id", async (req, res) => {
     try {
         const [result] = await pool.query(
         "DELETE FROM InquiryFormResponse WHERE InquiryFormResponseID = ?",
@@ -180,7 +180,7 @@ export default (pool, sendResponse) => {
     });
 
     //create chosentrait
-    router.post("/chosen-traits", async (req, res) => {
+    router.post("/chosen-trait", async (req, res) => {
     try {
         const { inquiryFormID, traitID } = req.body;
 
@@ -202,7 +202,7 @@ export default (pool, sendResponse) => {
     });
 
     //get all chosentraits from a form
-    router.get("/chosen-traits/form/:id", async (req, res) => {
+    router.get("/chosen-trait/form/:id", async (req, res) => {
     try {
         //get all chosentrait data from a chosen inquiryform
         const [rows] = await pool.query(
@@ -220,7 +220,7 @@ export default (pool, sendResponse) => {
     });
 
     //delete chosentrait
-    router.delete("/chosen-traits", async (req, res) => {
+    router.delete("/chosen-trait", async (req, res) => {
     try {
         const { inquiryFormID, traitID } = req.body;
 
@@ -239,7 +239,7 @@ export default (pool, sendResponse) => {
     });
 
     //add identifyingtrait to ghost
-    router.post("/identifying-traits", async (req, res) => {
+    router.post("/identifying-trait", async (req, res) => {
     try {
         const { ghostID, traitID } = req.body;
 
@@ -261,7 +261,7 @@ export default (pool, sendResponse) => {
     });
 
     //get all traits for a ghost
-    router.get("/identifying-traits/ghost/:id", async (req, res) => {
+    router.get("/identifying-trait/ghost/:id", async (req, res) => {
     try {
         //for every identifyingtrait row for a ghost, join to trait table 
         // and get the full trait details from trait
@@ -281,7 +281,7 @@ export default (pool, sendResponse) => {
     });
 
     //delete identifyingtrait
-    router.delete("/identifying-traits", async (req, res) => {
+    router.delete("/identifying-trait", async (req, res) => {
     try {
         const { ghostID, traitID } = req.body;
 
