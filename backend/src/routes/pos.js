@@ -25,7 +25,7 @@ export default (pool, sendResponse) => {
         const hashed = await bcrypt.hash(password, 10);
 
         const [result] = await pool.query(
-        "INSERT INTO CustomerAccount (Email, Username, Password, Status) VALUES (?, ?, ?, ?)",
+        "INSERT INTO CustomerAccount (Email, Username, PasswordHash, Status) VALUES (?, ?, ?, ?)",
         [email, username, hashed, status || "active"]
         );
 
