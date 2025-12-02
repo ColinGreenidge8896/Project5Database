@@ -25,7 +25,7 @@ export default (pool, sendResponse) => {
         const hashed = await bcrypt.hash(password, 10);
 
         const [result] = await pool.query(
-        "INSERT INTO CustomerAccount (Email, Username, Password, Status) VALUES (?, ?, ?, ?)",
+        "INSERT INTO CustomerAccount (Email, Username, PasswordHash, Status) VALUES (?, ?, ?, ?)",
         [email, username, hashed, status || "active"]
         );
 
@@ -85,16 +85,16 @@ export default (pool, sendResponse) => {
     // Login route -/customers/login or just /login
     router.post("/login", async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { username, password } = req.body;
 
-        if (!email || !password) {
+        if (!username || !password) {
             return sendResponse(res, false, "Missing email or password.");
         }
 
         // Find the user by email
         const [rows] = await pool.query(
-            "SELECT AccountID, Email, Username, Password, Status FROM CustomerAccount WHERE Email = ?;",
-            [email]
+            "SELECT AccountID, Email, Username, Password, Status FROM CustomerAccount WHERE Username = ?;",
+            [username]
         );
 
         if (rows.length === 0) {
