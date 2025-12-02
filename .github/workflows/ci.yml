@@ -27,5 +27,5 @@ jobs:
         env:
           DBDOCS_TOKEN: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQ3NDYwLCJ0b2tlbiI6ImI0ODBlMjViNGE5NWExZWZhNzNjNjQzZGExNTkxOGMyIiwiaWF0IjoxNzY0NzE2NjYxfQ.M55-4Lfd_pogzdJQaKKc7Ov6T6NgF6Cn0jN1LPqOZ7s
         run: |
-          sql2dbml db/init.sql -o dbmlupdate.dbml
+          sql2dbml --mysql db/init.sql -o dbmlupdate.dbml
           dbdocs build dbmlupdate.dbml --project Project V Database
