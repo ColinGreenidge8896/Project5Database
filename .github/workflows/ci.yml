@@ -17,6 +17,9 @@ jobs:
       - name: Install dbdocs
         run: sudo npm install -g dbdocs
 
+      - name: Install dbdocs/cli
+        run: sudo npm install -g @dbml/cli
+
       - name: Check dbdocs
         run: dbdocs
 
