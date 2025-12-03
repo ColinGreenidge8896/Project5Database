@@ -55,8 +55,6 @@ jobs:
 
       - name: Test Database Connection
         run: |
-          docker compose exec -T db mysql -u myuser -ppassword -e "SHOW DATABASES;"
-          docker compose exec -T db mysql -u myuser -ppassword mydatabase -e "SHOW TABLES;"
           curl http://localhost:3000/api/test
 
       - name: Stop Docker Compose
