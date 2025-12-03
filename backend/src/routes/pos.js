@@ -93,7 +93,7 @@ export default (pool, sendResponse) => {
 
         // Find the user by email
         const [rows] = await pool.query(
-            "SELECT AccountID, Email, Username, Password, Status FROM CustomerAccount WHERE Username = ?;",
+            "SELECT AccountID, Email, Username, PasswordHash, Status FROM CustomerAccount WHERE Username = ?;",
             [username]
         );
 
