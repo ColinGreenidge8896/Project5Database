@@ -80,6 +80,9 @@ CREATE TABLE CustomerAccount (
   Status ENUM('active','inactive','banned') DEFAULT 'active',
   CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+-- customer table 
+-- maintenance - update fields 
+-- populate customer 
 
 CREATE TABLE CustomerAddress (
   AddressID INT AUTO_INCREMENT PRIMARY KEY,

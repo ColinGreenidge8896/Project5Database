@@ -11,15 +11,14 @@ class TestRentals:
     def test_create_rental(self):
         """Test POST /api/fleet/rental"""
         rental_data = {
-            "rentalCode": "test",
-            "AccountID": 1,
-            "startDate": "2025-01-15",
-            "endDate": "2025-01-20",
-            "RentalStatus": "Returned",
-            "Notes": "Test rental",
-            "Scope": "External"
+            "rentalcode": "test",
+            "accountid": 1,
+            "start": "2025-01-15",
+            "end": "2025-01-20",
+            "status": "Returned",
+            "notes": "Test rental",
+            "scope": "External"
         }
-        
         response = requests.post(f"{BASE_URL}/rental", json=rental_data)
         print(response.status_code)
         print(response.json())
