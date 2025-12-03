@@ -403,22 +403,22 @@ CREATE TABLE ItemReq (
   FOREIGN KEY (ServiceID) REFERENCES Service(ServiceID)
 );
 
-INSERT INTO Ghost (GhostID, GhostName, GhostDescription) VALUES
-(0, 'Testing Ghost', 'This is a test ghost.');
+INSERT INTO Ghost (GhostName, GhostDescription) VALUES
+('Testing Ghost', 'This is a test ghost.');
 INSERT INTO Trait (TraitID, TraitName) VALUES
-(0, 'Testing Trait');
-INSERT INTO Product (ProductID, ProductName, Price, ProductDescription) VALUES
-(0, 100.00, 'Testing product description.');
-INSERT INTO ProductStock (ProductID, QuantityAvailable, RestockThreshold, LastRestockDate) VALUES
-(0, 5, 2, NOW());
-INSERT INTO Equipment (EquipmentID, EquipmentCode, EquipmentName, EquipmentDescription, EquipmentValue, EquipmentCategory, EquipmentType, EquipmentTrackingId, EquipmentAvailability) VALUES
-(0, 'EQ-OOO-000','Test Equipment Pack', 'Test Equipment Description', 1000.00,                       'Category', 'Type', 'AA-000-A', 'Available');
-INSERT INTO CustomerAccount (AccountID, Email, Username, PasswordHash) VALUES
-(0, 'test@testing.com', 'test', 'T3st123');
-INSERT INTO CustomerAddress (AddressID, AccountID, Line1, City, ProvinceState, PostalCode, Country) VALUES
-(0, 0, '123 First St', 'Toronto', 'Ontario', 'A1A 1A1', 'Canada');
-INSERT INTO Rental (RentalID, RentalCode, AccountID, StartDate, EndDate, RentalStatus, Notes, Scope) VALUES
-(0, 'RT-0000', 0, '2000-01-01', '2000-01-01', 'Closed', 'Test insert rental.', 'External');
+('Testing Trait');
+INSERT INTO Product (ProductName, Price, ProductDescription) VALUES
+(100.00, 'Testing product description.');
+INSERT INTO ProductStock (QuantityAvailable, RestockThreshold, LastRestockDate) VALUES
+(5, 2, NOW());
+INSERT INTO Equipment (EquipmentCode, EquipmentName, EquipmentDescription, EquipmentValue, EquipmentCategory, EquipmentType, EquipmentTrackingId, EquipmentAvailability) VALUES
+('EQ-OOO-000','Test Equipment Pack', 'Test Equipment Description', 1000.00,                       'Category', 'Type', 'AA-000-A', 'Available');
+INSERT INTO CustomerAccount (Email, Username, PasswordHash) VALUES
+('test@testing.com', 'test', 'T3st123');
+INSERT INTO CustomerAddress (AccountID, Line1, City, ProvinceState, PostalCode, Country) VALUES
+(0, '123 First St', 'Toronto', 'Ontario', 'A1A 1A1', 'Canada');
+INSERT INTO Rental (RentalCode, AccountID, StartDate, EndDate, RentalStatus, Notes, Scope) VALUES
+('RT-0000', 0, '2000-01-01', '2000-01-01', 'Closed', 'Test insert rental.', 'External');
 
 -- inserting ghost and trait data
 INSERT INTO Ghost (GhostName, GhostDescription) VALUES
