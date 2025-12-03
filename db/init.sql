@@ -86,7 +86,7 @@ CREATE TABLE CustomerAccount (
 
 -- Customer Table - Belongs to FLEET TEAM - different name if we had more time
 CREATE TABLE Customer (
-    CustomerId INT AUTO_INCREMENT PRIMARY KEY,
+    AccountId INT AUTO_INCREMENT PRIMARY KEY,
     CustomerCode VARCHAR(32) NOT NULL UNIQUE,
     CustomerName VARCHAR(200) NOT NULL,
     CustomerAddress TEXT NULL,
@@ -206,7 +206,7 @@ CREATE TABLE Rental (
   CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
   
   CONSTRAINT UQ_Rental_RentalCode UNIQUE (RentalCode),
-  FOREIGN KEY (AccountID) REFERENCES CustomerAccount(AccountID)
+  FOREIGN KEY (AccountID) REFERENCES Customer(AccountID)
 );
 
 -- remove ability to rent same equipment over and over - use UNIQUE
