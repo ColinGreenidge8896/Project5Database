@@ -9,11 +9,12 @@ class TestRentals:
     """Test Rental CRUD operations"""
     # must match format:
     # const { rentalcode, accountid, start, end, status, notes, scope } = req.body;
+    # accountId = 0 for testing
     def test_create_rental(self):
         """Test POST /api/fleet/rental"""
         rental_data = {
             "rentalcode": "test",
-            "accountid": 1,
+            "accountid": 0,
             "start": "2025-01-15",
             "end": "2025-01-20",
             "status": "Returned",
@@ -43,10 +44,13 @@ class TestRentals:
         """Test GET /api/fleet/rental/:id"""
         # Create rental first
         rental_data = {
-            "customerID": 1,
-            "startDate": "2025-02-01",
-            "endDate": "2025-02-05",
-            "status": "Draft"
+            "rentalcode": "test",
+            "accountid": 0,
+            "start": "2025-01-15",
+            "end": "2025-01-20",
+            "status": "Returned",
+            "notes": "Test rental",
+            "scope": "External"
         }
         create_response = requests.post(f"{BASE_URL}/rental", json=rental_data)
         rental_id = create_response.json()["data"].get("rentalID") or create_response.json()["data"].get("RentalID")
@@ -62,10 +66,13 @@ class TestRentals:
         """Test PATCH /api/fleet/rental/:id"""
         # Create rental
         rental_data = {
-            "customerID": 1,
-            "startDate": "2025-03-01",
-            "endDate": "2025-03-05",
-            "status": "Draft"
+            "rentalcode": "test",
+            "accountid": 0,
+            "start": "2025-01-15",
+            "end": "2025-01-20",
+            "status": "Returned",
+            "notes": "Test rental",
+            "scope": "External"
         }
         create_response = requests.post(f"{BASE_URL}/rental", json=rental_data)
         rental_id = create_response.json()["data"].get("rentalID") or create_response.json()["data"].get("RentalID")
@@ -85,10 +92,13 @@ class TestRentals:
         """Test DELETE /api/fleet/rental/:id"""
         # Create rental
         rental_data = {
-            "customerID": 1,
-            "startDate": "2025-04-01",
-            "endDate": "2025-04-05",
-            "status": "Draft"
+            "rentalcode": "test",
+            "accountid": 0,
+            "start": "2025-01-15",
+            "end": "2025-01-20",
+            "status": "Returned",
+            "notes": "Test rental",
+            "scope": "External"
         }
         create_response = requests.post(f"{BASE_URL}/rental", json=rental_data)
         rental_id = create_response.json()["data"].get("rentalID") or create_response.json()["data"].get("RentalID")
