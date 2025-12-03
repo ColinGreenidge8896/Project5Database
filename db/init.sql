@@ -405,20 +405,20 @@ CREATE TABLE ItemReq (
 
 INSERT INTO Ghost (GhostName, GhostDescription) VALUES
 ('Testing Ghost', 'This is a test ghost.');
-INSERT INTO Trait (TraitID, TraitName) VALUES
+INSERT INTO Trait (TraitName) VALUES
 ('Testing Trait');
 INSERT INTO Product (ProductName, Price, ProductDescription) VALUES
-(100.00, 'Testing product description.');
-INSERT INTO ProductStock (QuantityAvailable, RestockThreshold, LastRestockDate) VALUES
-(5, 2, NOW());
+('Test Product', 100.00, 'Testing product description.');
+INSERT INTO ProductStock (ProductID, QuantityAvailable, RestockThreshold, LastRestockDate) VALUES
+(1, 5, 2, NOW());
 INSERT INTO Equipment (EquipmentCode, EquipmentName, EquipmentDescription, EquipmentValue, EquipmentCategory, EquipmentType, EquipmentTrackingId, EquipmentAvailability) VALUES
 ('EQ-OOO-000','Test Equipment Pack', 'Test Equipment Description', 1000.00,                       'Category', 'Type', 'AA-000-A', 'Available');
 INSERT INTO CustomerAccount (Email, Username, PasswordHash) VALUES
 ('test@testing.com', 'test', 'T3st123');
 INSERT INTO CustomerAddress (AccountID, Line1, City, ProvinceState, PostalCode, Country) VALUES
-(0, '123 First St', 'Toronto', 'Ontario', 'A1A 1A1', 'Canada');
+(1, '123 First St', 'Toronto', 'Ontario', 'A1A 1A1', 'Canada');
 INSERT INTO Rental (RentalCode, AccountID, StartDate, EndDate, RentalStatus, Notes, Scope) VALUES
-('RT-0000', 0, '2000-01-01', '2000-01-01', 'Closed', 'Test insert rental.', 'External');
+('RT-0000', 1, '2000-01-01', '2000-01-01', 'Closed', 'Test insert rental.', 'External');
 
 -- inserting ghost and trait data
 INSERT INTO Ghost (GhostName, GhostDescription) VALUES
@@ -460,19 +460,19 @@ INSERT INTO Product (ProductName, Price, ProductDescription) VALUES
 ('Radios', 60.00, 'Long-range two-way radios for team communication in large locations.');
 
 INSERT INTO ProductStock (ProductID, QuantityAvailable, RestockThreshold, LastRestockDate) VALUES
-(1, 100, 20, NOW()),  -- Salt
-(2, 200, 50, NOW()),  -- Candy
-(3, 50, 10, NOW()),   -- Doorstops / Wedges
-(4, 15, 5, NOW()),    -- Helmet
-(5, 30, 5, NOW()),    -- Religious Symbol
-(6, 100, 20, NOW()),  -- Earplugs
-(7, 10, 2, NOW()),    -- Body Armour
-(8, 8, 2, NOW()),     -- Video Camera
-(9, 12, 3, NOW()),    -- EVP Recorder
-(10, 15, 5, NOW()),   -- EMF Reader
-(11, 25, 5, NOW()),   -- Holy Text
-(12, 40, 10, NOW()),  -- Flashlight
-(13, 20, 5, NOW());   -- Radios
+(1+1, 100, 20, NOW()),  -- Salt
+(2+1, 200, 50, NOW()),  -- Candy
+(3+1, 50, 10, NOW()),   -- Doorstops / Wedges
+(4+1, 15, 5, NOW()),    -- Helmet
+(5+1, 30, 5, NOW()),    -- Religious Symbol
+(6+1, 100, 20, NOW()),  -- Earplugs
+(7+1, 10, 2, NOW()),    -- Body Armour
+(8+1, 8, 2, NOW()),     -- Video Camera
+(9+1, 12, 3, NOW()),    -- EVP Recorder
+(10+1, 15, 5, NOW()),   -- EMF Reader
+(11+1, 25, 5, NOW()),   -- Holy Text
+(12+1, 40, 10, NOW()),  -- Flashlight
+(13+1, 20, 5, NOW());   -- Radios
 
 INSERT INTO Equipment (EquipmentCode, EquipmentName, EquipmentDescription, EquipmentValue, EquipmentCategory, EquipmentType, EquipmentTrackingId, EquipmentAvailability)
 VALUES
@@ -551,78 +551,78 @@ INSERT INTO CustomerAccount (Email, Username, PasswordHash) VALUES
 ('contact@rgb.tv',           'rgb.cartoon', 'Real#Heroes');
 
 INSERT INTO CustomerAddress (AccountID, Line1, City, ProvinceState, PostalCode, Country) VALUES
-(1, '123 City Hall Plaza', 'Toronto', 'Ontario', 'M5H 2N2', 'Canada'),
-(2, '456 Environmental Way', 'Ottawa', 'Ontario', 'K1A 0H3', 'Canada'),
-(3, '789 University Ave', 'Toronto', 'Ontario', 'M5G 1X8', 'Canada'),
-(4, '1 Museum Drive', 'Toronto', 'Ontario', 'M5T 1P5', 'Canada'),
-(5, '1214 Spook Central', 'Vancouver', 'British Columbia', 'V6B 2W9', 'Canada'),
-(6, 'The Sedgewick Hotel', 'Vancouver', 'British Columbia', 'V6C 3L2', 'Canada'),
-(7, '555 Marshmallow Blvd', 'Montreal', 'Quebec', 'H3B 1G5', 'Canada'),
-(8, '100 College Walk', 'Toronto', 'Ontario', 'M5S 2E5', 'Canada'),
-(9, '14 North Moore St', 'Toronto', 'Ontario', 'M4Y 1L1', 'Canada'),
-(10, '222 Animation Studios', 'Vancouver', 'British Columbia', 'V5K 0A1', 'Canada');  
+(1+1, '123 City Hall Plaza', 'Toronto', 'Ontario', 'M5H 2N2', 'Canada'),
+(2+1, '456 Environmental Way', 'Ottawa', 'Ontario', 'K1A 0H3', 'Canada'),
+(3+1, '789 University Ave', 'Toronto', 'Ontario', 'M5G 1X8', 'Canada'),
+(4+1, '1 Museum Drive', 'Toronto', 'Ontario', 'M5T 1P5', 'Canada'),
+(5+1, '1214 Spook Central', 'Vancouver', 'British Columbia', 'V6B 2W9', 'Canada'),
+(6+1, 'The Sedgewick Hotel', 'Vancouver', 'British Columbia', 'V6C 3L2', 'Canada'),
+(7+1, '555 Marshmallow Blvd', 'Montreal', 'Quebec', 'H3B 1G5', 'Canada'),
+(8+1, '100 College Walk', 'Toronto', 'Ontario', 'M5S 2E5', 'Canada'),
+(9+1, '14 North Moore St', 'Toronto', 'Ontario', 'M4Y 1L1', 'Canada'),
+(10+1, '222 Animation Studios', 'Vancouver', 'British Columbia', 'V5K 0A1', 'Canada');  
 
 INSERT INTO Rental (RentalCode, AccountID, StartDate, EndDate, RentalStatus, Notes, Scope) VALUES
-    ('RT-0001', 1, '2024-01-05', '2024-01-12', 'Closed', 'City Hall emergency ghost investigation', 'External'),
-    ('RT-0002', 2, '2024-01-10', '2024-01-15', 'Closed', 'EPA compliance testing equipment', 'External'),
-    ('RT-0003', 3, '2024-01-18', '2024-01-25', 'Closed', 'University paranormal research project', 'External'),
-    ('RT-0004', 4, '2024-02-01', '2024-02-07', 'Closed', 'Museum spectral disturbance investigation', 'External'),
-    ('RT-0005', 5, '2024-02-10', '2024-02-17', 'Closed', 'Shandor Building inspection', 'External'),
-    ('RT-0006', 6, '2024-02-20', '2024-02-25', 'Closed', 'Sedgewick Hotel recurring haunting', 'External'),
-    ('RT-0007', 7, '2024-03-01', '2024-03-08', 'Closed', 'Marshmallow factory paranormal event', 'External'),
-    ('RT-0008', 8, '2024-03-12', '2024-03-19', 'Closed', 'Columbia University lab equipment rental', 'External'),
-    ('RT-0009', 9, '2024-03-22', '2024-03-28', 'Closed', 'Fire station paranormal drill', 'External'),
-    ('RT-0010', 10, '2024-04-01', '2024-04-07', 'Closed', 'Cartoon division training exercise', 'External'),
-    ('RT-0011', 1, '2024-04-10', '2024-04-17', 'Closed', 'City-wide ghost sweep initiative', 'External'),
-    ('RT-0012', 2, '2024-04-20', '2024-04-25', 'Closed', 'Environmental impact assessment', 'External'),
-    ('RT-0013', 3, '2024-05-01', '2024-05-08', 'Closed', 'Academic research on Class IV entities', 'External'),
-    ('RT-0014', 4, '2024-05-12', '2024-05-18', 'Closed', 'Art museum spectral cleanup', 'External'),
-    ('RT-0015', 5, '2024-05-22', '2024-05-29', 'Closed', 'Cult headquarters investigation', 'External'),
-    ('RT-0016', 6, '2024-06-01', '2024-06-07', 'Closed', 'Hotel ballroom ghost removal', 'External'),
-    ('RT-0017', 7, '2024-06-10', '2024-06-17', 'Closed', 'Factory safety inspection equipment', 'External'),
-    ('RT-0018', 8, '2024-06-20', '2024-06-27', 'Closed', 'University summer research program', 'External'),
-    ('RT-0019', 9, '2024-07-01', '2024-07-08', 'Closed', 'Fire department training session', 'External'),
-    ('RT-0020', 10, '2024-07-12', '2024-07-19', 'Closed', 'Media production equipment rental', 'External'),
-    ('RT-0021', 1, '2024-07-22', '2024-07-29', 'Closed', 'Summer ghost festival preparation', 'External'),
-    ('RT-0022', 2, '2024-08-01', '2024-08-08', 'Closed', 'EPA annual ghost count', 'External'),
-    ('RT-0023', 3, '2024-08-12', '2024-08-19', 'Closed', 'Fall semester equipment setup', 'External'),
-    ('RT-0024', 4, '2024-08-22', '2024-08-29', 'Closed', 'Museum night watch equipment', 'External'),
-    ('RT-0025', 5, '2024-09-01', '2024-09-08', 'Closed', 'Building inspection and cleanup', 'External'),
-    ('RT-0026', 6, '2024-09-12', '2024-09-19', 'Closed', 'Hotel convention ghost management', 'External'),
-    ('RT-0027', 7, '2024-09-22', '2024-09-29', 'Closed', 'Product launch event safety', 'External'),
-    ('RT-0028', 8, '2024-10-01', '2024-10-08', 'Closed', 'Research conference equipment', 'External'),
-    ('RT-0029', 9, '2024-10-12', '2024-10-19', 'Closed', 'Halloween safety preparation', 'External'),
-    ('RT-0030', 10, '2024-10-22', '2024-10-29', 'Closed', 'Fall filming equipment rental', 'External'),
-    ('RT-0031', 1, '2024-11-01', '2024-11-07', 'Overdue', 'Equipment not returned on time', 'External'),
-    ('RT-0032', 2, '2024-11-05', '2024-11-10', 'Overdue', 'Extended investigation equipment', 'External'),
-    ('RT-0033', 3, '2024-11-08', '2024-11-12', 'Overdue', 'Research project delayed', 'External'),
-    ('RT-0034', 4, '2024-11-10', '2024-11-15', 'Overdue', 'Museum closure extension', 'External'),
-    ('RT-0035', 5, '2024-11-12', '2024-11-17', 'Overdue', 'Building investigation ongoing', 'External'),
-    ('RT-0036', 6, '2024-11-14', '2024-11-19', 'Overdue', 'Hotel event extended', 'External'),
-    ('RT-0037', 7, '2024-11-16', '2024-11-21', 'Overdue', 'Factory inspection incomplete', 'External'),
-    ('RT-0038', 8, '2024-11-18', '2024-11-23', 'Overdue', 'Research equipment retention', 'External'),
-    ('RT-0039', 9, '2024-11-20', '2024-11-25', 'Overdue', 'Training extended unexpectedly', 'External'),
-    ('RT-0040', 10, '2024-11-22', '2024-11-27', 'Overdue', 'Production schedule overrun', 'External'),
-    ('RT-0041', 1, '2024-11-25', '2024-11-28', 'Returned', 'Quick turnaround rental', 'External'),
-    ('RT-0042', 2, '2024-11-26', '2024-11-29', 'Returned', 'EPA spot check completed', 'External'),
-    ('RT-0043', 3, '2024-11-26', '2024-12-01', 'Returned', 'Weekend research project', 'External'),
-    ('RT-0044', 4, '2024-11-27', '2024-12-02', 'Returned', 'Museum security test', 'External'),
-    ('RT-0045', 5, '2024-11-27', '2024-12-03', 'Returned', 'Building re-inspection', 'External'),
-    ('RT-0046', 6, '2024-11-28', '2024-12-04', 'Returned', 'Hotel maintenance check', 'External'),
-    ('RT-0047', 7, '2024-11-28', '2024-12-05', 'Returned', 'Factory quality assurance', 'External'),
-    ('RT-0048', 8, '2024-11-29', '2024-12-06', 'Returned', 'Lab equipment calibration', 'External'),
-    ('RT-0049', 9, '2024-11-29', '2024-12-07', 'Returned', 'Drill equipment returned early', 'External'),
-    ('RT-0050', 10, '2024-11-30', '2024-12-08', 'Returned', 'Filming wrapped early', 'External'),
-    ('RT-0051', 1, '2024-11-28', '2024-12-05', 'CheckedOut', 'Active city investigation', 'External'),
-    ('RT-0052', 2, '2024-11-29', '2024-12-06', 'CheckedOut', 'EPA field work in progress', 'External'),
-    ('RT-0053', 3, '2024-11-30', '2024-12-07', 'CheckedOut', 'University experiment ongoing', 'External'),
-    ('RT-0054', 4, '2024-12-01', '2024-12-08', 'CheckedOut', 'Museum night shift monitoring', 'External'),
-    ('RT-0055', 5, '2024-12-02', '2024-12-09', 'CheckedOut', 'Building surveillance active', 'External'),
-    ('RT-0056', 6, '2024-12-10', '2024-12-17', 'Reserved', 'Hotel upcoming event reservation', 'External'),
-    ('RT-0057', 7, '2024-12-12', '2024-12-19', 'Reserved', 'Factory scheduled inspection', 'External'),
-    ('RT-0058', 8, '2024-12-14', '2024-12-21', 'Reserved', 'Winter research program', 'External'),
-    ('RT-0059', 9, '2024-12-16', '2024-12-23', 'Reserved', 'Holiday training session', 'External'),
-    ('RT-0060', 10, '2024-12-18', '2024-12-25', 'Reserved', 'Year-end production filming', 'External');
+    ('RT-0001', 1+1, '2024-01-05', '2024-01-12', 'Closed', 'City Hall emergency ghost investigation', 'External'),
+    ('RT-0002', 2+1, '2024-01-10', '2024-01-15', 'Closed', 'EPA compliance testing equipment', 'External'),
+    ('RT-0003', 3+1, '2024-01-18', '2024-01-25', 'Closed', 'University paranormal research project', 'External'),
+    ('RT-0004', 4+1, '2024-02-01', '2024-02-07', 'Closed', 'Museum spectral disturbance investigation', 'External'),
+    ('RT-0005', 5+1, '2024-02-10', '2024-02-17', 'Closed', 'Shandor Building inspection', 'External'),
+    ('RT-0006', 6+1, '2024-02-20', '2024-02-25', 'Closed', 'Sedgewick Hotel recurring haunting', 'External'),
+    ('RT-0007', 7+1, '2024-03-01', '2024-03-08', 'Closed', 'Marshmallow factory paranormal event', 'External'),
+    ('RT-0008', 8+1, '2024-03-12', '2024-03-19', 'Closed', 'Columbia University lab equipment rental', 'External'),
+    ('RT-0009', 9+1, '2024-03-22', '2024-03-28', 'Closed', 'Fire station paranormal drill', 'External'),
+    ('RT-0010', 10+1, '2024-04-01', '2024-04-07', 'Closed', 'Cartoon division training exercise', 'External'),
+    ('RT-0011', 1+1, '2024-04-10', '2024-04-17', 'Closed', 'City-wide ghost sweep initiative', 'External'),
+    ('RT-0012', 2+1, '2024-04-20', '2024-04-25', 'Closed', 'Environmental impact assessment', 'External'),
+    ('RT-0013', 3+1, '2024-05-01', '2024-05-08', 'Closed', 'Academic research on Class IV entities', 'External'),
+    ('RT-0014', 4+1, '2024-05-12', '2024-05-18', 'Closed', 'Art museum spectral cleanup', 'External'),
+    ('RT-0015', 5+1, '2024-05-22', '2024-05-29', 'Closed', 'Cult headquarters investigation', 'External'),
+    ('RT-0016', 6+1, '2024-06-01', '2024-06-07', 'Closed', 'Hotel ballroom ghost removal', 'External'),
+    ('RT-0017', 7+1, '2024-06-10', '2024-06-17', 'Closed', 'Factory safety inspection equipment', 'External'),
+    ('RT-0018', 8+1, '2024-06-20', '2024-06-27', 'Closed', 'University summer research program', 'External'),
+    ('RT-0019', 9+1, '2024-07-01', '2024-07-08', 'Closed', 'Fire department training session', 'External'),
+    ('RT-0020', 10+1, '2024-07-12', '2024-07-19', 'Closed', 'Media production equipment rental', 'External'),
+    ('RT-0021', 1+1, '2024-07-22', '2024-07-29', 'Closed', 'Summer ghost festival preparation', 'External'),
+    ('RT-0022', 2+1, '2024-08-01', '2024-08-08', 'Closed', 'EPA annual ghost count', 'External'),
+    ('RT-0023', 3+1, '2024-08-12', '2024-08-19', 'Closed', 'Fall semester equipment setup', 'External'),
+    ('RT-0024', 4+1, '2024-08-22', '2024-08-29', 'Closed', 'Museum night watch equipment', 'External'),
+    ('RT-0025', 5+1, '2024-09-01', '2024-09-08', 'Closed', 'Building inspection and cleanup', 'External'),
+    ('RT-0026', 6+1, '2024-09-12', '2024-09-19', 'Closed', 'Hotel convention ghost management', 'External'),
+    ('RT-0027', 7+1, '2024-09-22', '2024-09-29', 'Closed', 'Product launch event safety', 'External'),
+    ('RT-0028', 8+1, '2024-10-01', '2024-10-08', 'Closed', 'Research conference equipment', 'External'),
+    ('RT-0029', 9+1, '2024-10-12', '2024-10-19', 'Closed', 'Halloween safety preparation', 'External'),
+    ('RT-0030', 10+1, '2024-10-22', '2024-10-29', 'Closed', 'Fall filming equipment rental', 'External'),
+    ('RT-0031', 1+1, '2024-11-01', '2024-11-07', 'Overdue', 'Equipment not returned on time', 'External'),
+    ('RT-0032', 2+1, '2024-11-05', '2024-11-10', 'Overdue', 'Extended investigation equipment', 'External'),
+    ('RT-0033', 3+1, '2024-11-08', '2024-11-12', 'Overdue', 'Research project delayed', 'External'),
+    ('RT-0034', 4+1, '2024-11-10', '2024-11-15', 'Overdue', 'Museum closure extension', 'External'),
+    ('RT-0035', 5+1, '2024-11-12', '2024-11-17', 'Overdue', 'Building investigation ongoing', 'External'),
+    ('RT-0036', 6+1, '2024-11-14', '2024-11-19', 'Overdue', 'Hotel event extended', 'External'),
+    ('RT-0037', 7+1, '2024-11-16', '2024-11-21', 'Overdue', 'Factory inspection incomplete', 'External'),
+    ('RT-0038', 8+1, '2024-11-18', '2024-11-23', 'Overdue', 'Research equipment retention', 'External'),
+    ('RT-0039', 9+1, '2024-11-20', '2024-11-25', 'Overdue', 'Training extended unexpectedly', 'External'),
+    ('RT-0040', 10+1, '2024-11-22', '2024-11-27', 'Overdue', 'Production schedule overrun', 'External'),
+    ('RT-0041', 1+1, '2024-11-25', '2024-11-28', 'Returned', 'Quick turnaround rental', 'External'),
+    ('RT-0042', 2+1, '2024-11-26', '2024-11-29', 'Returned', 'EPA spot check completed', 'External'),
+    ('RT-0043', 3+1, '2024-11-26', '2024-12-01', 'Returned', 'Weekend research project', 'External'),
+    ('RT-0044', 4+1, '2024-11-27', '2024-12-02', 'Returned', 'Museum security test', 'External'),
+    ('RT-0045', 5+1, '2024-11-27', '2024-12-03', 'Returned', 'Building re-inspection', 'External'),
+    ('RT-0046', 6+1, '2024-11-28', '2024-12-04', 'Returned', 'Hotel maintenance check', 'External'),
+    ('RT-0047', 7+1, '2024-11-28', '2024-12-05', 'Returned', 'Factory quality assurance', 'External'),
+    ('RT-0048', 8+1, '2024-11-29', '2024-12-06', 'Returned', 'Lab equipment calibration', 'External'),
+    ('RT-0049', 9+1, '2024-11-29', '2024-12-07', 'Returned', 'Drill equipment returned early', 'External'),
+    ('RT-0050', 10+1, '2024-11-30', '2024-12-08', 'Returned', 'Filming wrapped early', 'External'),
+    ('RT-0051', 1+1, '2024-11-28', '2024-12-05', 'CheckedOut', 'Active city investigation', 'External'),
+    ('RT-0052', 2+1, '2024-11-29', '2024-12-06', 'CheckedOut', 'EPA field work in progress', 'External'),
+    ('RT-0053', 3+1, '2024-11-30', '2024-12-07', 'CheckedOut', 'University experiment ongoing', 'External'),
+    ('RT-0054', 4+1, '2024-12-01', '2024-12-08', 'CheckedOut', 'Museum night shift monitoring', 'External'),
+    ('RT-0055', 5+1, '2024-12-02', '2024-12-09', 'CheckedOut', 'Building surveillance active', 'External'),
+    ('RT-0056', 6+1, '2024-12-10', '2024-12-17', 'Reserved', 'Hotel upcoming event reservation', 'External'),
+    ('RT-0057', 7+1, '2024-12-12', '2024-12-19', 'Reserved', 'Factory scheduled inspection', 'External'),
+    ('RT-0058', 8+1, '2024-12-14', '2024-12-21', 'Reserved', 'Winter research program', 'External'),
+    ('RT-0059', 9+1, '2024-12-16', '2024-12-23', 'Reserved', 'Holiday training session', 'External'),
+    ('RT-0060', 10+1, '2024-12-18', '2024-12-25', 'Reserved', 'Year-end production filming', 'External');
 
 -- RT-0001: Mayor Lenny Clotch
 INSERT INTO RentedEquipment (RentalId, EquipmentId)
@@ -711,8 +711,8 @@ INSERT INTO Maintenance (
     RentalId,
     LastServiceDate,
     MaintenanceStatus,
-    OpenedAt,
-    ClosedAt,
+    OpenDate,
+    ClosedDate,
     Outcome,
     Technician,
     Notes
@@ -772,7 +772,7 @@ SELECT
          LIMIT 1
         ),
         '2024-12-10'
-    ) AS OpenedAt,
+    ) AS OpenDate,
     
     -- CloseDate: NULL if Open/Returned, otherwise date
     CASE
@@ -792,7 +792,7 @@ SELECT
             ),
             '2024-12-15'
         )
-    END AS ClosedAt,
+    END AS ClosedDate,
     
     -- Outcome: Damaged if overdue, otherwise Working
     CASE
