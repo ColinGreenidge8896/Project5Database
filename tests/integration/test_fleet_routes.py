@@ -7,7 +7,8 @@ BASE_URL = "http://localhost:3000/api/fleet"
 
 class TestRentals:
     """Test Rental CRUD operations"""
-    # missing required fields - rentalcode was missing
+    # must match format:
+    # const { rentalcode, accountid, start, end, status, notes, scope } = req.body;
     def test_create_rental(self):
         """Test POST /api/fleet/rental"""
         rental_data = {
