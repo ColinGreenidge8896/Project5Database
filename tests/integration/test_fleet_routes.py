@@ -23,6 +23,8 @@ class TestRentals:
         
         assert response.status_code == 200
         data = response.json()
+        print(response.status_code)
+        print(response.json())
         assert data["success"] == True
         assert "rentalID" in data["data"] or "RentalID" in data["data"]
     
