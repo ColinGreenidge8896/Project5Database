@@ -84,6 +84,21 @@ CREATE TABLE CustomerAccount (
 -- maintenance - update fields 
 -- populate customer 
 
+-- Customer Table - Belongs to FLEET TEAM - different name if we had more time
+CREATE TABLE Customer (
+    CustomerId INT AUTO_INCREMENT PRIMARY KEY,
+    CustomerCode VARCHAR(32) NOT NULL UNIQUE,
+    CustomerName VARCHAR(200) NOT NULL,
+    CustomerAddress TEXT NULL,
+    CustomerGovtId VARCHAR(100) NULL,
+    CustomerEmail VARCHAR(200) NULL,
+    CustomerPhone VARCHAR(50) NULL,
+    
+    Username VARCHAR(50) NULL,
+    Password VARCHAR(200) NULL
+);
+
+
 CREATE TABLE CustomerAddress (
   AddressID INT AUTO_INCREMENT PRIMARY KEY,
   AccountID INT NOT NULL,
@@ -214,12 +229,11 @@ CREATE TABLE Maintenance (
   RentalID INT,
 
   LastServiceDate DATE,
-  NextServiceDate DATE,
   
   MaintenanceStatus ENUM('Open','Closed') DEFAULT 'Open',
 
-  OpenedAt DATE NOT NULL,
-  ClosedAt DATE,
+  OpenDate DATE NOT NULL,
+  CloseDate DATE NULL,
 
   Outcome ENUM('Working','Damaged') DEFAULT 'Working',
   Technician VARCHAR(200),
