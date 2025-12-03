@@ -29,3 +29,41 @@ jobs:
         run: |
           sql2dbml --mysql db/init.sql -o dbmlupdate.dbml
           dbdocs build dbmlupdate.dbml --project "Project V Database"
+  test-api:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+  
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        
+      - name: Start Docker Compose services
+        run: |
+          docker-compose up -d
+          
+      - name: Wait for services to be healthy
+        run: |
+          echo "Waiting for database to be ready..."
+          timeout 60 bash -c 'until docker-compose exec -T db mysqladmin ping -h localhost -u myuser -ppassword --silent; do sleep 2; done'
+          
+          echo "Waiting for backend to be ready..."
+          timeout 60 bash -c 'until curl -f http://localhost:3000/health || curl -f http://localhost:3000; do sleep 2; done'
+      
+      - name: Check running containers
+        run: |
+          docker-compose ps
+          docker-compose logs
+
+      - name: Test Database Connection
+        run: |
+          docker-compose exec -T db mysql -u myuser -ppassword -e "SHOW DATABASES;"
+          docker-compose exec -T db mysql -u myuser -ppassword mydatabase -e "SHOW TABLES;"
+          curl http://localhost:3000/api/test
+
+      - name: Stop Docker Compose
+        if: always()
+        run: |
+          docker-compose logs
+          docker-compose down -v
