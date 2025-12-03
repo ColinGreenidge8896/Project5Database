@@ -7,24 +7,26 @@ BASE_URL = "http://localhost:3000/api/fleet"
 
 class TestRentals:
     """Test Rental CRUD operations"""
-    
+    # missing required fields - rentalcode was missing
     def test_create_rental(self):
         """Test POST /api/fleet/rental"""
         rental_data = {
+            "rentalCode": "test",
             "customerID": 1,
             "startDate": "2025-01-15",
             "endDate": "2025-01-20",
-            "status": "Draft",
+            "status": "Returned",
             "note": "Test rental",
             "scope": "External"
         }
         
         response = requests.post(f"{BASE_URL}/rental", json=rental_data)
-        
-        assert response.status_code == 200
-        data = response.json()
         print(response.status_code)
         print(response.json())
+
+        assert response.status_code == 200
+        data = response.json()
+
         assert data["success"] == True
         assert "rentalID" in data["data"] or "RentalID" in data["data"]
     
