@@ -68,17 +68,29 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
       
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          
+      - name: Start Docker Compose services
+        run: |
+          docker compose up -d
 
       - name: Install dependencies
         run: |
           pip install --upgrade pip
           pip install -r tests/requirements.txt
 
+      - name: Wait for services to be healthy
+        run: |
+          echo "Waiting for backend to be ready..."
+          sleep 15
+          
       - name: Run unit tests
         run: |
           pytest tests/unit/ -v
