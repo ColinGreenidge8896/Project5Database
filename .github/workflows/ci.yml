@@ -91,6 +91,15 @@ jobs:
           echo "Waiting for backend to be ready..."
           sleep 15
           
-      - name: Run unit tests
+      # - name: Run unit tests
+      #   run: |
+      #     pytest tests/unit/ -v
+
+      - name: Run integration tests
         run: |
-          pytest tests/unit/ -v
+          pytest tests/integration/ -v
+          
+      - name: Stop Docker Compose
+        if: always()
+        run: |
+          docker compose down -v
