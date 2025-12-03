@@ -415,7 +415,7 @@ INSERT INTO Equipment (EquipmentCode, EquipmentName, EquipmentDescription, Equip
 INSERT INTO CustomerAccount (Email, Username, PasswordHash) VALUES
 ('test@testing.com', 'test', 'T3st123');
 INSERT INTO Customer(CustomerCode, CustomerName, CustomerAddress, CustomerGovtId, CustomerEmail, CustomerPhone, Username, Password) VALUES
- ('CT-TEST', 'test', 'test test test', 'test', 'test', 'test', 'test', 'test'),
+ ('CT-TEST', 'test', 'test test test', 'test', 'test', 'test', 'test', 'test');
 INSERT INTO CustomerAddress (AccountID, Line1, City, ProvinceState, PostalCode, Country) VALUES
 (1, '123 First St', 'Toronto', 'Ontario', 'A1A 1A1', 'Canada');
 INSERT INTO Rental (RentalCode, AccountID, StartDate, EndDate, RentalStatus, Notes, Scope) VALUES
