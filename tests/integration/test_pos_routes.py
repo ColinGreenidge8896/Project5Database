@@ -130,22 +130,10 @@ class TestLogin:
     
     def test_login_success(self):
         """Test POST /api/pos/login with valid credentials"""
-        # Create a customer first
-        timestamp = int(time.time())
-        username = f"loginuser{timestamp}"
-        password = "testpass123"
-        
-        new_customer = {
-            "email": f"{username}@test.com",
-            "username": username,
-            "password": password
-        }
-        requests.post(f"{BASE_URL}/customers", json=new_customer)
-        
-        # Try to login
+        # Use existing credentials from database
         login_data = {
-            "username": username,
-            "password": password
+            "username": "shandor.ghost",
+            "password": "SECRETP@55"
         }
         
         response = requests.post(f"{BASE_URL}/login", json=login_data)
@@ -154,26 +142,15 @@ class TestLogin:
         assert response.status_code == 200
         assert data["success"] == True
         assert "user" in data["data"]
-        assert data["data"]["user"]["Username"] == username
-        assert "Password" not in data["data"]["user"]  # Password should be removed
-    
+        assert data["data"]["user"]["Username"] == "shandor.ghost"
+        assert "Password" not in data["data"]["user"]  # Password should be removed from response
+   
     def test_login_wrong_password(self):
         """Test POST /api/pos/login with incorrect password"""
-        # Create customer
-        timestamp = int(time.time())
-        username = f"wrongpass{timestamp}"
-        
-        new_customer = {
-            "email": f"{username}@test.com",
-            "username": username,
-            "password": "correctpassword"
-        }
-        requests.post(f"{BASE_URL}/customers", json=new_customer)
-        
-        # Try wrong password
+        # Use existing username but wrong password
         login_data = {
-            "username": username,
-            "password": "wrongpassword"
+            "username": "shandor.ghost",
+            "password": "WrongPassword123"
         }
         
         response = requests.post(f"{BASE_URL}/login", json=login_data)
