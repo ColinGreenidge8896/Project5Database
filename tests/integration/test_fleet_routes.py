@@ -12,6 +12,7 @@ class TestRentals:
     # accountId = 0 for testing
     def test_create_rental(self):
         """Test POST /api/fleet/rental"""
+        
         rental_data = {
             "rentalcode": "test",
             "accountid": 1,

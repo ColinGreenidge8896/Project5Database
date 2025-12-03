@@ -86,7 +86,7 @@ CREATE TABLE CustomerAccount (
 
 -- Customer Table - Belongs to FLEET TEAM - different name if we had more time
 CREATE TABLE Customer (
-    AccountId INT AUTO_INCREMENT PRIMARY KEY,
+    AccountID INT AUTO_INCREMENT PRIMARY KEY,
     CustomerCode VARCHAR(32) NOT NULL UNIQUE,
     CustomerName VARCHAR(200) NOT NULL,
     CustomerAddress TEXT NULL,
@@ -97,7 +97,6 @@ CREATE TABLE Customer (
     Username VARCHAR(50) NULL,
     Password VARCHAR(200) NULL
 );
-
 
 CREATE TABLE CustomerAddress (
   AddressID INT AUTO_INCREMENT PRIMARY KEY,
