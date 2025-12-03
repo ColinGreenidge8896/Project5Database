@@ -46,6 +46,7 @@ jobs:
       - name: Wait for services to be healthy
         run: |
           echo "Waiting for backend to be ready..."
+          sleep 45
           timeout 60 bash -c 'until curl -f http://localhost:3000/api/test; do sleep 2; done'
       
       - name: Check running containers
