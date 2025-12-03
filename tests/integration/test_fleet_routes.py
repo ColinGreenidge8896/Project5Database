@@ -14,7 +14,7 @@ class TestRentals:
         """Test POST /api/fleet/rental"""
         rental_data = {
             "rentalcode": "test",
-            "accountid": 0,
+            "accountid": 1,
             "start": "2025-01-15",
             "end": "2025-01-20",
             "status": "Returned",
@@ -45,7 +45,7 @@ class TestRentals:
         # Create rental first
         rental_data = {
             "rentalcode": "test",
-            "accountid": 0,
+            "accountid": 1,
             "start": "2025-01-15",
             "end": "2025-01-20",
             "status": "Returned",
@@ -67,7 +67,7 @@ class TestRentals:
         # Create rental
         rental_data = {
             "rentalcode": "test",
-            "accountid": 0,
+            "accountid": 1,
             "start": "2025-01-15",
             "end": "2025-01-20",
             "status": "Returned",
@@ -93,7 +93,7 @@ class TestRentals:
         # Create rental
         rental_data = {
             "rentalcode": "test",
-            "accountid": 0,
+            "accountid": 1,
             "start": "2025-01-15",
             "end": "2025-01-20",
             "status": "Returned",
