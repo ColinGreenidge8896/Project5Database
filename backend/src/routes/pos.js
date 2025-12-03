@@ -14,8 +14,8 @@ export default (pool, sendResponse) => {
     CREATE login, register (register is first /customers route, but can be renamed if they want)
     */
 
-    // Create a new customer account
-    router.post("/customers", async (req, res) => {
+    // Create a new customer account - rename to /register?
+    router.post("/register", async (req, res) => {
     try {
         const { email, username, password, status } = req.body;
         if (!email || !username || !password)

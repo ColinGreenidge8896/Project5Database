@@ -9,7 +9,7 @@ class TestCustomerCRUD:
     """Test Customer CRUD operations"""
     
     def test_create_customer(self):
-        """Test POST /api/pos/customers"""
+        """Test POST /api/pos/register"""
         timestamp = int(time.time())
         customer_data = {
             "email": f"test{timestamp}@example.com",
@@ -18,7 +18,7 @@ class TestCustomerCRUD:
             "status": "active"
         }
         
-        response = requests.post(f"{BASE_URL}/customers", json=customer_data)
+        response = requests.post(f"{BASE_URL}/register", json=customer_data)
         
         assert response.status_code == 200
         data = response.json()
@@ -27,38 +27,38 @@ class TestCustomerCRUD:
         assert isinstance(data["data"]["accountID"], int)
     
     def test_create_customer_missing_email(self):
-        """Test POST /api/pos/customers without email"""
+        """Test POST /api/pos/register without email"""
         customer_data = {
             "username": "testuser",
             "password": "password123"
         }
         
-        response = requests.post(f"{BASE_URL}/customers", json=customer_data)
+        response = requests.post(f"{BASE_URL}/register", json=customer_data)
         data = response.json()
         
         assert data["success"] == False
         assert "Missing required fields" in data["message"]
     
     def test_create_customer_missing_username(self):
-        """Test POST /api/pos/customers without username"""
+        """Test POST /api/pos/register without username"""
         customer_data = {
             "email": "test@example.com",
             "password": "password123"
         }
         
-        response = requests.post(f"{BASE_URL}/customers", json=customer_data)
+        response = requests.post(f"{BASE_URL}/register", json=customer_data)
         data = response.json()
         
         assert data["success"] == False
     
     def test_create_customer_missing_password(self):
-        """Test POST /api/pos/customers without password"""
+        """Test POST /api/pos/register without password"""
         customer_data = {
             "email": "test@example.com",
             "username": "testuser"
         }
         
-        response = requests.post(f"{BASE_URL}/customers", json=customer_data)
+        response = requests.post(f"{BASE_URL}/register", json=customer_data)
         data = response.json()
         
         assert data["success"] == False
