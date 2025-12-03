@@ -233,6 +233,7 @@ CREATE TABLE Maintenance (
   MaintenanceStatus ENUM('Open','Closed') DEFAULT 'Open',
 
   OpenDate DATE NOT NULL,
+  CloseDate DATE NULL,
 
   Outcome ENUM('Working','Damaged') DEFAULT 'Working',
   Technician VARCHAR(200),
