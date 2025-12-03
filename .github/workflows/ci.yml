@@ -41,7 +41,7 @@ jobs:
         
       - name: Start Docker Compose services
         run: |
-          docker-compose up -d
+          docker compose up -d
           
       - name: Wait for services to be healthy
         run: |
