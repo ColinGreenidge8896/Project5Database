@@ -721,12 +721,12 @@ WHERE EquipmentCode IN ('EQ-COM-001', 'EQ-MSC-005');
 -- Create maintenance records for equipment with rental history
 INSERT INTO Maintenance (
     MaintenanceCode,
-    EquipmentId,
-    RentalId,
+    EquipmentID,
+    RentalID,
     LastServiceDate,
     MaintenanceStatus,
     OpenDate,
-    ClosedDate,
+    CloseDate,
     Outcome,
     Technician,
     Notes
