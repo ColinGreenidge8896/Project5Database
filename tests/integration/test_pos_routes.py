@@ -10,17 +10,17 @@ class TestCustomerCRUD:
     
     def test_get_test_customer(self):
         """Test GET /api/pos/customers/:id with seeded test customer (ID=0)"""
-        response = requests.get(f"{BASE_URL}/customers/0")
+        response = requests.get(f"{BASE_URL}/customers/1")
         
         assert response.status_code == 200
         data = response.json()
         assert data["success"] == True
-        assert data["data"]["AccountID"] == 0
+        assert data["data"]["AccountID"] == 1
         assert data["data"]["Username"] == "test"
         assert data["data"]["Email"] == "test@testing.com"
     
     def test_create_customer(self):
-        """Test POST /api/pos/customers"""
+        """Test POST /api/pos/register"""
         timestamp = int(time.time())
         customer_data = {
             "email": f"newcustomer{timestamp}@example.com",
@@ -85,7 +85,7 @@ class TestPayments:
     def test_create_payment_with_test_customer(self):
         """Test POST /api/pos/payments using test customer (ID=0)"""
         payment_data = {
-            "accountID": 0,  # Test customer
+            "accountID": 1,  # Test customer
             "cardNo": "4532123456789012",
             "cvv": "123",
             "expiryDate": "12/26",
