@@ -46,8 +46,7 @@ jobs:
       - name: Wait for services to be healthy
         run: |
           echo "Waiting for backend to be ready..."
-          sleep 45
-          timeout 60 bash -c 'until curl -f http://localhost:3000/api/test; do sleep 2; done'
+          sleep 30
       
       - name: Check running containers
         run: |
@@ -62,3 +61,24 @@ jobs:
         if: always()
         run: |
           docker compose down -v
+
+  unit-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r tests/requirements.txt
+
+      - name: Run unit tests
+        run: |
+          pytest tests/unit/ -v
