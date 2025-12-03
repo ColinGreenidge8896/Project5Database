@@ -12,12 +12,12 @@ class TestRentals:
         """Test POST /api/fleet/rental"""
         rental_data = {
             "rentalCode": "test",
-            "customerID": 1,
+            "AccountID": 1,
             "startDate": "2025-01-15",
             "endDate": "2025-01-20",
-            "status": "Returned",
-            "note": "Test rental",
-            "scope": "External"
+            "RentalStatus": "Returned",
+            "Notes": "Test rental",
+            "Scope": "External"
         }
         
         response = requests.post(f"{BASE_URL}/rental", json=rental_data)
