@@ -3,6 +3,7 @@
 
 import express from "express";
 
+import fleetRoute from "./routes/fleet.js";
 import reviewsRoute from "./routes/reviews.js";
 import posRoute from "./routes/pos.js";
 import inventoryRoute from "./routes/inventory.js";
@@ -18,6 +19,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
+app.use("/api/fleet",             fleetRoute(pool, sendResponse));
 app.use("/api/reviews",           reviewsRoute(pool, sendResponse));
 app.use("/api/pos",               posRoute(pool, sendResponse));
 app.use("/api/inventory",         inventoryRoute(pool, sendResponse));
