@@ -157,7 +157,8 @@ class TestStockOrders:
         }
         
         response = requests.post(f"{BASE_URL}/stock-order", json=order_data)
-        
+        print(response.status_code)
+        print(response.json())
         assert response.status_code == 200
         data = response.json()
         assert data["success"] == True
