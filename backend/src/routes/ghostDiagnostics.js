@@ -369,6 +369,7 @@ export default (pool, sendResponse) => {
         const updates = [];
         const values = [];
 
+        //adds update if included in patch body
         if (equipmentID !== undefined) { updates.push("EquipmentID = ?"); values.push(equipmentID); }
         if (serviceID !== undefined) { updates.push("ServiceID = ?"); values.push(serviceID); }
         if (quantity !== undefined) { updates.push("Quantity = ?"); values.push(quantity); }
@@ -514,8 +515,5 @@ export default (pool, sendResponse) => {
     /* ======================
     Customer Service Route
     ====================== */
-    
-    
-
     return router;
 };
