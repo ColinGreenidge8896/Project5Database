@@ -11,5 +11,7 @@ export default {
   ],
   coveragePathIgnorePatterns: [
     '/routes/'
-  ]
+  ],
+  // Add these lines for ESM support
+  transform: {},
 };
