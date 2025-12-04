@@ -89,13 +89,11 @@ class TestPayments:
     def test_create_payment_with_test_customer(self):
         """Test POST /api/pos/payments using test customer (ID=0)"""
         payment_data = {
-            "accountID": 1,
-            "cardNo": "4532123456789012",
-            "expiryDate": "12/26",
-            "amount": 100.00,
-            "paymentMethod": "credit_card",
-            "serviceAddress": "123 Test St",
-            "deliveryAddress": "456 Main St"
+        "accountID": 1,
+        "cardNo": "4532123456789012",
+        "amount": 100.00,
+        "paymentMethod": "credit_card"
+        # billing address if they want
         }
         
         response = requests.post(f"{BASE_URL}/payments", json=payment_data)
