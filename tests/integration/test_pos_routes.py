@@ -89,10 +89,11 @@ class TestPayments:
     def test_create_payment_with_test_customer(self):
         """Test POST /api/pos/payments using test customer (ID=0)"""
         payment_data = {
-            "accountID": 1,  # Test customer
+            "accountID": 1,
             "cardNo": "4532123456789012",
-            "cvv": "123",
             "expiryDate": "12/26",
+            "amount": 100.00,
+            "paymentMethod": "credit_card",
             "serviceAddress": "123 Test St",
             "deliveryAddress": "456 Main St"
         }
@@ -119,12 +120,15 @@ class TestTransactions:
     
     def test_create_item_transaction_with_test_product(self):
         """Test POST /api/pos/item-transactions using test product (ID=0)"""
-        # First create a payment
+        #create test payment
         payment_data = {
-            "accountID": 0,
+            "accountID": 1, 
             "cardNo": "4532123456789012",
-            "cvv": "123",
-            "expiryDate": "12/27"
+            "expiryDate": "12/27",
+            "amount": 200.00,
+            "paymentMethod": "credit_card",
+            "serviceAddress": "123 Test St",
+            "deliveryAddress": "456 Main St"
         }
         payment_response = requests.post(f"{BASE_URL}/payments", json=payment_data)
         payment_id = payment_response.json()["data"]["paymentID"]
@@ -132,7 +136,7 @@ class TestTransactions:
         # Create transaction with test product
         transaction_data = {
             "paymentID": payment_id,
-            "productID": 0,  # Test product
+            "productID": 0,
             "quantity": 2,
             "subtotal": 200.00
         }
