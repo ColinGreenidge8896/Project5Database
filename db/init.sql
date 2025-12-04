@@ -356,22 +356,22 @@ CREATE TABLE IdentifyingTrait (
 ) COMMENT = 'Combines a ghost and trait for identification';
 
 CREATE TABLE InquiryForm (
-  InquiryFormID INT AUTO_INCREMENT PRIMARY KEY,
-  AccountID INT,
-  InquiryFormDescription TEXT,
-  SubmittedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+  InquiryFormID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique inquiry form identifier',
+  AccountID INT COMMENT 'Associated customer account identifier',
+  InquiryFormDescription TEXT COMMENT 'Description of inquiry form',
+  SubmittedAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Time submitted',
   FOREIGN KEY (AccountID) REFERENCES CustomerAccount(AccountID)
-);
+) COMMENT = 'Stores inquiry form information';
 
 CREATE TABLE InquiryFormResponse (
-  InquiryFormResponseID INT AUTO_INCREMENT PRIMARY KEY,
-  InquiryFormID INT, 
-  GhostID INT,
-  InquiryFormResponseDescription TEXT,
+  InquiryFormResponseID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique inquiry form response identifier',
+  InquiryFormID INT COMMENT 'Associated inquiry form identifier', 
+  GhostID INT COMMENT 'Associated ghost identifier',
+  InquiryFormResponseDescription TEXT COMMENT 'Description of inquiry form response',
   SubmittedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (InquiryFormID) REFERENCES InquiryForm(InquiryFormID),
   FOREIGN KEY (GhostID) REFERENCES Ghost(GhostID)
-);
+) COMMENT = 'Stores inquiry form responses';
 
 -- requested implementation from ghost diag team - can change to combined primary key if needed
 CREATE TABLE ChosenTrait (
