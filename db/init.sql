@@ -375,32 +375,32 @@ CREATE TABLE InquiryFormResponse (
 
 -- requested implementation from ghost diag team - can change to combined primary key if needed
 CREATE TABLE ChosenTrait (
-  ChosenTraitID INT AUTO_INCREMENT PRIMARY KEY,
-  InquiryFormID INT,
-  TraitID INT,
+  ChosenTraitID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique chosen trait identifier',
+  InquiryFormID INT COMMENT 'Unique associated inquiry form identifier',
+  TraitID INT COMMENT 'Unique associated trait identifier',
   UNIQUE (InquiryFormID, TraitID),
   FOREIGN KEY (InquiryFormID) REFERENCES InquiryForm(InquiryFormID),
   FOREIGN KEY (TraitID) REFERENCES Trait(TraitID)
-);
+) COMMENT = 'Combines inquiry form with trait for chosen trait';
 
 CREATE TABLE RemovalMethod (
-  RemovalMethodID INT AUTO_INCREMENT PRIMARY KEY,
-  GhostID int,
-  ServiceID int,
+  RemovalMethodID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique removal method identifier',
+  GhostID int COMMENT 'Associated ghost identifier',
+  ServiceID int COMMENT 'Associated service identifier',
   FOREIGN KEY (GhostID) REFERENCES Ghost(GhostID),
   FOREIGN KEY (ServiceID) REFERENCES Service(ServiceID)
-);
+) COMMENT = 'Combines ghost with service for removal method';
 
 -- who accesses this table?
 CREATE TABLE ItemReq (
-  ItemReqID INT AUTO_INCREMENT PRIMARY KEY,
-  EquipmentID INT,
-  ServiceID INT,
-  Quantity INT DEFAULT 1,
-  Notes TEXT,
+  ItemReqID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique item request identifier',
+  EquipmentID INT COMMENT 'Associated equipment identifier',
+  ServiceID INT COMMENT 'Associated service identifier',
+  Quantity INT DEFAULT 1 COMMENT 'Quantity of items in request',
+  Notes TEXT COMMENT 'Notes about request',
   FOREIGN KEY (EquipmentID) REFERENCES Equipment(EquipmentID),
   FOREIGN KEY (ServiceID) REFERENCES Service(ServiceID)
-);
+) COMMENT = 'Stores item request information';
 
 INSERT INTO Ghost (GhostName, GhostDescription) VALUES
 ('Testing Ghost', 'This is a test ghost.');
