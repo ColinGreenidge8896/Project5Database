@@ -222,27 +222,27 @@ CREATE TABLE RentedEquipment (
 
 -- tie entries to either requipment or rental, otherwise "floating" events possible
 CREATE TABLE Maintenance (
-  MaintenanceID INT AUTO_INCREMENT PRIMARY KEY,
-  MaintenanceCode VARCHAR(32) NOT NULL,
-  EquipmentID INT NOT NULL,
-  RentalID INT,
+  MaintenanceID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique maintenance identifier',
+  MaintenanceCode VARCHAR(32) NOT NULL COMMENT 'Unique maintenance code',
+  EquipmentID INT NOT NULL COMMENT 'Unique associated equipment identifier',
+  RentalID INT COMMENT 'Unique associated rental identifier',
 
-  LastServiceDate DATE,
+  LastServiceDate DATE COMMENT 'Date of last service',
   
-  MaintenanceStatus ENUM('Open','Closed') DEFAULT 'Open',
+  MaintenanceStatus ENUM('Open','Closed') DEFAULT 'Open' COMMENT 'Status of maintenance: open, closed',
 
-  OpenDate DATE NOT NULL,
-  CloseDate DATE NULL,
+  OpenDate DATE NOT NULL COMMENT 'Date opened',
+  CloseDate DATE NULL COMMENT 'Date closed',
 
-  Outcome ENUM('Working','Damaged') DEFAULT 'Working',
-  Technician VARCHAR(200),
-  Notes TEXT,
+  Outcome ENUM('Working','Damaged') DEFAULT 'Working' COMMENT 'Outcome of maintenance: working, damaged',
+  Technician VARCHAR(200) COMMENT 'Technician assigned to maintenance',
+  Notes TEXT COMMENT 'Notes about maintenance',
 
-  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Time created',
 
   FOREIGN KEY (EquipmentID) REFERENCES Equipment(EquipmentID),
   FOREIGN KEY (RentalID) REFERENCES Rental(RentalID)
-);
+) COMMENT = 'Stores maintenance information';
 
 
 CREATE TABLE Payment (
