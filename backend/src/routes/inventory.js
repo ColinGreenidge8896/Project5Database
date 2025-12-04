@@ -149,6 +149,7 @@ export default (pool, sendResponse) => {
     // Create new order
     router.post("/stock-order", async (req, res) => {
     try {
+        const receivedAtValue = received || null; // NULL if not provided
         const { productid, qty, suppliername, ordered, received } = req.body;
         if (!productid || !qty || !suppliername)
         return sendResponse(res, false, "Missing required fields.");
