@@ -98,7 +98,7 @@ export default (pool, sendResponse) => {
         );
 
         if (rows.length === 0) {
-            return sendResponse(res, false, "Invalid email or password.");
+            return sendResponse(res, false, "Invalid username or password.");
         }
 
         const user = rows[0];
@@ -107,7 +107,7 @@ export default (pool, sendResponse) => {
         const passwordMatch = await bcrypt.compare(password, user.Password);
 
         if (!passwordMatch) {
-            return sendResponse(res, false, "Invalid email or password.");
+            return sendResponse(res, false, "Invalid username or password.");
         }
 
         // Optionally, check if the account is active
