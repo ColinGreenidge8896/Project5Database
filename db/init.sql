@@ -301,37 +301,37 @@ CREATE TABLE ServiceTransaction (
 ) COMMENT = 'Stores service transaction information';
 
 CREATE TABLE ProductReview (
-  ReviewID INT AUTO_INCREMENT PRIMARY KEY,
-  ProductID INT NOT NULL,
-  AccountID INT NOT NULL,
-  Rating INT CHECK (Rating BETWEEN 1 AND 5),
-  Comment TEXT,
-  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+  ReviewID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique product review identifier',
+  ProductID INT NOT NULL COMMENT 'Associated product identifier',
+  AccountID INT NOT NULL COMMENT 'Associated customer account identifier',
+  Rating INT CHECK (Rating BETWEEN 1 AND 5) COMMENT 'Customer rating of product: 1-5',
+  Comment TEXT COMMENT 'Customer comment on product',
+  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Time created',
   FOREIGN KEY (ProductID) REFERENCES Product(ProductID),
   FOREIGN KEY (AccountID) REFERENCES CustomerAccount(AccountID)
-);
+) COMMENT = 'Stores product review information';
 
 CREATE TABLE RentalReview (
-  ReviewID INT AUTO_INCREMENT PRIMARY KEY,
-  RentalID INT NOT NULL,
-  AccountID INT NOT NULL,
-  Rating INT CHECK (Rating BETWEEN 1 AND 5),
-  Comment TEXT,
-  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+  ReviewID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique rental review identifier',
+  RentalID INT NOT NULL COMMENT 'Associated rental identifier',
+  AccountID INT NOT NULL COMMENT 'Associated customer account identifier',
+  Rating INT CHECK (Rating BETWEEN 1 AND 5) COMMENT 'Customer rating of rental: 1-5',
+  Comment TEXT COMMENT 'Customer comment on rental',
+  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Time created',
   FOREIGN KEY (RentalID) REFERENCES Rental(RentalID),
   FOREIGN KEY (AccountID) REFERENCES CustomerAccount(AccountID)
-);
+) COMMENT = 'Stores rental review information';
 
 CREATE TABLE ServiceReview (
-  ReviewID INT AUTO_INCREMENT PRIMARY KEY,
-  ServiceID INT NOT NULL,
-  AccountID INT NOT NULL,
-  Rating INT CHECK (Rating BETWEEN 1 AND 5),
-  Comment TEXT,
-  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+  ReviewID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique service review identifier',
+  ServiceID INT NOT NULL COMMENT 'Associated service identifier',
+  AccountID INT NOT NULL COMMENT 'Associated customer account identifier',
+  Rating INT CHECK (Rating BETWEEN 1 AND 5) COMMENT 'Customer rating of service',
+  Comment TEXT COMMENT 'Customer comment on service',
+  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Time created',
   FOREIGN KEY (ServiceID) REFERENCES Service(ServiceID),
   FOREIGN KEY (AccountID) REFERENCES CustomerAccount(AccountID)
-);
+) COMMENT = 'Stores service review information';
 
 CREATE TABLE Ghost (
   GhostID INT AUTO_INCREMENT PRIMARY KEY,
