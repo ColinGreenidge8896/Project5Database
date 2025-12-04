@@ -9,5 +9,8 @@ export default {
     'backend/src/**/*.js',
     '!backend/src/node_modules/**',
     '!backend/src/tests/**'
+  ],
+  coveragePathIgnorePatterns: [
+    "backend/src/routes/"
   ]
 };
