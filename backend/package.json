@@ -19,6 +19,7 @@
   },
   "license": "ISC",
   "author": "Database Team",
+  "type": "module",
   "main": "server.js",
   "scripts": {
     "test": "test",
