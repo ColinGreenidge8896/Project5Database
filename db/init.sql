@@ -334,12 +334,12 @@ CREATE TABLE ServiceReview (
 ) COMMENT = 'Stores service review information';
 
 CREATE TABLE Ghost (
-  GhostID INT AUTO_INCREMENT PRIMARY KEY,
-  GhostName VARCHAR(150) NOT NULL,
-  GhostDescription TEXT,
-  ThreatLevel ENUM('low','medium','high') DEFAULT 'medium',
-  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
-);
+  GhostID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique ghost identifier',
+  GhostName VARCHAR(150) NOT NULL COMMENT 'Name of ghost',
+  GhostDescription TEXT COMMENT 'Description of ghost',
+  ThreatLevel ENUM('low','medium','high') DEFAULT 'medium' COMMENT 'Threat level of ghost: low, medium, high',
+  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Time created'
+) COMMENT = 'Stores ghost information';
 
 CREATE TABLE Trait (
   TraitID INT AUTO_INCREMENT PRIMARY KEY,
