@@ -115,13 +115,13 @@ CREATE TABLE CustomerAddress (
 ) COMMENT = 'Stores address information for a customer account';
 
 CREATE TABLE Employee (
-  EmployeeID INT AUTO_INCREMENT PRIMARY KEY,
-  EmployeeName VARCHAR(100) NOT NULL,
-  Username VARCHAR(50) NOT NULL,
-  Password VARCHAR(200) NOT NULL,
+  EmployeeID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique employee identifier',
+  EmployeeName VARCHAR(100) NOT NULL COMMENT 'Employee name',
+  Username VARCHAR(50) NOT NULL COMMENT 'Unqiue employee username',
+  Password VARCHAR(200) NOT NULL COMMENT 'Employee password',
 
   CONSTRAINT UQ_Employee_Username UNIQUE (Username)
-);
+) COMMENT = 'Stores employee information';
 
 CREATE TABLE Team (
   TeamID INT AUTO_INCREMENT PRIMARY KEY,
