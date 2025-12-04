@@ -118,11 +118,13 @@ class TestEquipment:
         """Test POST /api/fleet/equipment"""
         timestamp = int(time.time())
         equipment_data = {
-            "code": f"EQ-TEST-{timestamp}",
+            "equipmentcode": "test1",
+            "name": "test",
             "description": "Test equipment",
             "value": 1000.00,
             "category": "Test Category",
             "type": "Test Type",
+            "trackingid": "test",
             "availability": "Available"
         }
         
