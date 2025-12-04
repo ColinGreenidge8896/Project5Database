@@ -277,7 +277,7 @@ export default (pool, sendResponse) => {
     /* ======================
     Customer Address Route
     ====================== */
-router.post("/addresses", async (req, res) => {
+    router.post("/customeraddress", async (req, res) => {
     try {
         const { accountID, line1, line2, city, provinceState, postalCode, country } = req.body;
 
@@ -301,22 +301,22 @@ router.post("/addresses", async (req, res) => {
             sendResponse(res, false, err.message);
         }
     }
-});
+    });
 
-// Get all addresses
-router.get("/addresses", async (req, res) => {
+    // Get all customeraddress
+    router.get("/customeraddress", async (req, res) => {
     try {
         const [rows] = await pool.query(
             "SELECT * FROM CustomerAddress;"
         );
-        sendResponse(res, true, "Customer addresses retrieved.", rows);
+        sendResponse(res, true, "Customer customeraddress retrieved.", rows);
     } catch (err) {
         sendResponse(res, false, err.message);
     }
-});
+    });
 
-// Get address by ID
-router.get("/addresses/:id", async (req, res) => {
+    // Get address by ID
+    router.get("/customeraddress/:id", async (req, res) => {
     try {
         const [rows] = await pool.query(
             "SELECT * FROM CustomerAddress WHERE AddressID = ?;",
@@ -331,10 +331,10 @@ router.get("/addresses/:id", async (req, res) => {
     } catch (err) {
         sendResponse(res, false, err.message);
     }
-});
+    });
 
     // Update address
-    router.patch("/addresses/:id", async (req, res) => {
+    router.patch("/customeraddress/:id", async (req, res) => {
     try {
         const { line1, line2, city, provinceState, postalCode, country } = req.body;
 
@@ -371,7 +371,7 @@ router.get("/addresses/:id", async (req, res) => {
     });
 
     // Delete address
-    router.delete("/addresses/:id", async (req, res) => {
+    router.delete("/customeraddress/:id", async (req, res) => {
     try {
         const [result] = await pool.query(
             "DELETE FROM CustomerAddress WHERE AddressID = ?;",
