@@ -423,12 +423,98 @@ export default (pool, sendResponse) => {
     Service Route
     ====================== */
 
+    //create service
+    router.post("/service", async (req, res) => {
+    try {
+        const { servicename, description, rate } = req.body;
 
+        if (!servicename || !rate)
+        return sendResponse(res, false, "Missing fields.");
+
+        const [result] = await pool.query(
+        `INSERT INTO Service (ServiceName, ServiceDescription, BaseRate)
+        VALUES (?, ?, ?)`,
+        [servicename, description || "", rate]
+        );
+
+        sendResponse(res, true, "Service created.", { inquiryFormID: result.insertId });
+    } catch (err) {
+        console.error(err);
+        sendResponse(res, false, "Internal server error.");
+    }
+    });
+
+    //get all service
+    router.get("/service", async (req, res) => {
+    try {
+        const [rows] = await pool.query("SELECT * FROM Service;");
+        sendResponse(res, true, "Service records retrieved.", rows);
+    } catch (err) {
+        sendResponse(res, false, err.message);
+    }
+    });
+
+    //get service by id
+    router.get("/service/:id", async (req, res) => {
+    try {
+        const [rows] = await pool.query(
+        "SELECT * FROM Service WHERE ServiceID = ?",
+        [req.params.id]
+        );
+
+        if (rows.length === 0)
+        return sendResponse(res, false, "Service not found.");
+
+        sendResponse(res, true, "Service retrieved.", rows[0]);
+    } catch (err) {
+        sendResponse(res, false, err.message);
+    }
+    });
+
+    //update service form
+    router.patch("/service/:id", async (req, res) => {
+    try {
+        const { servicename, description, rate } = req.body;
+
+        const [result] = await pool.query(
+        `UPDATE Service
+        SET ServiceName = COALESCE(?, ServiceName),
+            ServiceDescription = COALESCE(?, ServiceDescription),
+            BaseRate = COALESCE(?, BaseRate)
+        WHERE ServiceID = ?`,
+        [servicename, description, rate, req.params.id]
+        );
+
+        if (result.affectedRows === 0)
+        return sendResponse(res, false, "Service not found.");
+
+        sendResponse(res, true, "Service updated.");
+    } catch (err) {
+        sendResponse(res, false, err.message);
+    }
+    });
+
+    //delete service by id
+    router.delete("/service/:id", async (req, res) => {
+    try {
+        const [result] = await pool.query(
+        "DELETE FROM Service WHERE Service = ?",
+        [req.params.id]
+        );
+
+        if (result.affectedRows === 0)
+        return sendResponse(res, false, "Service not found.");
+
+        sendResponse(res, true, "Service deleted.");
+    } catch (err) {
+        sendResponse(res, false, err.message);
+    }
+    });
 
     /* ======================
     Customer Service Route
     ====================== */
-
+    
     
 
     return router;
