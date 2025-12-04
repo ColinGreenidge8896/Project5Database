@@ -29,7 +29,7 @@ class TestCustomerCRUD:
             "status": "active"
         }
         
-        response = requests.post(f"{BASE_URL}/customers", json=customer_data)
+        response = requests.post(f"{BASE_URL}/register", json=customer_data)
         
         assert response.status_code == 200
         data = response.json()
