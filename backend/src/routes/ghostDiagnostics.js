@@ -299,5 +299,23 @@ export default (pool, sendResponse) => {
     }
     });
 
+    /* ======================
+     Item Req Route
+    ====================== */
+
+
+
+    /* ======================
+    Service Route
+    ====================== */
+
+
+
+    /* ======================
+    Customer Service Route
+    ====================== */
+
+    
+
     return router;
 };
