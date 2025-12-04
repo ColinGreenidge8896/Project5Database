@@ -151,11 +151,13 @@ class TestEquipment:
         # Create equipment first
         timestamp = int(time.time())
         equipment_data = {
-            "code": f"EQ-GET-{timestamp}",
-            "description": "Get test",
-            "value": 500.00,
-            "category": "Test",
-            "type": "Test",
+            "equipmentcode": "test2",
+            "name": "test",
+            "description": "Test equipment",
+            "value": 1000.00,
+            "category": "Test Category",
+            "type": "Test Type",
+            "trackingid": "test",
             "availability": "Available"
         }
         create_response = requests.post(f"{BASE_URL}/equipment", json=equipment_data)
