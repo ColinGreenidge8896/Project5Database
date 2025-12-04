@@ -122,11 +122,8 @@ class TestTransactions:
         payment_data = {
             "accountID": 1, 
             "cardNo": "4532123456789012",
-            "expiryDate": "12/27",
             "amount": 200.00,
             "paymentMethod": "credit_card",
-            "serviceAddress": "123 Test St",
-            "deliveryAddress": "456 Main St"
         }
         payment_response = requests.post(f"{BASE_URL}/payments", json=payment_data)
         payment_id = payment_response.json()["data"]["paymentID"]
