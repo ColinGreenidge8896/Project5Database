@@ -1,16 +1,15 @@
 export default {
   testEnvironment: 'node',
-  testMatch: ['**/tests/unit/**/*.test.js'],
-  transform: {},
+  testMatch: ['<rootDir>/backend/src/tests/unit/**/*.test.js'],
   verbose: true,
   collectCoverage: true,
-  coverageReporters: ['text'],
+  coverageReporters: ['text', 'html'],
   collectCoverageFrom: [
-    'backend/src/**/*.js',
-    '!backend/src/node_modules/**',
-    '!backend/src/tests/**'
+    '<rootDir>/backend/src/**/*.js',
+    '!<rootDir>/backend/src/tests/**',
+    '!<rootDir>/backend/src/node_modules/**'
   ],
   coveragePathIgnorePatterns: [
-    "backend/src/routes/"
+    '/routes/'
   ]
 };
