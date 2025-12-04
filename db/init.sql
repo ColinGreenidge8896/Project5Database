@@ -86,33 +86,33 @@ CREATE TABLE CustomerAccount (
 
 -- Customer Table - Belongs to FLEET TEAM - different name if we had more time
 CREATE TABLE Customer (
-    AccountID INT AUTO_INCREMENT PRIMARY KEY,
-    CustomerCode VARCHAR(32) NOT NULL UNIQUE,
-    CustomerName VARCHAR(200) NOT NULL,
-    CustomerAddress TEXT NULL,
-    CustomerGovtId VARCHAR(100) NULL,
-    CustomerEmail VARCHAR(200) NULL,
-    CustomerPhone VARCHAR(50) NULL,
+    AccountID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique fleet customer identifier',
+    CustomerCode VARCHAR(32) NOT NULL UNIQUE COMMENT 'Unique fleet Customer code(??)',
+    CustomerName VARCHAR(200) NOT NULL COMMENT 'Fleet customer name',
+    CustomerAddress TEXT NULL COMMENT 'Fleet customer address',
+    CustomerGovtId VARCHAR(100) NULL COMMENT 'Fleet customer government ID (this seems like private information...)',
+    CustomerEmail VARCHAR(200) NULL COMMENT 'Fleet customer email address for contact',
+    CustomerPhone VARCHAR(50) NULL COMMENT 'Fleet customer phone number for contact',
     
-    Username VARCHAR(50) NULL,
-    Password VARCHAR(200) NULL
-);
+    Username VARCHAR(50) NULL COMMENT 'Fleet customer username',
+    Password VARCHAR(200) NULL COMMENT 'Fleet customer password'
+) COMMENT = 'Stores fleet customer credentials';
 
 CREATE TABLE CustomerAddress (
-  AddressID INT AUTO_INCREMENT PRIMARY KEY,
-  AccountID INT NOT NULL,
-  Line1 VARCHAR(255),
-  Line2 VARCHAR(255),
-  City VARCHAR(100),
-  ProvinceState VARCHAR(100),
-  PostalCode VARCHAR(20),
-  Country VARCHAR(100),
-  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+  AddressID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique customer address identifier',
+  AccountID INT NOT NULL COMMENT 'ID of associated customer account',
+  Line1 VARCHAR(255) COMMENT 'Primary address',
+  Line2 VARCHAR(255) COMMENT 'Additional address',
+  City VARCHAR(100) COMMENT 'Customer address city',
+  ProvinceState VARCHAR(100) COMMENT 'Customer address province or state',
+  PostalCode VARCHAR(20) COMMENT 'Customer address postal code',
+  Country VARCHAR(100) COMMENT 'Customer address country',
+  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Time created',
   FOREIGN KEY (AccountID) REFERENCES CustomerAccount(AccountID),
   
   -- REQUIRED to allow composite FK from Rental
   UNIQUE (AddressID, AccountID)
-);
+) COMMENT = 'Stores address information for a customer account';
 
 CREATE TABLE Employee (
   EmployeeID INT AUTO_INCREMENT PRIMARY KEY,
