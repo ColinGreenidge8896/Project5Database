@@ -246,18 +246,18 @@ CREATE TABLE Maintenance (
 
 
 CREATE TABLE Payment (
-  PaymentID INT AUTO_INCREMENT PRIMARY KEY,
-  AccountID INT NOT NULL,
-  BillingAddressID INT,
-  CardLast4 CHAR(4),
-  CardToken VARCHAR(255),
-  PaymentMethod ENUM('credit_card','debit','cash','e-transfer') DEFAULT 'credit_card',
-  Amount DECIMAL(10,2),
-  PaidAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PaymentID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique payment identifier',
+  AccountID INT NOT NULL COMMENT 'Unique associated customer account identifier',
+  BillingAddressID INT COMMENT 'Unique associated address identifier',
+  CardLast4 CHAR(4) COMMENT 'Last four digits of card',
+  CardToken VARCHAR(255) COMMENT 'Token of card',
+  PaymentMethod ENUM('credit_card','debit','cash','e-transfer') DEFAULT 'credit_card' COMMENT 'Payment method: credit card, debit, cash, e-transfer',
+  Amount DECIMAL(10,2) COMMENT 'Payment amount',
+  PaidAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Time of payment',
   FOREIGN KEY (AccountID) REFERENCES CustomerAccount(AccountID),
   FOREIGN KEY (BillingAddressID, AccountID)
     REFERENCES CustomerAddress(AddressID, AccountID)
-);
+) COMMENT = 'Stores payment information';
 
 -- service table for services performed - ghost diagnostics table
 CREATE TABLE Service (
