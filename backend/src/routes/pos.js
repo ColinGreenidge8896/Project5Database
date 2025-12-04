@@ -179,39 +179,32 @@ export default (pool, sendResponse) => {
     Payment Route
     ====================== */
 
-    // Create a new payment  -- dont store CVV!
+    // Create a new payment 
+    // requires accountID,billingaddress, cardlast4, cardtoken, paymentmethod, amount, paidat
     router.post("/payments", async (req, res) => {
     try {
-        const { accountID, cardNo, expiryDate, serviceAddress, deliveryAddress, amount, paymentMethod, billingAddressID } = req.body;
+    const { accountID, cardNo, amount, paymentMethod, billingAddressID } = req.body;
 
-        if (!accountID || !cardNo || !expiryDate || !amount)
-            return sendResponse(res, false, "Missing required fields.");
+    if (!accountID || !cardNo || !amount) {
+        return sendResponse(res, false, "Missing required fields.");
+    }
 
-        // in proper setup, we encrypt or hash or dont save teh cardNo at all
-        const cardLast4 = cardNo.slice(-4);
+    const last4 = cardNo.slice(-4); // store only last 4 digits
+    const token = "tok_" + Math.random().toString(36).substring(2, 15); // fake token for testing
 
-        const [result] = await pool.query(
-            `INSERT INTO Payment 
-            (AccountID, BillingAddressID, CardLast4, CardToken, PaymentMethod, Amount, ServiceAddress, DeliveryAddress) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-            [
-                accountID, 
-                billingAddressID || null, 
-                cardLast4, 
-                cardNo, 
-                paymentMethod || "credit_card", 
-                amount, 
-                serviceAddress || "", 
-                deliveryAddress || ""
-            ]
-        );
+    const [result] = await pool.query(
+        `INSERT INTO Payment 
+        (AccountID, BillingAddressID, CardLast4, CardToken, PaymentMethod, Amount)
+        VALUES (?, ?, ?, ?, ?, ?)`,
+        [accountID, billingAddressID || null, last4, token, paymentMethod || 'credit_card', amount]
+    );
 
         sendResponse(res, true, "Payment recorded.", { paymentID: result.insertId });
     } catch (err) {
-        console.error("Payment insert error:", err);
         sendResponse(res, false, err.message);
     }
     });
+
 
 
     // Get all payments
