@@ -131,12 +131,12 @@ CREATE TABLE Team (
 ) COMMENT = 'Stores team information';
 
 CREATE TABLE Product (
-  ProductID INT AUTO_INCREMENT PRIMARY KEY,
-  ProductName VARCHAR(150) NOT NULL,
-  ProductDescription TEXT,
-  Price DECIMAL(10,2) NOT NULL DEFAULT 0.00,
-  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
-);
+  ProductID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique product identifier',
+  ProductName VARCHAR(150) NOT NULL COMMENT 'Name of the product',
+  ProductDescription TEXT COMMENT 'Description of the product',
+  Price DECIMAL(10,2) NOT NULL DEFAULT 0.00 COMMENT 'Price of the product',
+  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Time created'
+) COMMENT = 'Stores product information';
 
 CREATE TABLE ProductStock (
   ProductID INT PRIMARY KEY,
