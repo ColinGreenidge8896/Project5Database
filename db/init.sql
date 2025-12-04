@@ -218,7 +218,7 @@ CREATE TABLE RentedEquipment (
 
   FOREIGN KEY (RentalID) REFERENCES Rental(RentalID),
   FOREIGN KEY (EquipmentID) REFERENCES Equipment(EquipmentID)
-) COMMENT = 'Stores combined rental and equipment to represented a rented piece of equipment';
+) COMMENT = 'Combination of rental and equipment';
 
 -- tie entries to either requipment or rental, otherwise "floating" events possible
 CREATE TABLE Maintenance (
@@ -271,12 +271,12 @@ CREATE TABLE Service (
 
 -- CustomerService - Ghost Diagnostics table for customer and service mix 
 CREATE TABLE CustomerService (
-  CustomerServiceID int AUTO_INCREMENT PRIMARY KEY,
-  ServiceID int NOT NULL,
-  AccountID int NOT NULL,
+  CustomerServiceID int AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique customer service identifier',
+  ServiceID int NOT NULL COMMENT 'Associated service identifier',
+  AccountID int NOT NULL COMMENT 'Associated customer account identifier',
   FOREIGN KEY (ServiceID) REFERENCES Service(ServiceID),
   FOREIGN key (AccountID) REFERENCES CustomerAccount(AccountID)
-);
+) COMMENT = 'Combination of customer account and service';
 
 CREATE TABLE ItemTransaction (
   ItemTransactionID INT AUTO_INCREMENT PRIMARY KEY,
