@@ -191,22 +191,22 @@ CREATE TABLE Equipment (
 -- );
 
 CREATE TABLE Rental (
-  RentalID INT AUTO_INCREMENT PRIMARY KEY,
-  RentalCode VARCHAR(32) NOT NULL,
-  AccountID INT NOT NULL,
+  RentalID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique rental identifier',
+  RentalCode VARCHAR(32) NOT NULL COMMENT 'Unique rental code',
+  AccountID INT NOT NULL COMMENT 'Unique associated customer account identifier',
 
-  StartDate DATE NOT NULL,
-  EndDate DATE NOT NULL,
+  StartDate DATE NOT NULL COMMENT 'Rental start date',
+  EndDate DATE NOT NULL COMMENT 'Rental end date',
 
-  RentalStatus ENUM('Reserved','CheckedOut','Returned','Overdue','Closed') DEFAULT 'Reserved',
-  Notes TEXT,
-  Scope ENUM('Internal','External') DEFAULT 'Internal',
+  RentalStatus ENUM('Reserved','CheckedOut','Returned','Overdue','Closed') DEFAULT 'Reserved' COMMENT 'Status of rental: reserved, checked out, returned, overdue, closed',
+  Notes TEXT COMMENT 'Notes about the rental',
+  Scope ENUM('Internal','External') DEFAULT 'Internal' COMMENT 'Scope of rental: internal, external',
 
-  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Time created',
   
   CONSTRAINT UQ_Rental_RentalCode UNIQUE (RentalCode),
   FOREIGN KEY (AccountID) REFERENCES Customer(AccountID)
-);
+) COMMENT = 'Stores rental information';
 
 -- remove ability to rent same equipment over and over - use UNIQUE
 CREATE TABLE RentedEquipment (
