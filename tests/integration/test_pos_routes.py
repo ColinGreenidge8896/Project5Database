@@ -131,7 +131,7 @@ class TestTransactions:
         # Create transaction with test product
         transaction_data = {
             "paymentID": payment_id,
-            "productID": 0,
+            "productID": 1,
             "quantity": 2,
             "subtotal": 200.00
         }
