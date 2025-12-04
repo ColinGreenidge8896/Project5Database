@@ -13,6 +13,5 @@ export default {
     '/routes/'
   ],
   // Add these lines for ESM support
-  extensionsToTreatAsEsm: ['.js'],
   transform: {},
 };
