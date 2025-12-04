@@ -116,9 +116,11 @@ class TestProductStock:
     """Test ProductStock operations"""
     
     def test_create_product_stock(self):
+
+
         """Test POST /api/inventory/product-stock"""
         stock_data = {
-            "productid": 3,
+            "productid": 15,
             "qty": 100,
             "restock": 20,
             "lastrestock": "2025-01-01"
