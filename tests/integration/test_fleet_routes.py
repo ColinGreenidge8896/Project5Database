@@ -45,7 +45,7 @@ class TestRentals:
         """Test GET /api/fleet/rental/:id"""
         # Create rental first
         rental_data = {
-            "rentalcode": "test",
+            "rentalcode": "test1",
             "accountid": 1,
             "start": "2025-01-15",
             "end": "2025-01-20",
@@ -67,7 +67,7 @@ class TestRentals:
         """Test PATCH /api/fleet/rental/:id"""
         # Create rental
         rental_data = {
-            "rentalcode": "test",
+            "rentalcode": "test2",
             "accountid": 1,
             "start": "2025-01-15",
             "end": "2025-01-20",
@@ -93,7 +93,7 @@ class TestRentals:
         """Test DELETE /api/fleet/rental/:id"""
         # Create rental
         rental_data = {
-            "rentalcode": "test",
+            "rentalcode": "test3",
             "accountid": 1,
             "start": "2025-01-15",
             "end": "2025-01-20",
