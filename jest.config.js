@@ -6,8 +6,8 @@ export default {
   collectCoverage: true,
   coverageReporters: ['text'],
   collectCoverageFrom: [
-    'backend/**/*.js',
-    '!backend/node_modules/**',
-    '!backend/tests/**'
+    'backend/src/**/*.js',
+    '!backend/src/node_modules/**',
+    '!backend/src/tests/**'
   ]
 };
