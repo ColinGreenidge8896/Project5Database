@@ -73,13 +73,13 @@ INSERT INTO Roles (RoleName)
 VALUES ('admin'), ('inventory'), ('pos'), ('fleet'), ('ghost_diagnostics');
 
 CREATE TABLE CustomerAccount (
-  AccountID INT AUTO_INCREMENT PRIMARY KEY,
-  Email VARCHAR(255) NOT NULL UNIQUE,
-  Username VARCHAR(100) NOT NULL UNIQUE,
-  PasswordHash VARCHAR(255) NOT NULL,
-  Status ENUM('active','inactive','banned') DEFAULT 'active',
-  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
-);
+  AccountID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique customer account identifier',
+  Email VARCHAR(255) NOT NULL UNIQUE COMMENT 'Customer email address for login and notifications',
+  Username VARCHAR(100) NOT NULL UNIQUE COMMENT 'Unique username for login',
+  PasswordHash VARCHAR(255) NOT NULL COMMENT 'Bcrypt hashed password',
+  Status ENUM('active','inactive','banned') DEFAULT 'active' COMMENT 'Account status: active, inactive, suspended',
+  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Time created'
+) COMMENT = 'Stores customer account login credentials and status';
 -- customer table 
 -- maintenance - update fields 
 -- populate customer 
