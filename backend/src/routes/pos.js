@@ -182,20 +182,37 @@ export default (pool, sendResponse) => {
     // Create a new payment  -- dont store CVV!
     router.post("/payments", async (req, res) => {
     try {
-        const { accountID, cardNo, cvv, expiryDate, serviceAddress, deliveryAddress } = req.body;
-        if (!accountID || !cardNo || !cvv || !expiryDate)
-        return sendResponse(res, false, "Missing required fields.");
+        const { accountID, cardNo, expiryDate, serviceAddress, deliveryAddress, amount, paymentMethod, billingAddressID } = req.body;
+
+        if (!accountID || !cardNo || !expiryDate || !amount)
+            return sendResponse(res, false, "Missing required fields.");
+
+        // in proper setup, we encrypt or hash or dont save teh cardNo at all
+        const cardLast4 = cardNo.slice(-4);
 
         const [result] = await pool.query(
-        "INSERT INTO Payment (AccountID, CardNo, CVV, ExpiryDate, ServiceAddress, DeliveryAddress) VALUES (?, ?, ?, ?, ?, ?)",
-        [accountID, cardNo, cvv, expiryDate, serviceAddress || "", deliveryAddress || ""]
+            `INSERT INTO Payment 
+            (AccountID, BillingAddressID, CardLast4, CardToken, PaymentMethod, Amount, ServiceAddress, DeliveryAddress) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            [
+                accountID, 
+                billingAddressID || null, 
+                cardLast4, 
+                cardNo, 
+                paymentMethod || "credit_card", 
+                amount, 
+                serviceAddress || "", 
+                deliveryAddress || ""
+            ]
         );
 
         sendResponse(res, true, "Payment recorded.", { paymentID: result.insertId });
     } catch (err) {
+        console.error("Payment insert error:", err);
         sendResponse(res, false, err.message);
     }
     });
+
 
     // Get all payments
     router.get("/payments", async (req, res) => {
