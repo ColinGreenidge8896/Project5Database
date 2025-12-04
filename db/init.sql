@@ -412,8 +412,8 @@ INSERT INTO ProductStock (ProductID, QuantityAvailable, RestockThreshold, LastRe
 (1, 5, 2, NOW());
 INSERT INTO Equipment (EquipmentCode, EquipmentName, EquipmentDescription, EquipmentValue, EquipmentCategory, EquipmentType, EquipmentTrackingId, EquipmentAvailability) VALUES
 ('EQ-OOO-000','Test Equipment Pack', 'Test Equipment Description', 1000.00,                       'Category', 'Type', 'AA-000-A', 'Available');
-INSERT INTO CustomerAccount (Email, Username, PasswordHash) VALUES
-('test@testing.com', 'test', 'T3st123');
+INSERT INTO CustomerAccount (Email, Username, PasswordHash, Status) VALUES
+('test@testing.com', 'test', '$2b$10$YevKfIfojHU8GObcEQMgcO3EDqDq1/lzjgGw./KRf/9H8IFtYlBDq', 'active');
 INSERT INTO Customer(CustomerCode, CustomerName, CustomerAddress, CustomerGovtId, CustomerEmail, CustomerPhone, Username, Password) VALUES
  ('CT-TEST', 'test', 'test test test', 'test', 'test', 'test', 'test', 'test');
 INSERT INTO CustomerAddress (AccountID, Line1, City, ProvinceState, PostalCode, Country) VALUES
@@ -539,31 +539,31 @@ VALUES
 ('EQ-MSC-010','Spectral Field Generator', 'Creates ghost-repelling field', 12000.00,        'Neutralization', 'Generator', 'SFG-001', 'Available');
 
     
-INSERT INTO CustomerAccount (Email, Username, PasswordHash) VALUES
-('mayor@nyc.gov',            'mayor.lenny', 'City@2024'),        
-('wpeck@epa.gov',            'peck.epa', 'Shut#Down'),           
-('j.hardemeyer@edu.gov',     'j.hardemeyer', 'Mayor#Aide'),      
-('vigo@artmuseum.org',       'vigo.carpathian', 'Scourge#666'),  
-('ivo@shandor.org',          'shandor.ghost', 'SECRETP@55'),     
-('slimer@sedgewick.com',     'slimer', 'C@LLghost6'),            
-('info@staypuft.com',        'stay.puft', 'Marsh#001'),          
-('paranormal@columbia.edu',  'cu.research', 'Lab#2024'),         
-('ladder8@nyfd.gov',         'ladder8.nyfd', 'Fire#Pole1'),      
-('contact@rgb.tv',           'rgb.cartoon', 'Real#Heroes');
+INSERT INTO CustomerAccount (Email, Username, PasswordHash, Status) VALUES
+('mayor@nyc.gov', 'mayor.lenny', '$2b$10$mkDWePYMSsT7uhI/j5Xvvu4DlYrjNLCtaLjt0pYo7dpMzQ/hMdJea', 'active'),
+('wpeck@epa.gov', 'peck.epa', '$2b$10$ciUm2DSqnvs10yiW9B0Nyu0/PPKmqOM2Yi6QUtC.7m4JUtEz6Bbn.', 'active'),
+('j.hardemeyer@edu.gov', 'j.hardemeyer', '$2b$10$kr8r9nP9RKav.9yTU2f19O8F0.0CopB7HSuHXWSINsRAfQxGBDpJS', 'active'),
+('vigo@artmuseum.org', 'vigo.carpathian', '$2b$10$PEDw4q58wWmff/1lFyJdiuJCeAcvK0t/fc2z.UFMpKFsp9O2hqnyq', 'active'),
+('ivo@shandor.org', 'shandor.ghost', '$2b$10$2xOQ5xvlBIqGQsW71k5Pn.5W37Lxj5len7dB6i.2OME0kwTpCi2bO', 'active'),
+('slimer@sedgewick.com', 'slimer', '$2b$10$MzJYe63dMFsUjNnr.eSst.lPmR85Bv3NwHoa/B/vLe4d5a6CJKq.y', 'active'),
+('info@staypuft.com', 'stay.puft', '$2b$10$B.HTwDHItyX2RnL755rjQuASQPNG5Ufj5cWqtDvsadt8I6S6opAdC', 'active'),
+('paranormal@columbia.edu', 'cu.research', '$2b$10$k0R0zP0gwkpkdP7Ed19Gh.zC9ZxKAVbMocE4b..J.fRxKVqpHRLou', 'active'),
+('ladder8@nyfd.gov', 'ladder8.nyfd', '$2b$10$NqYQ15Ga0lHWe/8iu62vBuC6Zxe5ob4meMhW4iAiCHOOYG2FX7L6C', 'active'),
+('contact@rgb.tv', 'rgb.cartoon', '$2b$10$hQR6bvceyyQ4enOxHJKGSuZrfB31L88jPPA/QJZskBfXRys18Kh9S', 'active');
 
 INSERT INTO Customer (CustomerCode, CustomerName, CustomerAddress, CustomerGovtId, CustomerEmail, CustomerPhone, Username, Password)
 VALUES
-    ('CT-0001', 'Mayor Lenny Clotch', '123 City Hall Plaza, New York, NY', 'SSN-111-22-3333', 'mayor@nyc.gov', '555-0101', 'mayor.lenny', 'City@2024'),
-    ('CT-0002', 'Peck of the EPA', '456 Environmental Way, NY', 'SSN-222-33-4444', 'wpeck@epa.gov', '555-0102', 'peck.epa', 'Shut#Down'),
-    ('CT-0003', 'Dr. Hardemeyer', '789 University Ave, NY', 'SSN-333-44-5555', 'j.hardemeyer@edu.gov', '555-0103', 'j.hardemeyer', 'Mayor#Aide'),
-    ('CT-0004', 'Vigo the Carpathian (Rental)', '1 Museum of Art, NY', NULL, 'vigo@artmuseum.org', '555-0104', 'vigo.carpathian', 'Scourge#666'),
+    ('CT-0001', 'Mayor Lenny Clotch', '123 City Hall Plaza, New York, NY', 'SSN-111-22-3333', 'mayor@nyc.gov', '555-0101', 'mayor.lenny', '$2b$10$mkDWePYMSsT7uhI/j5Xvvu4DlYrjNLCtaLjt0pYo7dpMzQ/hMdJea'),
+    ('CT-0002', 'Peck of the EPA', '456 Environmental Way, NY', 'SSN-222-33-4444', 'wpeck@epa.gov', '555-0102', 'peck.epa', '$2b$10$ciUm2DSqnvs10yiW9B0Nyu0/PPKmqOM2Yi6QUtC.7m4JUtEz6Bbn.'),
+    ('CT-0003', 'Dr. Hardemeyer', '789 University Ave, NY', 'SSN-333-44-5555', 'j.hardemeyer@edu.gov', '555-0103', 'j.hardemeyer', '$2b$10$kr8r9nP9RKav.9yTU2f19O8F0.0CopB7HSuHXWSINsRAfQxGBDpJS'),
+    ('CT-0004', 'Vigo the Carpathian (Rental)', '1 Museum of Art, NY', NULL, 'vigo@artmuseum.org', '555-0104', 'vigo.carpathian', '$2b$10$PEDw4q58wWmff/1lFyJdiuJCeAcvK0t/fc2z.UFMpKFsp9O2hqnyq'),
     ('CT-0005', 'Ivo Shandor Ghost Cult', '1214 Spook Central, NY', NULL, 'ivo@shandor.org', '555-0105', NULL, NULL),
     ('CT-0006', 'Slimer (Employee Rental)', 'The Sedgewick Hotel, NY', NULL, 'slimer@sedgewick.com', '555-0106', NULL, NULL),
-    ('CT-0007', 'Stay Puft Marshmallow Corporation', '555 Marshmallow Blvd, NJ', 'EIN-9876543', 'info@staypuft.com', '555-0107', 'stay.puft', 'Marsh#001'),
-    ('CT-0008', 'Columbia University Paranormal Research Lab', '100 College Walk, NY', 'EIN-1112223', 'paranormal@columbia.edu', '555-0108', 'cu.research', 'Lab#2024'),
-    ('CT-0009', 'Fire Department – Ladder Company 8', '14 North Moore St, NY', NULL, 'ladder8@nyfd.gov', '555-0109', 'ladder8.nyfd', 'Fire#Pole1'),
-    ('CT-0010', 'The Real Ghostbusters (Cartoon Division)', '222 Animation Studios, CA', NULL, 'contact@rgb.tv', '555-0110', 'rgb.cartoon', 'Real#Heroes');
-
+    ('CT-0007', 'Stay Puft Marshmallow Corporation', '555 Marshmallow Blvd, NJ', 'EIN-9876543', 'info@staypuft.com', '555-0107', 'stay.puft', '$2b$10$B.HTwDHItyX2RnL755rjQuASQPNG5Ufj5cWqtDvsadt8I6S6opAdC'),
+    ('CT-0008', 'Columbia University Paranormal Research Lab', '100 College Walk, NY', 'EIN-1112223', 'paranormal@columbia.edu', '555-0108', 'cu.research', '$2b$10$k0R0zP0gwkpkdP7Ed19Gh.zC9ZxKAVbMocE4b..J.fRxKVqpHRLou'),
+    ('CT-0009', 'Fire Department – Ladder Company 8', '14 North Moore St, NY', NULL, 'ladder8@nyfd.gov', '555-0109', 'ladder8.nyfd', '$2b$10$NqYQ15Ga0lHWe/8iu62vBuC6Zxe5ob4meMhW4iAiCHOOYG2FX7L6C'),
+    ('CT-0010', 'The Real Ghostbusters (Cartoon Division)', '222 Animation Studios, CA', NULL, 'contact@rgb.tv', '555-0110', 'rgb.cartoon', '$2b$10$hQR6bvceyyQ4enOxHJKGSuZrfB31L88jPPA/QJZskBfXRys18Kh9S');
+    
 INSERT INTO CustomerAddress (AccountID, Line1, City, ProvinceState, PostalCode, Country) VALUES
 (1+1, '123 City Hall Plaza', 'Toronto', 'Ontario', 'M5H 2N2', 'Canada'),
 (2+1, '456 Environmental Way', 'Ottawa', 'Ontario', 'K1A 0H3', 'Canada'),
