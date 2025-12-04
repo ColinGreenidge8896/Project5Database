@@ -113,7 +113,7 @@ class TestRentals:
 
 class TestEquipment:
     """Test Equipment CRUD operations"""
-    
+    # 
     def test_create_equipment(self):
         """Test POST /api/fleet/equipment"""
         timestamp = int(time.time())
@@ -130,6 +130,8 @@ class TestEquipment:
         
         assert response.status_code == 200
         data = response.json()
+        print(response.status_code)
+        print(response.json())
         assert data["success"] == True
         assert "equipmentID" in data["data"] or "EquipmentID" in data["data"]
     

@@ -21,6 +21,9 @@ class TestProducts:
         
         assert response.status_code == 200
         data = response.json()
+        print(response.status_code)
+        print(response.json())
+
         assert data["success"] == True
         assert "productID" in data["data"]
     
@@ -125,6 +128,8 @@ class TestProductStock:
         
         assert response.status_code == 200
         data = response.json()
+        print(response.status_code)
+        print(response.json())
         assert data["success"] == True
     
     def test_get_all_product_stock(self):
@@ -133,6 +138,7 @@ class TestProductStock:
         
         assert response.status_code == 200
         data = response.json()
+        
         assert data["success"] == True
         assert isinstance(data["data"], list)
 
