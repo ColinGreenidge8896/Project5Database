@@ -90,6 +90,7 @@ jobs:
         if: always()
         run: |
           docker compose down -v
+        # maybe docker system prune -af --volumes after docker down
           
   integration-tests:
     runs-on: ubuntu-latest
@@ -134,3 +135,4 @@ jobs:
         if: always()
         run: |
           docker compose down -v
+        # maybe docker system prune -af --volumes after docker down
