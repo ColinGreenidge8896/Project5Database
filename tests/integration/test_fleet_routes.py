@@ -166,4 +166,4 @@ class TestEquipment:
         # Get it
         response = requests.get(f"{BASE_URL}/equipment/{equipment_id}")
         
-        assert response.sta
+        assert response.status_code == 200
