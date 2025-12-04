@@ -123,7 +123,6 @@ export default (pool, sendResponse) => {
     }
     });
 
-
     /* ======================
     Payment Route
     ====================== */

@@ -59,6 +59,8 @@ class TestLogin:
         
         response = requests.post(f"{BASE_URL}/login", json=login_data)
         data = response.json()
+        print(response.status_code)
+        print(response.json())
         
         assert response.status_code == 200
         assert data["success"] == True
@@ -75,6 +77,8 @@ class TestLogin:
         
         response = requests.post(f"{BASE_URL}/login", json=login_data)
         data = response.json()
+        print(response.status_code)
+        print(response.json())
         
         assert data["success"] == False
         assert "Invalid" in data["message"]
