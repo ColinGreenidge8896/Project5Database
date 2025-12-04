@@ -98,7 +98,8 @@ class TestPayments:
         }
         
         response = requests.post(f"{BASE_URL}/payments", json=payment_data)
-        
+        print(response.status_code)
+        print(response.json())
         assert response.status_code == 200
         data = response.json()
         assert data["success"] == True
@@ -137,7 +138,8 @@ class TestTransactions:
         }
         
         response = requests.post(f"{BASE_URL}/item-transactions", json=transaction_data)
-        
+        print(response.status_code)
+        print(response.json())
         assert response.status_code == 200
         data = response.json()
         assert data["success"] == True

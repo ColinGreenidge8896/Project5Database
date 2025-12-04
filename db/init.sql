@@ -418,6 +418,8 @@ INSERT INTO Customer(CustomerCode, CustomerName, CustomerAddress, CustomerGovtId
  ('CT-TEST', 'test', 'test test test', 'test', 'test', 'test', 'test', 'test');
 INSERT INTO CustomerAddress (AccountID, Line1, City, ProvinceState, PostalCode, Country) VALUES
 (1, '123 First St', 'Toronto', 'Ontario', 'A1A 1A1', 'Canada');
+INSERT INTO Service (ServiceName, ServiceDescription, BaseRate) VALUES
+('Test Service', 'Test service description', 12);
 INSERT INTO Rental (RentalCode, AccountID, StartDate, EndDate, RentalStatus, Notes, Scope) VALUES
 ('RT-0000', 1, '2000-01-01', '2000-01-01', 'Closed', 'Test insert rental.', 'External');
 
