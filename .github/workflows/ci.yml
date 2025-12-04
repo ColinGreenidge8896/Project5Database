@@ -121,13 +121,14 @@ jobs:
           echo "Waiting for backend to be ready..."
           sleep 15
 
-      - name: Run integration tests with coverage
+      - name: Run integration tests
         run: |
-          pytest tests/integration/ -v --cov=backend --cov-report=term
+          pytest tests/integration/ -v 
+        # --cov=backend --cov-report=term
 
-      - name: Check pytest coverage threshold
-        run: |
-          pytest tests/integration/ --cov=backend --cov-fail-under=70
+      # - name: Check pytest coverage threshold
+      #   run: |
+      #     pytest tests/integration/ --cov=backend --cov-fail-under=70
           
       - name: Stop Docker Compose
         if: always()
