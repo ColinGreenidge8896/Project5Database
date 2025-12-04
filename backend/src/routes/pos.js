@@ -277,8 +277,116 @@ export default (pool, sendResponse) => {
     /* ======================
     Customer Address Route
     ====================== */
+router.post("/addresses", async (req, res) => {
+    try {
+        const { accountID, line1, line2, city, provinceState, postalCode, country } = req.body;
 
-    
+        if (!accountID || !line1 || !city || !provinceState || !postalCode || !country) {
+            return sendResponse(res, false, "Missing required fields.");
+        }
+
+        const [result] = await pool.query(
+            `INSERT INTO CustomerAddress 
+            (AccountID, Line1, Line2, City, ProvinceState, PostalCode, Country) 
+            VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [accountID, line1, line2 || "", city, provinceState, postalCode, country]
+        );
+
+        sendResponse(res, true, "Customer address created.", { addressID: result.insertId });
+    } catch (err) {
+        console.error(err);
+        if (err.code === "ER_DUP_ENTRY") {
+            sendResponse(res, false, "Address for this account already exists.");
+        } else {
+            sendResponse(res, false, err.message);
+        }
+    }
+});
+
+// Get all addresses
+router.get("/addresses", async (req, res) => {
+    try {
+        const [rows] = await pool.query(
+            "SELECT * FROM CustomerAddress;"
+        );
+        sendResponse(res, true, "Customer addresses retrieved.", rows);
+    } catch (err) {
+        sendResponse(res, false, err.message);
+    }
+});
+
+// Get address by ID
+router.get("/addresses/:id", async (req, res) => {
+    try {
+        const [rows] = await pool.query(
+            "SELECT * FROM CustomerAddress WHERE AddressID = ?;",
+            [req.params.id]
+        );
+
+        if (rows.length === 0) {
+            return sendResponse(res, false, "Address not found.");
+        }
+
+        sendResponse(res, true, "Customer address retrieved.", rows[0]);
+    } catch (err) {
+        sendResponse(res, false, err.message);
+    }
+});
+
+    // Update address
+    router.patch("/addresses/:id", async (req, res) => {
+    try {
+        const { line1, line2, city, provinceState, postalCode, country } = req.body;
+
+        // Only update fields that are provided
+        const updates = [];
+        const values = [];
+
+        if (line1) { updates.push("Line1 = ?"); values.push(line1); }
+        if (line2) { updates.push("Line2 = ?"); values.push(line2); }
+        if (city) { updates.push("City = ?"); values.push(city); }
+        if (provinceState) { updates.push("ProvinceState = ?"); values.push(provinceState); }
+        if (postalCode) { updates.push("PostalCode = ?"); values.push(postalCode); }
+        if (country) { updates.push("Country = ?"); values.push(country); }
+
+        if (updates.length === 0) {
+            return sendResponse(res, false, "No fields to update.");
+        }
+
+        values.push(req.params.id);
+
+        const [result] = await pool.query(
+            `UPDATE CustomerAddress SET ${updates.join(", ")} WHERE AddressID = ?;`,
+            values
+        );
+
+        if (result.affectedRows === 0) {
+            return sendResponse(res, false, "Address not found.");
+        }
+
+        sendResponse(res, true, "Customer address updated.");
+    } catch (err) {
+        sendResponse(res, false, err.message);
+    }
+    });
+
+    // Delete address
+    router.delete("/addresses/:id", async (req, res) => {
+    try {
+        const [result] = await pool.query(
+            "DELETE FROM CustomerAddress WHERE AddressID = ?;",
+            [req.params.id]
+        );
+
+        if (result.affectedRows === 0) {
+            return sendResponse(res, false, "Address not found.");
+        }
+
+        sendResponse(res, true, "Customer address deleted.");
+    } catch (err) {
+        sendResponse(res, false, err.message);
+    }
+    });
 
     return router;
 };
