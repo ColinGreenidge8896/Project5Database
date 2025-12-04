@@ -139,14 +139,14 @@ CREATE TABLE Product (
 ) COMMENT = 'Stores product information';
 
 CREATE TABLE ProductStock (
-  ProductID INT PRIMARY KEY,
-  QuantityAvailable INT DEFAULT 0,
-  RestockThreshold INT DEFAULT 10,
-  LastRestockDate DATE,
+  ProductID INT PRIMARY KEY COMMENT 'Unique product identifier',
+  QuantityAvailable INT DEFAULT 0 COMMENT 'Quantity of product currently available',
+  RestockThreshold INT DEFAULT 10 COMMENT 'Threshold at which to restock the product',
+  LastRestockDate DATE COMMENT 'Last time the product was restocked',
   CONSTRAINT FK_ProductStock_Product
 	FOREIGN KEY (ProductID) REFERENCES Product(ProductID)
 	ON DELETE CASCADE
-);
+) COMMENT = 'Stores the current stock information of a product';
 
 CREATE TABLE StockOrder (
   StockOrderID INT AUTO_INCREMENT PRIMARY KEY,
