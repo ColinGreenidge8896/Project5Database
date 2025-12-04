@@ -136,3 +136,4 @@ jobs:
         run: |
           docker compose down -v
           docker system prune -af --volumes
+          # demo
