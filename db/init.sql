@@ -100,7 +100,7 @@ CREATE TABLE Customer (
 
 CREATE TABLE CustomerAddress (
   AddressID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique customer address identifier',
-  AccountID INT NOT NULL COMMENT 'ID of associated customer account',
+  AccountID INT NOT NULL COMMENT 'Identifier of associated customer account',
   Line1 VARCHAR(255) COMMENT 'Primary address',
   Line2 VARCHAR(255) COMMENT 'Additional address',
   City VARCHAR(100) COMMENT 'Customer address city',
@@ -139,7 +139,7 @@ CREATE TABLE Product (
 ) COMMENT = 'Stores product information';
 
 CREATE TABLE ProductStock (
-  ProductID INT PRIMARY KEY COMMENT 'Unique product identifier',
+  ProductID INT PRIMARY KEY COMMENT 'Unique associated product identifier',
   QuantityAvailable INT DEFAULT 0 COMMENT 'Quantity of product currently available',
   RestockThreshold INT DEFAULT 10 COMMENT 'Threshold at which to restock the product',
   LastRestockDate DATE COMMENT 'Last time the product was restocked',
@@ -149,32 +149,32 @@ CREATE TABLE ProductStock (
 ) COMMENT = 'Stores the current stock information of a product';
 
 CREATE TABLE StockOrder (
-  StockOrderID INT AUTO_INCREMENT PRIMARY KEY,
-  ProductID INT NOT NULL,
-  QuantityOrdered INT,
-  SupplierName VARCHAR(150),
-  OrderedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-  ReceivedAt DATETIME,
+  StockOrderID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique stock order identifier',
+  ProductID INT NOT NULL COMMENT 'Unique associated product identifier',
+  QuantityOrdered INT COMMENT 'Amount of stock ordered',
+  SupplierName VARCHAR(150) COMMENT 'Name of supplier',
+  OrderedAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Date of order',
+  ReceivedAt DATETIME COMMENT 'Date recieved',
   FOREIGN KEY (ProductID) REFERENCES Product(ProductID)
-);
+) COMMENT = 'Stores stock order information';
 
 -- is this a type of equipment or individual units? 
 CREATE TABLE Equipment (
-  EquipmentID INT AUTO_INCREMENT PRIMARY KEY,
-  EquipmentCode VARCHAR(32) NOT NULL,
-  EquipmentName VARCHAR(100) NOT NULL,
-  EquipmentDescription TEXT,
-  EquipmentValue DECIMAL(12,2) NOT NULL,
-  EquipmentCategory VARCHAR(50) NOT NULL,
-  EquipmentType VARCHAR (50) NOT NULL,
+  EquipmentID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique equipment identifer',
+  EquipmentCode VARCHAR(32) NOT NULL COMMENT 'Unique equipment code',
+  EquipmentName VARCHAR(100) NOT NULL COMMENT 'Name of equipment',
+  EquipmentDescription TEXT COMMENT 'Description of equipment',
+  EquipmentValue DECIMAL(12,2) NOT NULL COMMENT 'Equipment value',
+  EquipmentCategory VARCHAR(50) NOT NULL COMMENT 'Category of equipment',
+  EquipmentType VARCHAR (50) NOT NULL COMMENT 'Type of equipment',
 
-  EquipmentTrackingId VARCHAR(100),
-  EquipmentAvailability ENUM('Available','UnderMaintenance','OutForRental','Damaged','Unavailable') DEFAULT 'Available',
+  EquipmentTrackingId VARCHAR(100) COMMENT 'Tracking identifier of equipment',
+  EquipmentAvailability ENUM('Available','UnderMaintenance','OutForRental','Damaged','Unavailable') DEFAULT 'Available' COMMENT 'Availability of equipment: available, under maintenance, out for rental, damaged, unavailable',
   
-  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Time created',
 
   CONSTRAINT UQ_Equipment_EquipmentCode UNIQUE (EquipmentCode)
-);
+) COMMENT = 'Stores equipment information';
 
 -- Equipment can be linked to vehicle by entire category, not individual equipment items
 -- also does a vehicle need equipment tied to it?? just tie everything together in a Service table entry
