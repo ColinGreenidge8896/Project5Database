@@ -149,14 +149,18 @@ export default (pool, sendResponse) => {
     // Create new order
     router.post("/stock-order", async (req, res) => {
     try {
-        const receivedAtValue = received || null; // NULL if not provided
+        // Destructure first
         const { productid, qty, suppliername, ordered, received } = req.body;
+
         if (!productid || !qty || !suppliername)
-        return sendResponse(res, false, "Missing required fields.");
+            return sendResponse(res, false, "Missing required fields.");
+
+        // Use received after it's defined
+        const receivedAtValue = received || null;
 
         const [result] = await pool.query(
-        "INSERT INTO StockOrder (ProductID, QuantityOrdered, SupplierName, OrderedAt, ReceivedAt) VALUES (?, ?, ?, ?, ?)",
-        [productid, qty, suppliername, ordered, received || ""]
+            "INSERT INTO StockOrder (ProductID, QuantityOrdered, SupplierName, OrderedAt, ReceivedAt) VALUES (?, ?, ?, ?, ?)",
+            [productid, qty, suppliername, ordered, receivedAtValue]
         );
 
         sendResponse(res, true, "Order created.", { productID: result.insertId });
@@ -164,6 +168,7 @@ export default (pool, sendResponse) => {
         sendResponse(res, false, err.message);
     }
     });
+
 
     // Get all orders
     router.get("/stock-order", async (req, res) => {
