@@ -1,8 +1,11 @@
+
+import { sendResponse } from "../../utils/sendResponse.js";
+
 describe('sendResponse Function', () => {
   // Mock sendResponse from utils/sendResponse.js
-  function sendResponse(res, success, message, data = null) {
-    res.json({ success, message, data });
-  }
+  // function sendResponse(res, success, message, data = null) {
+  //   res.json({ success, message, data });
+  // }
 
   describe('Response Structure', () => {
     test('calls res.json with correct structure for success', () => {
