@@ -124,11 +124,11 @@ CREATE TABLE Employee (
 ) COMMENT = 'Stores employee information';
 
 CREATE TABLE Team (
-  TeamID INT AUTO_INCREMENT PRIMARY KEY,
-  TeamName VARCHAR(150) NOT NULL,
-  TeamDescription TEXT,
-  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
-);
+  TeamID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique team identifier',
+  TeamName VARCHAR(150) NOT NULL COMMENT 'Name of the team',
+  TeamDescription TEXT COMMENT 'Description of the team',
+  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Time created'
+) COMMENT = 'Stores team information';
 
 CREATE TABLE Product (
   ProductID INT AUTO_INCREMENT PRIMARY KEY,
