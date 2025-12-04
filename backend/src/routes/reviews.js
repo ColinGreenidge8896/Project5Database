@@ -197,7 +197,7 @@ export default (pool, sendResponse) => {
         }
 
         const [result] = await pool.query(
-        "INSERT INTO ServiceReview (ReviewID, AccountID, Rating, Comment) VALUES (?, ?, ?, ?)",
+        "INSERT INTO ServiceReview (ServiceID, AccountID, Rating, Comment) VALUES (?, ?, ?, ?)",
         [serviceID, accountID, rating, comment || ""]
         );
 
