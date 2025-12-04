@@ -304,7 +304,7 @@ CREATE TABLE ProductReview (
   ReviewID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique product review identifier',
   ProductID INT NOT NULL COMMENT 'Associated product identifier',
   AccountID INT NOT NULL COMMENT 'Associated customer account identifier',
-  Rating INT CHECK (Rating BETWEEN 1 AND 5) COMMENT 'Customer rating of product: 1-5',
+  Rating INT COMMENT 'Customer rating of product: 1-5' CHECK (Rating BETWEEN 1 AND 5),
   Comment TEXT COMMENT 'Customer comment on product',
   CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Time created',
   FOREIGN KEY (ProductID) REFERENCES Product(ProductID),
@@ -315,7 +315,7 @@ CREATE TABLE RentalReview (
   ReviewID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique rental review identifier',
   RentalID INT NOT NULL COMMENT 'Associated rental identifier',
   AccountID INT NOT NULL COMMENT 'Associated customer account identifier',
-  Rating INT CHECK (Rating BETWEEN 1 AND 5) COMMENT 'Customer rating of rental: 1-5',
+  Rating INT COMMENT 'Customer rating of rental: 1-5' CHECK (Rating BETWEEN 1 AND 5),
   Comment TEXT COMMENT 'Customer comment on rental',
   CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Time created',
   FOREIGN KEY (RentalID) REFERENCES Rental(RentalID),
@@ -326,7 +326,7 @@ CREATE TABLE ServiceReview (
   ReviewID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique service review identifier',
   ServiceID INT NOT NULL COMMENT 'Associated service identifier',
   AccountID INT NOT NULL COMMENT 'Associated customer account identifier',
-  Rating INT CHECK (Rating BETWEEN 1 AND 5) COMMENT 'Customer rating of service',
+  Rating INT COMMENT 'Customer rating of service' CHECK (Rating BETWEEN 1 AND 5),
   Comment TEXT COMMENT 'Customer comment on service',
   CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Time created',
   FOREIGN KEY (ServiceID) REFERENCES Service(ServiceID),
@@ -342,18 +342,18 @@ CREATE TABLE Ghost (
 ) COMMENT = 'Stores ghost information';
 
 CREATE TABLE Trait (
-  TraitID INT AUTO_INCREMENT PRIMARY KEY,
-  TraitName VARCHAR(150) NOT NULL,
-  TraitType ENUM('physical','behavioral','paranormal') DEFAULT 'paranormal'
-);
+  TraitID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique trait identifier',
+  TraitName VARCHAR(150) NOT NULL COMMENT 'Name of trait',
+  TraitType ENUM('physical','behavioral','paranormal') DEFAULT 'paranormal' COMMENT 'Type of trait: physical, behavioral, paranormal'
+) COMMENT = 'Stores trait information, used to identify ghosts';
 
 CREATE TABLE IdentifyingTrait (
-  GhostID INT NOT NULL,
-  TraitID INT NOT NULL,
+  GhostID INT NOT NULL COMMENT 'Associated ghost identifier',
+  TraitID INT NOT NULL COMMENT 'Associated trait identifier',
   PRIMARY KEY (GhostID, TraitID),
   FOREIGN KEY (GhostID) REFERENCES Ghost(GhostID),
   FOREIGN KEY (TraitID) REFERENCES Trait(TraitID)
-);
+) COMMENT = 'Combines a ghost and trait for identification';
 
 CREATE TABLE InquiryForm (
   InquiryFormID INT AUTO_INCREMENT PRIMARY KEY,
