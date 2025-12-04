@@ -65,7 +65,59 @@ export default (pool, sendResponse) => {
     }
     });
 
-    //update customer account
+    // Update customer account
+    router.patch("/customers/:id", async (req, res) => {
+    try {
+        const { email, username, password, status } = req.body;
+        const { id } = req.params;
+
+        // Check that at least one field is provided
+        if (!email && !username && !password && !status) {
+            return sendResponse(res, false, "No fields provided to update.");
+        }
+
+        const updates = [];
+        const values = [];
+
+        if (email) {
+            updates.push("Email = ?");
+            values.push(email);
+        }
+        if (username) {
+            updates.push("Username = ?");
+            values.push(username);
+        }
+        if (password) {
+            const hashed = await bcrypt.hash(password, 10);
+            updates.push("PasswordHash = ?");
+            values.push(hashed);
+        }
+        if (status) {
+            updates.push("Status = ?");
+            values.push(status);
+        }
+
+        values.push(id); // For WHERE clause
+
+        const [result] = await pool.query(
+            `UPDATE CustomerAccount SET ${updates.join(", ")} WHERE AccountID = ?`,
+            values
+        );
+
+        if (result.affectedRows === 0) {
+            return sendResponse(res, false, "Customer not found.");
+        }
+
+        sendResponse(res, true, "Customer account updated.");
+        } catch (err) {
+        console.error("Error updating customer:", err);
+        if (err.code === "ER_DUP_ENTRY") {
+            sendResponse(res, false, "Email or username already exists.");
+        } else {
+            sendResponse(res, false, "Internal server error.");
+        }
+    }
+    });
 
     // Delete customer
     router.delete("/customers/:id", async (req, res) => {
