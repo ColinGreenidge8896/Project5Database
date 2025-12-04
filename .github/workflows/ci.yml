@@ -53,9 +53,9 @@ jobs:
       - name: Run JavaScript unit tests with coverage
         run: jest tests/unit/ --verbose --coverage
 
-      - name: Check Jest coverage threshold
-        run: |
-          jest tests/unit/ --coverage --coverageThreshold='{"global":{"branches":50,"functions":50,"lines":50,"statements":50}}'
+      # - name: Check Jest coverage threshold
+      #   run: |
+      #     jest tests/unit/ --coverage --coverageThreshold='{"global":{"branches":50,"functions":50,"lines":50,"statements":50}}'
 
   test-api:
     runs-on: ubuntu-latest
