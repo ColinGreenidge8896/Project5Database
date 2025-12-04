@@ -283,22 +283,22 @@ CREATE TABLE ItemTransaction (
   PaymentID INT NOT NULL COMMENT 'Associated payment identifier',
   ProductID INT COMMENT 'Associated product identifier',
   Quantity INT DEFAULT 1 COMMENT 'Quantity of product being purchased',
-  Subtotal DECIMAL(10,2) COMMENT 'Subtotal of purchase',
+  Subtotal DECIMAL(10,2) COMMENT 'Subtotal of item transaction',
   CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Time created',
   FOREIGN KEY (PaymentID) REFERENCES Payment(PaymentID),
   FOREIGN KEY (ProductID) REFERENCES Product(ProductID)
 ) COMMENT = 'Stores item transaction information';
 
 CREATE TABLE ServiceTransaction (
-  ServiceTransactionID INT AUTO_INCREMENT PRIMARY KEY,
-  PaymentID INT NOT NULL,
-  ServiceID INT,
-  HoursWorked DECIMAL(5,2),
-  Subtotal DECIMAL(10,2),
-  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+  ServiceTransactionID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique service transaction identifier',
+  PaymentID INT NOT NULL COMMENT 'Associated payment identifier',
+  ServiceID INT COMMENT 'Associated service identifier',
+  HoursWorked DECIMAL(5,2) COMMENT 'Hours worked on service',
+  Subtotal DECIMAL(10,2) COMMENT 'Subtotal of service transaction',
+  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Time created',
   FOREIGN KEY (PaymentID) REFERENCES Payment(PaymentID),
   FOREIGN KEY (ServiceID) REFERENCES Service(ServiceID)
-);
+) COMMENT = 'Stores service transaction information';
 
 CREATE TABLE ProductReview (
   ReviewID INT AUTO_INCREMENT PRIMARY KEY,
