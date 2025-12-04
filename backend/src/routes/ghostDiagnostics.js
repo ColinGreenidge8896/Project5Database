@@ -302,7 +302,121 @@ export default (pool, sendResponse) => {
     /* ======================
      Item Req Route
     ====================== */
+    // Create a new item requirement
+    router.post("/item-req", async (req, res) => {
+    try {
+        const { equipmentID, serviceID, quantity, notes } = req.body;
 
+        if (!equipmentID && !serviceID) {
+            return sendResponse(res, false, "At least one of EquipmentID or ServiceID is required.");
+        }
+
+        const [result] = await pool.query(
+            `INSERT INTO ItemReq (EquipmentID, ServiceID, Quantity, Notes) 
+             VALUES (?, ?, ?, ?)`,
+            [
+                equipmentID || null,
+                serviceID || null,
+                quantity || 1,
+                notes || ""
+            ]
+        );
+
+        sendResponse(res, true, "Item requirement created.", { itemReqID: result.insertId });
+    } catch (err) {
+        console.error(err);
+        if (err.code === "ER_NO_REFERENCED_ROW_2") {
+            sendResponse(res, false, "Referenced EquipmentID or ServiceID does not exist.");
+        } else {
+            sendResponse(res, false, err.message);
+        }
+    }
+    });
+
+    // Get all item requirements
+    router.get("/item-req", async (req, res) => {
+    try {
+        const [rows] = await pool.query("SELECT * FROM ItemReq;");
+        sendResponse(res, true, "Item requirements retrieved.", rows);
+    } catch (err) {
+        sendResponse(res, false, err.message);
+    }
+    });
+
+    // Get item requirement by ID
+    router.get("/item-req/:id", async (req, res) => {
+    try {
+        const [rows] = await pool.query(
+            "SELECT * FROM ItemReq WHERE ItemReqID = ?;",
+            [req.params.id]
+        );
+
+        if (rows.length === 0) {
+            return sendResponse(res, false, "Item requirement not found.");
+        }
+
+        sendResponse(res, true, "Item requirement retrieved.", rows[0]);
+    } catch (err) {
+        sendResponse(res, false, err.message);
+    }
+    });
+
+    // Update item requirement
+    router.patch("/item-req/:id", async (req, res) => {
+    try {
+        const { equipmentID, serviceID, quantity, notes } = req.body;
+
+        const updates = [];
+        const values = [];
+
+        if (equipmentID !== undefined) { updates.push("EquipmentID = ?"); values.push(equipmentID); }
+        if (serviceID !== undefined) { updates.push("ServiceID = ?"); values.push(serviceID); }
+        if (quantity !== undefined) { updates.push("Quantity = ?"); values.push(quantity); }
+        if (notes !== undefined) { updates.push("Notes = ?"); values.push(notes); }
+
+        if (updates.length === 0) {
+            return sendResponse(res, false, "No fields to update.");
+        }
+
+        values.push(req.params.id);
+
+        const [result] = await pool.query(
+            `UPDATE ItemReq SET ${updates.join(", ")} WHERE ItemReqID = ?;`,
+            values
+        );
+
+        if (result.affectedRows === 0) {
+            return sendResponse(res, false, "Item requirement not found.");
+        }
+
+        sendResponse(res, true, "Item requirement updated.");
+    } catch (err) {
+        console.error(err);
+        if (err.code === "ER_NO_REFERENCED_ROW_2") {
+            sendResponse(res, false, "Referenced EquipmentID or ServiceID does not exist.");
+        } else {
+            sendResponse(res, false, err.message);
+        }
+    }
+    });
+
+    // Delete item requirement
+    router.delete("/item-req/:id", async (req, res) => {
+    try {
+        const [result] = await pool.query(
+            "DELETE FROM ItemReq WHERE ItemReqID = ?;",
+            [req.params.id]
+        );
+
+        if (result.affectedRows === 0) {
+            return sendResponse(res, false, "Item requirement not found.");
+        }
+
+        sendResponse(res, true, "Item requirement deleted.");
+    } catch (err) {
+        sendResponse(res, false, err.message);
+    }
+    });
 
 
     /* ======================
