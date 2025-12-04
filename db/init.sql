@@ -210,15 +210,15 @@ CREATE TABLE Rental (
 
 -- remove ability to rent same equipment over and over - use UNIQUE
 CREATE TABLE RentedEquipment (
-  RentedEquipmentID INT AUTO_INCREMENT PRIMARY KEY,
-  RentalID INT NOT NULL,
-  EquipmentID INT NOT NULL,
+  RentedEquipmentID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique rented equipment identifier',
+  RentalID INT NOT NULL COMMENT 'Unique associated rental identifier',
+  EquipmentID INT NOT NULL COMMENT 'Unique associated equipment identifier',
   
   UNIQUE (RentalID, EquipmentID),
 
   FOREIGN KEY (RentalID) REFERENCES Rental(RentalID),
   FOREIGN KEY (EquipmentID) REFERENCES Equipment(EquipmentID)
-);
+) COMMENT = 'Stores combined rental and equipment to represented a rented piece of equipment';
 
 -- tie entries to either requipment or rental, otherwise "floating" events possible
 CREATE TABLE Maintenance (
