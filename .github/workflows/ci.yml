@@ -77,7 +77,7 @@ jobs:
       - name: Install backend dependencies
         run: |
           cd backend
-          npm ci
+          npm install
 
       - name: Install Jest
         run: npm install --global jest
