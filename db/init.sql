@@ -139,7 +139,7 @@ CREATE TABLE Product (
 ) COMMENT = 'Stores product information';
 
 CREATE TABLE ProductStock (
-  ProductID INT PRIMARY KEY COMMENT 'Unique associated product identifier',
+  ProductID INT PRIMARY KEY COMMENT 'Associated product identifier',
   QuantityAvailable INT DEFAULT 0 COMMENT 'Quantity of product currently available',
   RestockThreshold INT DEFAULT 10 COMMENT 'Threshold at which to restock the product',
   LastRestockDate DATE COMMENT 'Last time the product was restocked',
@@ -150,7 +150,7 @@ CREATE TABLE ProductStock (
 
 CREATE TABLE StockOrder (
   StockOrderID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique stock order identifier',
-  ProductID INT NOT NULL COMMENT 'Unique associated product identifier',
+  ProductID INT NOT NULL COMMENT 'Associated product identifier',
   QuantityOrdered INT COMMENT 'Amount of stock ordered',
   SupplierName VARCHAR(150) COMMENT 'Name of supplier',
   OrderedAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Date of order',
@@ -193,7 +193,7 @@ CREATE TABLE Equipment (
 CREATE TABLE Rental (
   RentalID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique rental identifier',
   RentalCode VARCHAR(32) NOT NULL COMMENT 'Unique rental code',
-  AccountID INT NOT NULL COMMENT 'Unique associated customer account identifier',
+  AccountID INT NOT NULL COMMENT 'Associated customer account identifier',
 
   StartDate DATE NOT NULL COMMENT 'Rental start date',
   EndDate DATE NOT NULL COMMENT 'Rental end date',
@@ -218,14 +218,14 @@ CREATE TABLE RentedEquipment (
 
   FOREIGN KEY (RentalID) REFERENCES Rental(RentalID),
   FOREIGN KEY (EquipmentID) REFERENCES Equipment(EquipmentID)
-) COMMENT = 'Stores combined rental and equipment to represented a rented piece of equipment';
+) COMMENT = 'Combination of rental and equipment';
 
 -- tie entries to either requipment or rental, otherwise "floating" events possible
 CREATE TABLE Maintenance (
   MaintenanceID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique maintenance identifier',
   MaintenanceCode VARCHAR(32) NOT NULL COMMENT 'Unique maintenance code',
-  EquipmentID INT NOT NULL COMMENT 'Unique associated equipment identifier',
-  RentalID INT COMMENT 'Unique associated rental identifier',
+  EquipmentID INT NOT NULL COMMENT 'Associated equipment identifier',
+  RentalID INT COMMENT 'Associated rental identifier',
 
   LastServiceDate DATE COMMENT 'Date of last service',
   
@@ -246,37 +246,37 @@ CREATE TABLE Maintenance (
 
 
 CREATE TABLE Payment (
-  PaymentID INT AUTO_INCREMENT PRIMARY KEY,
-  AccountID INT NOT NULL,
-  BillingAddressID INT,
-  CardLast4 CHAR(4),
-  CardToken VARCHAR(255),
-  PaymentMethod ENUM('credit_card','debit','cash','e-transfer') DEFAULT 'credit_card',
-  Amount DECIMAL(10,2),
-  PaidAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PaymentID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique payment identifier',
+  AccountID INT NOT NULL COMMENT 'Associated customer account identifier',
+  BillingAddressID INT COMMENT 'Associated address identifier',
+  CardLast4 CHAR(4) COMMENT 'Last four digits of card',
+  CardToken VARCHAR(255) COMMENT 'Token of card',
+  PaymentMethod ENUM('credit_card','debit','cash','e-transfer') DEFAULT 'credit_card' COMMENT 'Payment method: credit card, debit, cash, e-transfer',
+  Amount DECIMAL(10,2) COMMENT 'Payment amount',
+  PaidAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Time of payment',
   FOREIGN KEY (AccountID) REFERENCES CustomerAccount(AccountID),
   FOREIGN KEY (BillingAddressID, AccountID)
     REFERENCES CustomerAddress(AddressID, AccountID)
-);
+) COMMENT = 'Stores payment information';
 
 -- service table for services performed - ghost diagnostics table
 CREATE TABLE Service (
-  ServiceID INT AUTO_INCREMENT PRIMARY KEY,
-  ServiceName VARCHAR(150) NOT NULL,
-  ServiceDescription TEXT,
-  BaseRate DECIMAL(10,2),
-  TeamID INT,
+  ServiceID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique service identifier',
+  ServiceName VARCHAR(150) NOT NULL COMMENT 'Name of service',
+  ServiceDescription TEXT COMMENT 'Description of service',
+  BaseRate DECIMAL(10,2) COMMENT 'Base rate of service',
+  TeamID INT COMMENT 'Associated team identifier',
   FOREIGN KEY (TeamID) REFERENCES Team(TeamID)
-);
+) COMMENT = 'Stores information about performed services';
 
 -- CustomerService - Ghost Diagnostics table for customer and service mix 
 CREATE TABLE CustomerService (
-  CustomerServiceID int AUTO_INCREMENT PRIMARY KEY,
-  ServiceID int NOT NULL,
-  AccountID int NOT NULL,
+  CustomerServiceID int AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique customer service identifier',
+  ServiceID int NOT NULL COMMENT 'Associated service identifier',
+  AccountID int NOT NULL COMMENT 'Associated customer account identifier',
   FOREIGN KEY (ServiceID) REFERENCES Service(ServiceID),
   FOREIGN key (AccountID) REFERENCES CustomerAccount(AccountID)
-);
+) COMMENT = 'Combination of customer account and service';
 
 CREATE TABLE ItemTransaction (
   ItemTransactionID INT AUTO_INCREMENT PRIMARY KEY,
