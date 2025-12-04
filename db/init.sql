@@ -386,6 +386,10 @@ INSERT INTO Service (ServiceName, ServiceDescription, BaseRate) VALUES
 INSERT INTO Rental (RentalCode, AccountID, StartDate, EndDate, RentalStatus, Notes, Scope) VALUES
 ('RT-0000', 1, '2000-01-01', '2000-01-01', 'Closed', 'Test insert rental.', 'External');
 
+-- POS requested test customerAccount - pass is unhashed
+INSERT INTO CustomerAccount (Email, Username, PasswordHash, Status) VALUES
+('q@q.q', 'user', 'pass', 'active');
+
 -- inserting ghost and trait data
 INSERT INTO Ghost (GhostName, GhostDescription) VALUES
 ('None', 'This is NOT a supernatural entity'),
