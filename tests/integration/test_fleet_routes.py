@@ -118,11 +118,13 @@ class TestEquipment:
         """Test POST /api/fleet/equipment"""
         timestamp = int(time.time())
         equipment_data = {
-            "code": f"EQ-TEST-{timestamp}",
+            "equipmentcode": "test1",
+            "name": "test",
             "description": "Test equipment",
             "value": 1000.00,
             "category": "Test Category",
             "type": "Test Type",
+            "trackingid": "test",
             "availability": "Available"
         }
         
@@ -149,11 +151,13 @@ class TestEquipment:
         # Create equipment first
         timestamp = int(time.time())
         equipment_data = {
-            "code": f"EQ-GET-{timestamp}",
-            "description": "Get test",
-            "value": 500.00,
-            "category": "Test",
-            "type": "Test",
+            "equipmentcode": "test2",
+            "name": "test",
+            "description": "Test equipment",
+            "value": 1000.00,
+            "category": "Test Category",
+            "type": "Test Type",
+            "trackingid": "test",
             "availability": "Available"
         }
         create_response = requests.post(f"{BASE_URL}/equipment", json=equipment_data)
@@ -162,4 +166,4 @@ class TestEquipment:
         # Get it
         response = requests.get(f"{BASE_URL}/equipment/{equipment_id}")
         
-        assert response.sta
+        assert response.status_code == 200

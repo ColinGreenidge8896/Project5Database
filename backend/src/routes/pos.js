@@ -91,7 +91,6 @@ export default (pool, sendResponse) => {
             return sendResponse(res, false, "Missing email or password.");
         }
 
-        // Find the user by email
         const [rows] = await pool.query(
             "SELECT AccountID, Email, Username, PasswordHash, Status FROM CustomerAccount WHERE Username = ?;",
             [username]
@@ -103,27 +102,26 @@ export default (pool, sendResponse) => {
 
         const user = rows[0];
 
-        // Compare the provided password with the hashed password
-        const passwordMatch = await bcrypt.compare(password, user.Password);
+        // Compare password correctly
+        const passwordMatch = await bcrypt.compare(password, user.PasswordHash);
 
         if (!passwordMatch) {
             return sendResponse(res, false, "Invalid username or password.");
         }
 
-        // Optionally, check if the account is active
         if (user.Status !== "active") {
             return sendResponse(res, false, "Account is not active.");
         }
 
-        // Remove password before sending user data
-        delete user.Password;
+        // Remove hashed password from output
+        delete user.PasswordHash;
 
         sendResponse(res, true, "Login successful.", { user });
     } catch (err) {
         console.error("Error during login:", err);
         sendResponse(res, false, "Internal server error.");
     }
-});
+    });
 
     /* ======================
     Payment Route
