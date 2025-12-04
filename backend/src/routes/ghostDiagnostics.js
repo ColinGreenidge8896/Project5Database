@@ -515,5 +515,80 @@ export default (pool, sendResponse) => {
     /* ======================
     Customer Service Route
     ====================== */
+    // Assign a service to a customer
+    router.post("/customer-service", async (req, res) => {
+    try {
+        const { serviceID, accountID } = req.body;
+        if (!serviceID || !accountID)
+            return sendResponse(res, false, "Missing required fields: serviceID or accountID.");
+
+        const [result] = await pool.query(
+            "INSERT INTO CustomerService (ServiceID, AccountID) VALUES (?, ?)",
+            [serviceID, accountID]
+        );
+
+        sendResponse(res, true, "Customer service link created.", { customerServiceID: result.insertId });
+    } catch (err) {
+        console.error("Error creating customer-service link:", err);
+        if (err.code === "ER_NO_REFERENCED_ROW_2")
+            sendResponse(res, false, "Invalid ServiceID or AccountID.");
+        else if (err.code === "ER_DUP_ENTRY")
+            sendResponse(res, false, "This customer-service link already exists.");
+        else
+            sendResponse(res, false, "Internal server error.");
+    }
+    });
+
+    // Get all customer-service links - required by GD team?
+    router.get("/customer-service", async (req, res) => {
+    try {
+        const [rows] = await pool.query(
+            `SELECT cs.CustomerServiceID, cs.ServiceID, cs.AccountID,
+                    s.ServiceName, c.Username, c.Email
+             FROM CustomerService cs
+             JOIN Service s ON cs.ServiceID = s.ServiceID
+             JOIN CustomerAccount c ON cs.AccountID = c.AccountID`
+        );
+
+        sendResponse(res, true, "Customer-service links retrieved.", rows);
+    } catch (err) {
+        sendResponse(res, false, err.message);
+    }
+    });
+
+    // Get all services for a specific customer
+    router.get("/customer-service/customer/:accountID", async (req, res) => {
+    try {
+        const [rows] = await pool.query(
+            `SELECT cs.CustomerServiceID, cs.ServiceID, s.ServiceName, s.BaseRate
+             FROM CustomerService cs
+             JOIN Service s ON cs.ServiceID = s.ServiceID
+             WHERE cs.AccountID = ?`,
+            [req.params.accountID]
+        );
+
+        sendResponse(res, true, "Customer services retrieved.", rows);
+    } catch (err) {
+        sendResponse(res, false, err.message);
+    }
+    });
+
+    // Delete a customer-service link
+    router.delete("/customer-service/:id", async (req, res) => {
+    try {
+        const [result] = await pool.query(
+            "DELETE FROM CustomerService WHERE CustomerServiceID = ?",
+            [req.params.id]
+        );
+
+        if (result.affectedRows === 0)
+            return sendResponse(res, false, "Customer-service link not found.");
+
+        sendResponse(res, true, "Customer-service link deleted.");
+    } catch (err) {
+        sendResponse(res, false, err.message);
+    }
+    });
+
     return router;
 };
