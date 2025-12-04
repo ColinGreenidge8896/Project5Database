@@ -279,15 +279,15 @@ CREATE TABLE CustomerService (
 ) COMMENT = 'Combination of customer account and service';
 
 CREATE TABLE ItemTransaction (
-  ItemTransactionID INT AUTO_INCREMENT PRIMARY KEY,
-  PaymentID INT NOT NULL,
-  ProductID INT,
-  Quantity INT DEFAULT 1,
-  Subtotal DECIMAL(10,2),
-  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+  ItemTransactionID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique item transaction identifier',
+  PaymentID INT NOT NULL COMMENT 'Associated payment identifier',
+  ProductID INT COMMENT 'Associated product identifier',
+  Quantity INT DEFAULT 1 COMMENT 'Quantity of product being purchased',
+  Subtotal DECIMAL(10,2) COMMENT 'Subtotal of purchase',
+  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Time created',
   FOREIGN KEY (PaymentID) REFERENCES Payment(PaymentID),
   FOREIGN KEY (ProductID) REFERENCES Product(ProductID)
-);
+) COMMENT = 'Stores item transaction information';
 
 CREATE TABLE ServiceTransaction (
   ServiceTransactionID INT AUTO_INCREMENT PRIMARY KEY,
