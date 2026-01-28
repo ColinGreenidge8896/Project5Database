@@ -1,5 +1,5 @@
 
-# 👻 GhostBusters Enterprise – Backend Service
+#  GhostBusters Enterprise – Backend Service
 
 A school project set in a spoof enterprise world of **GhostBusters**. This repository hosts the backend API and supporting infrastructure.
 
@@ -7,7 +7,7 @@ Built with **Node.js + Express**, **MySQL**, **Python + PyTest**, and containeri
 
 ---
 
-## 🚀 Features
+##  Features
 - RESTful API using **Express** (Node.js)
 - **MySQL** relational database with migrations/seed data
 - **Docker** & **docker-compose** for local dev and reproducible environments
@@ -17,7 +17,7 @@ Built with **Node.js + Express**, **MySQL**, **Python + PyTest**, and containeri
 
 ---
 
-## 🏗️ Architecture Overview
+##  Architecture Overview
 
 ```
 +--------------------+          +---------------------+
@@ -43,7 +43,7 @@ Built with **Node.js + Express**, **MySQL**, **Python + PyTest**, and containeri
 
 ---
 
-## 📦 Tech Stack
+##  Tech Stack
 - **Runtime:** Node.js (Express)
 - **Database:** MySQL
 - **Scripting & Tests:** Python, PyTest
@@ -53,7 +53,7 @@ Built with **Node.js + Express**, **MySQL**, **Python + PyTest**, and containeri
 
 ---
 
-## 🐳 Quick Start (Docker)
+##  Quick Start (Docker)
 
 > Prerequisites: Docker Desktop (or Docker Engine), Docker Compose, and a `.env` file.
 
@@ -89,7 +89,7 @@ Built with **Node.js + Express**, **MySQL**, **Python + PyTest**, and containeri
 
 ---
 
-## 🧪 Testing
+##  Testing
 
 ### Backend (Node.js)
 ```bash
@@ -105,7 +105,7 @@ CI runs both suites on push and PR. Coverage reports (if configured) are uploade
 
 ---
 
-## 🗃️ Database & Documentation
+##  Database & Documentation
 - Schema is defined via migration scripts (e.g., `db/migrations`).
 - Seed data (e.g., `db/seeds`) bootstraps dev/test environments.
 - **dbdocs** publishes schema docs. Local preview:
@@ -117,7 +117,7 @@ CI runs both suites on push and PR. Coverage reports (if configured) are uploade
 
 ---
 
-## ⚙️ Configuration
+##  Configuration
 - App config via environment variables in `.env`.
 - Dockerfiles for both **API** and **MySQL**.
 - `docker-compose.yml` orchestrates service networking, volumes, and healthchecks.
@@ -158,7 +158,7 @@ volumes:
 
 ---
 
-## 🔌 Integration Summary (Enterprise Modules)
+##  Integration Summary (Enterprise Modules)
 This service integrates with other GhostBusters enterprise modules (planned or existing):
 
 - **Ops Console** – Admin UI to monitor ghosts, jobs, and trap inventory.
@@ -174,7 +174,7 @@ This service integrates with other GhostBusters enterprise modules (planned or e
 
 ---
 
-## 📁 Project Structure (suggested)
+##  Project Structure (suggested)
 ```
 repo-root/
 ├─ api/                # Express app
@@ -196,14 +196,14 @@ repo-root/
 
 ---
 
-## 🔒 Security Notes
+##  Security Notes
 - Do **not** commit real secrets. Use `.env` and CI secrets.
 - Configure least-privilege DB users.
 - Add request validation and basic rate limiting in the API.
 
 ---
 
-## 🛠️ Development Tips
+##  Development Tips
 - Prefer parameterized queries/ORM to avoid SQL injection.
 - Add healthcheck endpoints for containers.
 - Use multi-stage `Dockerfile` to keep images small.
@@ -211,7 +211,7 @@ repo-root/
 
 ---
 
-## 📜 License
+##  License
 
 This project is licensed under the **MIT License** — a permissive, free license suitable for educational and open-source projects.
 
@@ -241,7 +241,7 @@ SOFTWARE.
 
 ---
 
-## 🙌 Acknowledgements
+##  Acknowledgements
 - GhostBusters franchise for thematic inspiration (non-commercial, educational use).
 - Open-source communities behind Node.js, MySQL, Python, PyTest, Docker, and dbdocs.
 
